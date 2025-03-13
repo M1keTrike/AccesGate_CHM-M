@@ -1,0 +1,13 @@
+<h2>Crear Usuario</h2>
+
+<form>
+  <label for="name">Nombre:</label>
+  <input type="text" id="name" name="name" required>
+
+  <label for="nfc">NFC:</label>
+  <input type="text" id="nfc" name="nfc" [(ngModel)]="nfc" readonly>
+
+  <button type="button" (click)="scanNFC()">Escanear tarjeta</button>
+
+  <button type="submit" [routerLink]="['/']" routerLinkActive="router-link-active" >Guardar Usuario</button>
+</form>
