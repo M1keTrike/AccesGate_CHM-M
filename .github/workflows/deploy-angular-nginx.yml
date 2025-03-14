@@ -10,35 +10,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Clonar el repositorio
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2️⃣ Instalar Node.js y Angular CLI
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      # 3️⃣ Instalar dependencias
       - name: Install dependencies
         run: |
           cd Access-Gate-APP/Access-Gate
           npm ci
 
-      # 4️⃣ Construir la aplicación Angular
       - name: Build Angular app
         run: |
           cd Access-Gate-APP/Access-Gate
           npm run build -- --configuration=production
 
-      # 5️⃣ **Verificar que `dist/` se generó correctamente**
       - name: Verify Build Directory
         run: |
           echo "🔍 Verificando estructura del build..."
           ls -R Access-Gate-APP/Access-Gate/dist/
 
-      # 6️⃣ **Eliminar la versión anterior en EC2 antes de subir la nueva**
       - name: Remove old files on EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -50,11 +44,11 @@ jobs:
               sudo rm -rf /var/www/angular-app/*
               echo "✅ Archivos antiguos eliminados"
             else
-              echo "⚠️ Advertencia: El directorio /var/www/angular-app no existe. Se creará."
+              echo "⚠️ El directorio no existe. Creando..."
               sudo mkdir -p /var/www/angular-app
             fi
 
-      # 7️⃣ **Subir `dist/browser/` directamente a `/var/www/angular-app` en EC2**
+      # 🔽 🔥 **Corrección de Upload a EC2**
       - name: Upload dist folder to EC2
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -62,9 +56,9 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           source: "Access-Gate-APP/Access-Gate/dist/access-gate/browser/*"
-          target: "/var/www/angular-app"
+          target: "/var/www/angular-app/"
+          strip_components: 3  # 🔥 Evita enviar directorios intermedios innecesarios
 
-      # 8️⃣ **Verificar que los archivos se copiaron correctamente en EC2**
       - name: Check Deployment Files on EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -73,12 +67,11 @@ jobs:
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
             if [ ! -f "/var/www/angular-app/index.html" ]; then
-              echo "❌ ERROR: index.html no se encuentra en /var/www/angular-app"
+              echo "❌ ERROR: index.html no encontrado en /var/www/angular-app"
               exit 1
             fi
             echo "✅ index.html encontrado. Todo listo para reiniciar Nginx."
 
-      # 9️⃣ **Asegurar permisos correctos para Nginx**
       - name: Fix Permissions
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -90,7 +83,6 @@ jobs:
             sudo chown -R www-data:www-data /var/www/angular-app
             echo "✅ Permisos corregidos"
 
-      # 🔟 **Reiniciar el contenedor Nginx en EC2**
       - name: Restart Nginx Container
         uses: appleboy/ssh-action@v1.0.3
         with:
