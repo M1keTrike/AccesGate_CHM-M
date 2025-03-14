@@ -6,5 +6,11 @@ import (
 )
 
 func AttachReceiveRoutes(r *gin.Engine, receiveController *controllers.ReceiveNFCMessageController) {
-	r.POST("/receive_nfc", receiveController.Execute)
+
+	nfc := r.Group("/nfc")
+	{
+		nfc.POST("/receive_nfc", receiveController.Execute)
+	}
+
+
 }
