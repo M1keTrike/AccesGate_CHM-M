@@ -11,21 +11,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout del código
+      # 1️⃣ Clonar repositorio
       - name: Clonar repositorio
         uses: actions/checkout@v4
 
-      # Construcción de la imagen
+      # 2️⃣ Construcción de la imagen con rutas corregidas
       - name: Construir imagen Docker
         run: |
-          docker build -t access-gate-frontend:${{ github.sha }} -f Access-Gate-APP/Access-Gate/Dockerfile .
+          cd Access-Gate-APP/Access-Gate
+          docker build -t access-gate-frontend:${{ github.sha }} .
 
-      # Exportar la imagen y comprimirla
+      # 3️⃣ Exportar la imagen para transferencia
       - name: Exportar imagen Docker
         run: |
           docker save access-gate-frontend:${{ github.sha }} | gzip > access-gate.tar.gz
 
-      # Transferir la imagen al servidor
+      # 4️⃣ Transferir la imagen al servidor
       - name: Subir imagen al servidor
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -35,7 +36,7 @@ jobs:
           source: access-gate.tar.gz
           target: /home/ubuntu/
 
-      # Cargar y ejecutar la imagen en el servidor
+      # 5️⃣ Desplegar en el servidor
       - name: Desplegar en el servidor
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -46,12 +47,15 @@ jobs:
             # Detener y eliminar el contenedor anterior si existe
             docker stop access-gate-frontend || true
             docker rm access-gate-frontend || true
-            
-            # Cargar la imagen en Docker
+
+            # Eliminar la imagen anterior para evitar acumulación
+            docker rmi $(docker images -q access-gate-frontend) || true
+
+            # Cargar la nueva imagen en Docker
             docker load < /home/ubuntu/access-gate.tar.gz
-            
+
             # Ejecutar el nuevo contenedor
             docker run -d --name access-gate-frontend -p 80:80 --restart unless-stopped access-gate-frontend:${{ github.sha }}
-            
+
             # Limpiar archivos temporales
             rm /home/ubuntu/access-gate.tar.gz
