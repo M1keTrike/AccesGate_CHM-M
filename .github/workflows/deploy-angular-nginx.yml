@@ -37,7 +37,7 @@ jobs:
         run: |
           ls -l Access-Gate-APP/Access-Gate/dist/access-gate/browser/
 
-      # 6️⃣ **Subir `dist/browser/` a EC2**
+      # 6️⃣ **Subir `dist/browser/` directamente a `/var/www/angular-app` en EC2**
       - name: Upload dist folder to EC2
         uses: appleboy/scp-action@v0.1.4
         with:
