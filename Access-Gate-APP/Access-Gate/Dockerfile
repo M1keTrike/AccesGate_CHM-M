@@ -4,13 +4,13 @@ FROM node:20 AS build
 WORKDIR /app
 
 # Copiar archivos de dependencias
-COPY Access-Gate-APP/Access-Gate/package.json Access-Gate-APP/Access-Gate/package-lock.json ./
+COPY package.json package-lock.json ./
 
 # Instalar dependencias
 RUN npm ci
 
 # Copiar el código fuente de Angular
-COPY Access-Gate-APP/Access-Gate/ ./
+COPY . .
 
 # Construir la aplicación en modo producción
 RUN npm run build -- --configuration=production
@@ -19,7 +19,7 @@ RUN npm run build -- --configuration=production
 FROM nginx:stable-alpine
 
 # Copiar archivos de configuración de Nginx
-COPY Access-Gate-APP/Access-Gate/nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copiar la aplicación construida desde la etapa anterior
 COPY --from=build /app/dist/access-gate /usr/share/nginx/html
