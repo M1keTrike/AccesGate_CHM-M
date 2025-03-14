@@ -15,10 +15,10 @@ jobs:
       - name: Clonar repositorio
         uses: actions/checkout@v4
 
-      # 2️⃣ Construcción de la imagen con rutas corregidas
+      # 2️⃣ Moverse al directorio correcto antes de construir la imagen
       - name: Construir imagen Docker
         run: |
-          cd Access-Gate-APP/Access-Gate
+          cd Access-Gate-APP/Access-Gate || exit 1  # Salir si no existe
           docker build -t access-gate-frontend:${{ github.sha }} .
 
       # 3️⃣ Exportar la imagen para transferencia
