@@ -32,17 +32,22 @@ jobs:
           cd Access-Gate-APP/Access-Gate
           npm run build -- --configuration=production
 
-      # 5️⃣ Subir `dist/` a EC2 (directorio compartido con el contenedor)
+      # 5️⃣ **Verificar que `dist/` se generó correctamente**
+      - name: Debug Build Output
+        run: |
+          ls -l Access-Gate-APP/Access-Gate/dist/access-gate/browser/
+
+      # 6️⃣ **Subir `dist/browser/` a EC2**
       - name: Upload dist folder to EC2
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          source: "Access-Gate-APP/Access-Gate/dist/access-gate-app/"
+          source: "Access-Gate-APP/Access-Gate/dist/access-gate/browser/"
           target: "/var/www/angular-app"
 
-      # 6️⃣ Reiniciar el contenedor Nginx en EC2 para aplicar cambios
+      # 7️⃣ **Reiniciar el contenedor Nginx en EC2**
       - name: Restart Nginx Container
         uses: appleboy/ssh-action@v1.0.3
         with:
