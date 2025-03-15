@@ -24,6 +24,14 @@ import { ScanNfcComponent } from './components/scan-nfc/scan-nfc.component';
     CommonModule,
     AdminRoutingModule,
     FormsModule
+  ],
+  exports:[
+    AdminDashboardComponent,
+    CreateUserComponent,
+    CreateEventComponent,
+    AssignGuestsComponent,
+    ViewUsersComponent,
+    ScanNfcComponent
   ]
 })
 export class AdminModule { }
