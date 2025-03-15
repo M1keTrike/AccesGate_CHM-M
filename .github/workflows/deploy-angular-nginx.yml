@@ -1,0 +1,44 @@
+name: Deploy AccessGate Frontend
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: |
+          cd Access-Gate-APP/Access-Gate || exit 1  # Salir si no existe
+          docker build -t access-gate-frontend:${{ github.sha }} .
+
+      - name: Save Docker Image
+        run: |
+          docker save access-gate-frontend:${{ github.sha }} | gzip > access-gate.tar.gz
+
+      - name: Copy Image to EC2
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          source: "access-gate.tar.gz"
+          target: "/home/ubuntu/"
+
+      - name: Deploy Image on EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            docker load < /home/ubuntu/access-gate.tar.gz
+            docker stop access-gate-frontend || true
+            docker rm access-gate-frontend || true
+            docker run -d --name access-gate-frontend -p 80:80 access-gate-frontend:${{ github.sha }}

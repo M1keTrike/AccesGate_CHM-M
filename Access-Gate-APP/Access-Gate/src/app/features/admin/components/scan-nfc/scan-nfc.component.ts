@@ -3,9 +3,10 @@ import { Router } from '@angular/router';
 import { WebsocketService } from '../../services/websocket.service';
 
 @Component({
-  selector: 'app-scan-nfc',
-  templateUrl: './scan-nfc.component.html',
-  styleUrls: ['./scan-nfc.component.css']
+    selector: 'app-scan-nfc',
+    templateUrl: './scan-nfc.component.html',
+    styleUrls: ['./scan-nfc.component.css'],
+    standalone: false
 })
 export class ScanNfcComponent implements OnInit {
   nfcCode: string = '';

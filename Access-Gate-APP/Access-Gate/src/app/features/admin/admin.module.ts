@@ -26,6 +26,14 @@ import {  HttpClientModule } from '@angular/common/http';
     AdminRoutingModule,
     FormsModule,
     HttpClientModule
+  ],
+  exports:[
+    AdminDashboardComponent,
+    CreateUserComponent,
+    CreateEventComponent,
+    AssignGuestsComponent,
+    ViewUsersComponent,
+    ScanNfcComponent
   ]
 })
 export class AdminModule { }

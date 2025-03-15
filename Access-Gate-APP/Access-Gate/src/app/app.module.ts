@@ -6,6 +6,12 @@ import { AppComponent } from './app.component';
 import { AdminModule } from './features/admin/admin.module';
 import { HttpClientModule } from '@angular/common/http';
 
+// Firebase
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getMessaging, provideMessaging } from '@angular/fire/messaging';
+
+import { environment } from '../environments/environment';
+
 @NgModule({
   declarations: [
     AppComponent
@@ -16,7 +22,10 @@ import { HttpClientModule } from '@angular/common/http';
     AdminModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideMessaging(() => getMessaging())
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
