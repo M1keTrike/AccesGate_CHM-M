@@ -3,6 +3,7 @@ package main
 import (
 	users "api_resources/src/Users/infraestructure"
 	Nfc_cards "api_resources/src/Nfc_cards/infraestructure"
+	clients "api_resources/src/clients/infraestructure"
 	"time"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -16,9 +17,9 @@ func main(){
 	}
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"*"},
-		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
-		AllowHeaders: []string{"Origin"},
+		AllowOrigins: []string{"http://localhost:4200"},
+		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders: []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders: []string{"Content-Length"},
 		AllowCredentials: true,
 		MaxAge: 12 * time.Hour,
@@ -26,5 +27,6 @@ func main(){
 	
 	users.Init(router)
 	Nfc_cards.Init(router)	
+	clients.Init(router)
 	router.Run(":8080")
 }
