@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AdminModule } from './features/admin/admin.module';
+import { HttpClientModule } from '@angular/common/http';
 
 // Firebase
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -18,7 +19,8 @@ import { environment } from '../environments/environment';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    AdminModule
+    AdminModule,
+    HttpClientModule
   ],
   providers: [
     provideFirebaseApp(() => initializeApp(environment.firebase)),

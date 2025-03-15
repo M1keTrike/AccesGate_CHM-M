@@ -8,6 +8,7 @@ import { AdminDashboardComponent } from './components/admin-dashboard/admin-dash
 import { AdminRoutingModule } from './admin-routing.module';
 import { FormsModule } from '@angular/forms';
 import { ScanNfcComponent } from './components/scan-nfc/scan-nfc.component';
+import {  HttpClientModule } from '@angular/common/http';
 
 
 
@@ -23,7 +24,8 @@ import { ScanNfcComponent } from './components/scan-nfc/scan-nfc.component';
   imports: [
     CommonModule,
     AdminRoutingModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   exports:[
     AdminDashboardComponent,

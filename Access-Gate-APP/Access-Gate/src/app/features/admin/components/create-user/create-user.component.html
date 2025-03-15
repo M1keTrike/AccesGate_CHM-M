@@ -1,13 +1,27 @@
 <h2>Crear Usuario</h2>
 
-<form>
+<form (ngSubmit)="onSubmit()" #userForm="ngForm">
   <label for="name">Nombre:</label>
-  <input type="text" id="name" name="name" required>
+  <input type="text" id="name" name="name" required [(ngModel)]="name">
+
+  <label for="email">Email:</label>
+  <input type="email" id="email" name="email" required [(ngModel)]="email">
+
+  <label for="password">Contraseña:</label>
+  <input type="password" id="password" name="password" required [(ngModel)]="password">
+
+  <label for="role">Rol:</label>
+  <select id="role" name="role" [(ngModel)]="role">
+    <option value="attendee">asistente</option>
+    <option value="security">seguridad</option>
+    <option value="organizer">organizador</option>
+    <option value="admin">Administrador</option>
+  </select>
 
   <label for="nfc">NFC:</label>
   <input type="text" id="nfc" name="nfc" [(ngModel)]="nfc" readonly>
 
   <button type="button" (click)="scanNFC()">Escanear tarjeta</button>
 
-  <button type="submit" [routerLink]="['/']" routerLinkActive="router-link-active" >Guardar Usuario</button>
+  <button type="submit" [disabled]="!userForm.valid" >Guardar Usuario</button>
 </form>
