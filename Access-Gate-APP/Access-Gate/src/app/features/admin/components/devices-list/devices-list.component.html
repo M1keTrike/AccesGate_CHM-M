@@ -1,0 +1,9 @@
+<div class="devices-list">
+    <button (click)="scanAndConnect()" [disabled]="isSearching">
+      🔍 Buscar dispositivos Bluetooth
+    </button>
+  
+    <p *ngIf="isSearching">Buscando dispositivos...</p>
+    <p *ngIf="deviceName">✅ Conectado a: {{ deviceName }}</p>
+  </div>
+  
