@@ -8,9 +8,11 @@ import { AdminDashboardComponent } from './components/admin-dashboard/admin-dash
 import { AdminRoutingModule } from './admin-routing.module';
 import { FormsModule } from '@angular/forms';
 import { ScanNfcComponent } from './components/scan-nfc/scan-nfc.component';
-import {  HttpClientModule } from '@angular/common/http';
-
-
+import { HttpClientModule } from '@angular/common/http';
+import { LinkDeviceComponent } from './components/link-device/link-device.component';
+import { LinkStatusComponent } from './components/link-status/link-status.component';
+import { DevicesListComponent } from './components/devices-list/devices-list.component';
+import { WifiCredentialsFormComponent } from './components/wifi-credentials-form/wifi-credentials-form.component';
 
 @NgModule({
   declarations: [
@@ -19,21 +21,20 @@ import {  HttpClientModule } from '@angular/common/http';
     CreateEventComponent,
     AssignGuestsComponent,
     ViewUsersComponent,
-    ScanNfcComponent
+    ScanNfcComponent,
+    LinkDeviceComponent,
+    LinkStatusComponent,
+    DevicesListComponent,
+    WifiCredentialsFormComponent,
   ],
-  imports: [
-    CommonModule,
-    AdminRoutingModule,
-    FormsModule,
-    HttpClientModule
-  ],
-  exports:[
+  imports: [CommonModule, AdminRoutingModule, FormsModule, HttpClientModule],
+  exports: [
     AdminDashboardComponent,
     CreateUserComponent,
     CreateEventComponent,
     AssignGuestsComponent,
     ViewUsersComponent,
-    ScanNfcComponent
-  ]
+    ScanNfcComponent,
+  ],
 })
-export class AdminModule { }
+export class AdminModule {}

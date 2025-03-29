@@ -1,0 +1,16 @@
+<div class="link-status">
+    <h3>Estado de vinculación</h3>
+  
+    <p *ngIf="status === 'disconnected'">🔌 Dispositivo no conectado.</p>
+  
+    <p *ngIf="status === 'connected'">
+      ✅ Dispositivo conectado por Bluetooth.<br>
+      Introduce las credenciales Wi-Fi.
+    </p>
+  
+    <p *ngIf="status === 'wifi-connected'">
+      🌐 Conectado a red Wi-Fi.<br>
+      📡 Dirección MAC: <strong>{{ macAddress }}</strong>
+    </p>
+  </div>
+  

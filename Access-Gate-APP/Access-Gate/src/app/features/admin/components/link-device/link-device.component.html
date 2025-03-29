@@ -1,0 +1,16 @@
+<div class="link-device-container">
+  <h2>Vincular Microcontrolador</h2>
+
+  <app-devices-list
+    (deviceConnected)="onBluetoothConnected()"
+  ></app-devices-list>
+
+  <app-wifi-credentials-form
+    *ngIf="bluetoothStatus === 'connected'"
+    (wifiConnected)="onWiFiConnected($event)"
+  >
+  </app-wifi-credentials-form>
+
+  <app-link-status [status]="bluetoothStatus" [macAddress]="macAddress">
+  </app-link-status>
+</div>
