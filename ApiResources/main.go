@@ -4,6 +4,8 @@ import (
 	users "api_resources/src/Users/infraestructure"
 	Nfc_cards "api_resources/src/Nfc_cards/infraestructure"
 	clients "api_resources/src/clients/infraestructure"
+	event_attendees "api_resources/src/EventAttendees/infraestructure"
+	
 	"time"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -28,5 +30,6 @@ func main(){
 	users.Init(router)
 	Nfc_cards.Init(router)	
 	clients.Init(router)
+	event_attendees.Init(router)
 	router.Run(":8080")
 }
