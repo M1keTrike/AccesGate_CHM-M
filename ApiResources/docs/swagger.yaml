@@ -1,0 +1,275 @@
+basePath: /
+definitions:
+  controllers.CreateUserRequest:
+    properties:
+      biometric_auth:
+        example: false
+        type: boolean
+      email:
+        example: admin@example.com
+        type: string
+      fingerprint_id:
+        example: 0
+        type: integer
+      name:
+        example: Admin
+        type: string
+      password_hash:
+        example: "123456"
+        type: string
+      role:
+        example: admin
+        type: string
+    type: object
+  controllers.LoginRequest:
+    properties:
+      email:
+        example: admin@example.com
+        type: string
+      password:
+        example: "123456"
+        type: string
+    type: object
+  entities.User:
+    properties:
+      biometric_auth:
+        type: boolean
+      created_at:
+        type: string
+      email:
+        type: string
+      fingerprint_id:
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+      password_hash:
+        type: string
+      role:
+        type: string
+      updated_at:
+        type: string
+    type: object
+host: localhost:8084
+info:
+  contact:
+    email: contacto@accessgate.com
+    name: Equipo de Desarrollo AccessGate
+  description: API REST con arquitectura hexagonal para gestión de usuarios, tarjetas
+    NFC y clientes.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: https://accessgate.com/terms/
+  title: AccessGate API
+  version: "1.0"
+paths:
+  /users:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.User'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Obtiene todos los usuarios
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Registra un usuario con nombre, email, contraseña y rol
+      parameters:
+      - description: Nuevo usuario
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entities.User'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Crea un nuevo usuario
+      tags:
+      - Users
+  /users/{id}:
+    delete:
+      description: Borra un usuario existente utilizando su ID
+      parameters:
+      - description: ID del usuario
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Elimina un usuario por ID
+      tags:
+      - Users
+    get:
+      parameters:
+      - description: ID del usuario
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.User'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Obtiene un usuario por ID
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID del usuario
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Usuario actualizado
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/entities.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.User'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Actualiza un usuario existente
+      tags:
+      - Users
+  /users/email:
+    get:
+      parameters:
+      - description: Email del usuario
+        in: query
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.User'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtiene un usuario por email
+      tags:
+      - Users
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Valida credenciales y retorna un token JWT
+      parameters:
+      - description: Credenciales
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Inicia sesión de usuario
+      tags:
+      - Auth
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

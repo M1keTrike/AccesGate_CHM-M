@@ -1,3 +1,4 @@
+
 package infrastructure
 
 import (
@@ -20,4 +21,5 @@ func EventsRoutes(router *gin.Engine, handlers EventsHandlers) {
     router.PUT("/events/:id", handlers.update.Handle)
     router.DELETE("/events/:id", handlers.delete.Handle)
 }
+
 

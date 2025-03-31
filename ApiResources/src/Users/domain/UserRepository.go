@@ -1,9 +1,8 @@
 package domain
 
-import  (
+import (
 	"api_resources/src/Users/domain/entities"
 )
-    
 
 type UserRepository interface {
 	CreateUser(user *entities.User) error
