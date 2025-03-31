@@ -7,6 +7,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+
+
+
 type GetUserByEmailController struct {
 	useCase application.GetUserByEmail
 }
@@ -15,6 +18,14 @@ func NewGetUserByEmailController(useCase application.GetUserByEmail) *GetUserByE
 	return &GetUserByEmailController{useCase: useCase}
 }
 
+// GetUserByEmail godoc
+// @Summary Obtiene un usuario por email
+// @Tags Users
+// @Produce json
+// @Param email query string true "Email del usuario"
+// @Success 200 {object} entities.User
+// @Failure 404 {object} map[string]string
+// @Router /users/email [get]
 func (c *GetUserByEmailController) Execute(ctx *gin.Context) {
 	email := ctx.Query("email")
 	if email == "" {

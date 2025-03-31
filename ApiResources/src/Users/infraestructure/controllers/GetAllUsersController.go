@@ -15,6 +15,13 @@ func NewGetAllUsersController(useCase application.GetAllUsers) *GetAllUsersContr
 	return &GetAllUsersController{useCase: useCase}
 }
 
+// GetAllUsers godoc
+// @Summary Obtiene todos los usuarios
+// @Tags Users
+// @Produce json
+// @Success 200 {array} entities.User
+// @Security BearerAuth
+// @Router /users [get]
 func (c *GetAllUsersController) Execute(ctx *gin.Context) {
 	users, err := c.useCase.Execute()
 	if err != nil {
