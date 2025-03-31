@@ -1,15 +1,21 @@
 package main
 
 import (
+
+	users "api_resources/src/Users/infraestructure"
+	Nfc_cards "api_resources/src/Nfc_cards/infraestructure"
+	clients "api_resources/src/clients/infraestructure"
+	event_attendees "api_resources/src/EventAttendees/infraestructure"
+	Events "api_resources/src/Events/infrastructure"
+	
+
 	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 
-	Nfc_cards "api_resources/src/Nfc_cards/infraestructure"
-	users "api_resources/src/Users/infraestructure"
-	clients "api_resources/src/clients/infraestructure"
+
 
 	_ "api_resources/docs" // 👈 Swagger docs
 
@@ -57,6 +63,10 @@ func main() {
 	users.Init(router)
 	Nfc_cards.Init(router)
 	clients.Init(router)
+	event_attendees.Init(router)
+	Events.Init(router)
+	router.Run(":8080")
+
 
 	// Swagger route
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
