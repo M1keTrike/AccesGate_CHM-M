@@ -5,6 +5,7 @@ import (
 	Nfc_cards "api_resources/src/Nfc_cards/infraestructure"
 	clients "api_resources/src/clients/infraestructure"
 	event_attendees "api_resources/src/EventAttendees/infraestructure"
+	Events "api_resources/src/Events/infrastructure"
 	
 	"time"
 	"github.com/gin-gonic/gin"
@@ -31,5 +32,6 @@ func main(){
 	Nfc_cards.Init(router)	
 	clients.Init(router)
 	event_attendees.Init(router)
+	Events.Init(router)
 	router.Run(":8080")
 }
