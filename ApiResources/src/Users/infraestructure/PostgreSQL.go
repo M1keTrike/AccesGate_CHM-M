@@ -210,3 +210,56 @@ func (pg *PostgreSQL) GetUserByEmail(email string) (*entities.User, error) {
 	log.Printf("[GetUserByEmail] Usuario '%s' obtenido correctamente", email)
 	return user, nil
 }
+
+func (pg *PostgreSQL) GetUsersByRole(role string) ([]entities.User, error) {
+    users := []entities.User{}
+    query := `
+        SELECT id, name, email, password_hash, role,
+               created_at, updated_at, fingerprint_id, biometric_auth
+        FROM users 
+        WHERE role = $1`
+    
+    rows, err := pg.conn.DB.Query(query, role)
+    if err != nil {
+        log.Printf("[GetUsersByRole] Error al obtener usuarios con rol %s: %v", role, err)
+        return nil, fmt.Errorf("error al obtener usuarios por rol")
+    }
+    defer rows.Close()
+
+    for rows.Next() {
+        var user entities.User
+        var createdAt, updatedAt sql.NullTime
+        var fingerprintID sql.NullInt16
+
+        err := rows.Scan(
+            &user.ID,
+            &user.Name,
+            &user.Email,
+            &user.PasswordHash,
+            &user.Role,
+            &createdAt,
+            &updatedAt,
+            &fingerprintID,
+            &user.BiometricAuth,
+        )
+        if err != nil {
+            log.Printf("[GetUsersByRole] Error al escanear usuario: %v", err)
+            return nil, fmt.Errorf("error al procesar usuarios")
+        }
+
+        if createdAt.Valid {
+            user.CreatedAt = createdAt.Time
+        }
+        if updatedAt.Valid {
+            user.UpdatedAt = updatedAt.Time
+        }
+        if fingerprintID.Valid {
+            user.FingerprintID = fingerprintID.Int16
+        }
+
+        users = append(users, user)
+    }
+
+    log.Printf("[GetUsersByRole] Se obtuvieron %d usuarios con rol %s", len(users), role)
+    return users, nil
+}
