@@ -15,6 +15,7 @@ type UsersHandlers struct {
 	getAll     *controllers.GetAllUsersController
 	getByEmail *controllers.GetUserByEmailController
 	login      *controllers.LoginController // 👈 nuevo campo
+	getByRole  *controllers.GetUsersByRoleController
 }
 
 func UsersRoutes(router *gin.Engine, handlers UsersHandlers) {
@@ -26,6 +27,7 @@ func UsersRoutes(router *gin.Engine, handlers UsersHandlers) {
 
 	protected.GET("/email", handlers.getByEmail.Execute) // ← ahora protegida ✅
 	protected.GET("/:id", handlers.get.Execute)
+	protected.GET("/role/:role", handlers.getByRole.Execute)
 	protected.PUT("/:id", handlers.update.Execute)
 	protected.DELETE("/:id", handlers.delete.Execute)
 	protected.GET("", handlers.getAll.Execute)

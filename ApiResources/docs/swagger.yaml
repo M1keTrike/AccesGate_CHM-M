@@ -730,6 +730,41 @@ paths:
       summary: Inicia sesión de usuario
       tags:
       - Auth
+  /users/role/{role}:
+    get:
+      description: Retrieves all users with a specific role
+      parameters:
+      - description: User role
+        in: path
+        name: role
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.User'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get users by role
+      tags:
+      - Users
 securityDefinitions:
   BearerAuth:
     in: header

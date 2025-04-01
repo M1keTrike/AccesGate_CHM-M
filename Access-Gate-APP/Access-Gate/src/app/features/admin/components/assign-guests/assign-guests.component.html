@@ -1,3 +1,99 @@
-<p>assign-guests works! Deploy</p>
-
-<div><button>Invitar</button></div>
+<div class="assign-guests-container">
+    <div class="header-section">
+      <h2 class="page-title">Assign Guests to Events</h2>
+      <mat-divider></mat-divider>
+    </div>
+  
+    <!-- Form Section -->
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-card-title>Assign New Guest</mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      
+      <mat-card-content>
+        <form [formGroup]="assignForm" (ngSubmit)="assignGuest()" class="assignment-form">
+          <div class="form-fields">
+            <!-- Event Selection -->
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Select Event</mat-label>
+              <mat-select formControlName="eventId" (selectionChange)="onEventSelect($event.value)" required>
+                <mat-option *ngFor="let event of events" [value]="event.id">
+                  {{ event.name }} ({{ event.start_time | date:'mediumDate' }})
+                </mat-option>
+              </mat-select>
+              <mat-icon matSuffix>event</mat-icon>
+              <mat-error *ngIf="assignForm.get('eventId')?.hasError('required')">
+                Please select an event
+              </mat-error>
+            </mat-form-field>
+  
+            <!-- Guest Selection -->
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Select Guest</mat-label>
+              <mat-select formControlName="userId" required>
+                <mat-option *ngFor="let user of filteredUsers" [value]="user.id">
+                  {{ user.name }} ({{ user.email }})
+                </mat-option>
+              </mat-select>
+              <mat-icon matSuffix>person</mat-icon>
+              <mat-error *ngIf="assignForm.get('userId')?.hasError('required')">
+                Please select a guest
+              </mat-error>
+            </mat-form-field>
+          </div>
+  
+          <!-- Submit Button -->
+          <div class="form-actions">
+            <button mat-raised-button 
+                    color="primary" 
+                    type="submit" 
+                    [disabled]="!assignForm.valid || isLoading"
+                    class="submit-button">
+              <span *ngIf="!isLoading">Assign Guest</span>
+              <mat-spinner *ngIf="isLoading" diameter="24" class="spinner"></mat-spinner>
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  
+    <!-- Attendees List Section -->
+    <mat-card class="attendees-card" *ngIf="selectedEventId">
+      <mat-card-header>
+        <mat-card-title>Current Attendees</mat-card-title>
+        <mat-card-subtitle>
+          {{ attendees.length }} {{ attendees.length === 1 ? 'attendee' : 'attendees' }} registered
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      
+      <mat-card-content>
+        <mat-list class="attendees-list">
+          <!-- Attendees List -->
+          <mat-list-item *ngFor="let attendee of attendees" class="attendee-item">
+            <div class="attendee-info">
+              <mat-icon matListItemIcon>person</mat-icon>
+              <div matListItemTitle>{{ attendee.name }}</div>
+              <div matListItemLine>{{ attendee.email }}</div>
+            </div>
+            
+            <button mat-icon-button 
+                    color="warn" 
+                    (click)="removeAttendee(attendee.id)"
+                    matTooltip="Remove attendee"
+                    aria-label="Remove attendee">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-list-item>
+  
+          <!-- Empty State -->
+          <mat-list-item *ngIf="attendees.length === 0" class="empty-state">
+            <mat-icon matListItemIcon>info</mat-icon>
+            <div matListItemTitle>No attendees registered for this event</div>
+            <div matListItemLine>Select guests to assign them to this event</div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
