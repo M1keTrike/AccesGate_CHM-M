@@ -11,7 +11,6 @@ func Init(router *gin.Engine) {
 
 	repo := NewPostgreSQLEvents()
 
-
 	// Casos de uso
 	createUC := application.NewCreateEvent(repo)
 	getAllUC := application.NewGetAllEvents(repo)
