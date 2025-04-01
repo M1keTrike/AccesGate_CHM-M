@@ -15,6 +15,7 @@ import (
 	events "api_resources/src/Events/infrastructure"
 	users "api_resources/src/Users/infraestructure"
 	clients "api_resources/src/clients/infraestructure"
+	nfc_cards "api_resources/src/Nfc_cards/infraestructure"
 
 	_ "api_resources/docs" // 👈 Swagger docs
 
@@ -63,7 +64,7 @@ func main() {
 	devices.Init(router)
 
 	clients.Init(router)
-
+	nfc_cards.Init(router)
 	events.Init(router)
 	event_attendees.Init(router)
 

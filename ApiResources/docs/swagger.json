@@ -1253,6 +1253,162 @@
                 }
             }
         },
+        "/nfc_cards": {
+            "get": {
+                "description": "Retorna un listado de todas las tarjetas NFC registradas.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFC Cards"
+                ],
+                "summary": "Obtiene todas las tarjetas NFC",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.NfcCard"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Registra una nueva tarjeta NFC con UID y estado.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFC Cards"
+                ],
+                "summary": "Crea una nueva tarjeta NFC",
+                "parameters": [
+                    {
+                        "description": "Datos de la tarjeta NFC",
+                        "name": "card",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.NfcCard"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Error de validación de entrada",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/nfc_cards/{uid}": {
+            "get": {
+                "description": "Retorna los datos de una tarjeta NFC específica según su UID.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFC Cards"
+                ],
+                "summary": "Obtiene una tarjeta NFC por UID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "UID de la tarjeta NFC",
+                        "name": "uid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entities.NfcCard"
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Elimina una tarjeta NFC usando su UID.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFC Cards"
+                ],
+                "summary": "Elimina una tarjeta NFC",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "UID de la tarjeta NFC",
+                        "name": "uid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "security": [
@@ -1737,6 +1893,14 @@
                 },
                 "user_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "entities.NfcCard": {
+            "type": "object",
+            "properties": {
+                "card_uid": {
+                    "type": "string"
                 }
             }
         },
