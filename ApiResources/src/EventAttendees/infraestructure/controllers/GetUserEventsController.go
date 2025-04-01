@@ -15,6 +15,17 @@ func NewGetUserEventsController(useCase *application.GetUserEvents) *GetUserEven
     return &GetUserEventsController{useCase: useCase}
 }
 
+// GetUserEvents godoc
+// @Summary Get all events for a user
+// @Description Retrieves all events that a user is registered to attend
+// @Tags Event Attendees
+// @Produce json
+// @Param userId path int true "User ID"
+// @Success 200 {array} entities.Event
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Security BearerAuth
+// @Router /api/event-attendees/user/{userId}/events [get]
 func (c *GetUserEventsController) Execute(ctx *gin.Context) {
     userID, err := strconv.Atoi(ctx.Param("userId"))
     if err != nil {
