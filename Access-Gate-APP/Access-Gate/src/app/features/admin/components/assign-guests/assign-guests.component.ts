@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EventAttendeeService } from '../../services/event-attendee.service';
-import { UsersService } from '../../services/Users.Service';
+import { UsersService } from '../../../../services/Users.Service';
 import { EventService } from '../../services/event.service';
 import { Event } from '../../models/event';
 import { User } from '../../models/IUsers';
@@ -18,7 +18,7 @@ export class AssignGuestsComponent implements OnInit {
   assignForm: FormGroup;
   events: Event[] = [];
   users: User[] = [];
-  attendees: User[] = []; // Cambiado a User[] para coincidir con el servicio
+  attendees: User[] = [];
   filteredUsers: User[] = [];
   isLoading = false;
   selectedEventId: number | null = null;
@@ -35,11 +35,12 @@ export class AssignGuestsComponent implements OnInit {
       userId: ['', Validators.required]
     });
   }
-
+  token = localStorage.getItem('token');
   ngOnInit(): void {
+    console.log(this.token)
     this.loadData();
-  }
-
+  }  
+  
   private loadData(): void {
     this.isLoading = true;
     
