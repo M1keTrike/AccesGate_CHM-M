@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NfcCardsService } from '../../services/Nfc_cards.service';
-import { UsersService } from '../../services/Users.Service';
+import { UsersService } from '../../../../services/Users.Service';
 import { NfcCard } from '../../models/iNfc_cards';
 import { User } from '../../models/IUsers';
 

@@ -11,11 +11,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 
+	access_events "api_resources/src/AccessEvents/infrastructure"
 	devices "api_resources/src/Devices/infrastructure"
 	events "api_resources/src/Events/infrastructure"
+	nfc_cards "api_resources/src/Nfc_cards/infraestructure"
 	users "api_resources/src/Users/infraestructure"
 	clients "api_resources/src/clients/infraestructure"
-	nfc_cards "api_resources/src/Nfc_cards/infraestructure"
 
 	_ "api_resources/docs" // 👈 Swagger docs
 
@@ -67,9 +68,9 @@ func main() {
 	nfc_cards.Init(router)
 	events.Init(router)
 	event_attendees.Init(router)
+	access_events.Init(router)
 
 	nfc_assignments.Init(router)
-	//router.Run(":8080")
 
 	// Swagger route
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
