@@ -9,6 +9,7 @@ type UserRepository interface {
 	GetUserByID(id int) (entities.User, error)
 	GetUserByEmail(email string) (*entities.User, error)
 	GetAllUsers() ([]entities.User, error)
+	GetUsersByRole(role string) ([]entities.User, error)
 	UpdateUser(user *entities.User) error
 	DeleteUser(id int) error
 }

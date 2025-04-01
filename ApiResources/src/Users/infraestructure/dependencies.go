@@ -17,7 +17,8 @@ func Init(router *gin.Engine) {
 	deleteUserService := application.NewDeleteUser(os)
 	getAllUsersService := application.NewGetAllUsers(os)
 	getUserByEmailService := application.NewGetUserByEmail(os)
-	loginService := application.NewLoginUseCase(os) // 👈 login use case
+	loginService := application.NewLoginUseCase(os)
+	getUsersByRoleService := application.NewGetUsersByRole(os)
 
 	// Controladores
 	createUserController := controllers.NewCreateUserController(*createUserService)
@@ -26,7 +27,8 @@ func Init(router *gin.Engine) {
 	deleteUserController := controllers.NewDeleteUserController(*deleteUserService)
 	getAllUsersController := controllers.NewGetAllUsersController(*getAllUsersService)
 	getUserByEmailController := controllers.NewGetUserByEmailController(*getUserByEmailService)
-	loginController := controllers.NewLoginController(loginService) 
+	loginController := controllers.NewLoginController(loginService)
+	getUsersByRoleController := controllers.NewGetUsersByRoleController(*getUsersByRoleService)
 
 	UsersRoutes(router, UsersHandlers{
 		create:     createUserController,
@@ -35,6 +37,7 @@ func Init(router *gin.Engine) {
 		delete:     deleteUserController,
 		getAll:     getAllUsersController,
 		getByEmail: getUserByEmailController,
-		login:      loginController, // 👈 pasar controlador de login
+		login:      loginController,
+		getByRole:  getUsersByRoleController,
 	})
 }

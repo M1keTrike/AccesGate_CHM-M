@@ -77,6 +77,11 @@ definitions:
       user_id:
         type: integer
     type: object
+  entities.NfcCard:
+    properties:
+      card_uid:
+        type: string
+    type: object
   entities.NfcCardAssignment:
     properties:
       assigned_at:
@@ -907,6 +912,109 @@ paths:
       summary: Lista eventos por creador
       tags:
       - Events
+  /nfc_cards:
+    get:
+      description: Retorna un listado de todas las tarjetas NFC registradas.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.NfcCard'
+            type: array
+        "500":
+          description: Error interno del servidor
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtiene todas las tarjetas NFC
+      tags:
+      - NFC Cards
+    post:
+      consumes:
+      - application/json
+      description: Registra una nueva tarjeta NFC con UID y estado.
+      parameters:
+      - description: Datos de la tarjeta NFC
+        in: body
+        name: card
+        required: true
+        schema:
+          $ref: '#/definitions/entities.NfcCard'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "400":
+          description: Error de validación de entrada
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Error interno del servidor
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Crea una nueva tarjeta NFC
+      tags:
+      - NFC Cards
+  /nfc_cards/{uid}:
+    delete:
+      description: Elimina una tarjeta NFC usando su UID.
+      parameters:
+      - description: UID de la tarjeta NFC
+        in: path
+        name: uid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "500":
+          description: Error interno del servidor
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Elimina una tarjeta NFC
+      tags:
+      - NFC Cards
+    get:
+      description: Retorna los datos de una tarjeta NFC específica según su UID.
+      parameters:
+      - description: UID de la tarjeta NFC
+        in: path
+        name: uid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.NfcCard'
+        "500":
+          description: Error interno del servidor
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtiene una tarjeta NFC por UID
+      tags:
+      - NFC Cards
   /users:
     get:
       produces:
@@ -1109,6 +1217,41 @@ paths:
       summary: Inicia sesión de usuario
       tags:
       - Auth
+  /users/role/{role}:
+    get:
+      description: Retrieves all users with a specific role
+      parameters:
+      - description: User role
+        in: path
+        name: role
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.User'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get users by role
+      tags:
+      - Users
 securityDefinitions:
   BearerAuth:
     in: header
