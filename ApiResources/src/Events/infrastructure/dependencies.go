@@ -8,28 +8,33 @@ import (
 )
 
 func Init(router *gin.Engine) {
-	// Adaptador secundario PostgreSQL
-	eventRepo := NewPostgreSQL()
+
+	repo := NewPostgreSQLEvents()
+
 
 	// Casos de uso
-	createEventUC := application.NewCreateEvent(eventRepo)
-	deleteEventUC := application.NewDeleteEvent(eventRepo)
-	getAllEventsUC := application.NewGetAllEvents(eventRepo)
-	getEventByIDUC := application.NewGetEventByID(eventRepo)
-	updateEventUC := application.NewUpdateEvent(eventRepo)
+	createUC := application.NewCreateEvent(repo)
+	getAllUC := application.NewGetAllEvents(repo)
+	getByIDUC := application.NewGetEventByID(repo)
+	getByCreatorUC := application.NewGetEventsByCreator(repo)
+	updateUC := application.NewUpdateEvent(repo)
+	deleteUC := application.NewDeleteEvent(repo)
 
-	// Controladores HTTP
-	createEventCtrl := controllers.NewCreateEventController(createEventUC)
-	deleteEventCtrl := controllers.NewDeleteEventController(deleteEventUC)
-	getAllEventsCtrl := controllers.NewGetAllEventsController(getAllEventsUC)
-	getEventByIDCtrl := controllers.NewGetEventByIDController(getEventByIDUC)
-	updateEventCtrl := controllers.NewUpdateEventController(updateEventUC)
+	// Controladores
+	createCtrl := controllers.NewCreateEventController(createUC)
+	getAllCtrl := controllers.NewGetAllEventsController(getAllUC)
+	getByIDCtrl := controllers.NewGetEventByIDController(getByIDUC)
+	getByCreatorCtrl := controllers.NewGetEventsByCreatorController(getByCreatorUC)
+	updateCtrl := controllers.NewUpdateEventController(updateUC)
+	deleteCtrl := controllers.NewDeleteEventController(deleteUC)
 
+	// Registrar rutas
 	EventsRoutes(router, EventsHandlers{
-		create:  createEventCtrl,
-		delete:  deleteEventCtrl,
-		getAll:  getAllEventsCtrl,
-		getByID: getEventByIDCtrl,
-		update:  updateEventCtrl,
+		create:       createCtrl,
+		getAll:       getAllCtrl,
+		getByID:      getByIDCtrl,
+		getByCreator: getByCreatorCtrl,
+		update:       updateCtrl,
+		delete:       deleteCtrl,
 	})
 }

@@ -7,6 +7,7 @@ import { AssignGuestsComponent } from './components/assign-guests/assign-guests.
 import { ViewUsersComponent } from './components/view-users/view-users.component';
 import { ScanNfcComponent } from './components/scan-nfc/scan-nfc.component';
 import { LinkDeviceComponent } from './components/link-device/link-device.component';
+import { FingerprintRegisterComponent } from './components/fingerprint-register/fingerprint-register.component';
 
 const routes: Routes = [
   { path: '', component: AdminDashboardComponent },
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'assign-guests', component: AssignGuestsComponent },
   { path: 'view-users', component: ViewUsersComponent },
   { path: 'link-device', component: LinkDeviceComponent },
+  { path: 'fingerprint-register', component: FingerprintRegisterComponent },
 ];
 
 @NgModule({

@@ -13,6 +13,6 @@ func NewGetEventByID(repo domain.EventRepository) *GetEventByID {
 	return &GetEventByID{repo: repo}
 }
 
-func (uc *GetEventByID) Execute(id int) (entities.Event, error) {
+func (uc *GetEventByID) Execute(id int) (*entities.Event, error) {
 	return uc.repo.GetEventByID(id)
 }

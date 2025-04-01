@@ -1,0 +1,21 @@
+<div class="fingerprint-container">
+    <h2>Registro de Huella Digital</h2>
+  
+    <!-- Botón de conexión -->
+    <button (click)="conectarDispositivo()" *ngIf="!conectado">
+      🔗 Conectar dispositivo BLE
+    </button>
+  
+    <!-- Mostrar botón de registro solo si ya está conectado -->
+    <app-fingerprint-action
+      *ngIf="conectado"
+      (estado)="onStatusUpdate($event)"
+    ></app-fingerprint-action>
+  
+    <app-fingerprint-status
+      *ngIf="conectado"
+      [estado]="status"
+      [mensaje]="mensaje"
+    ></app-fingerprint-status>
+  </div>
+  

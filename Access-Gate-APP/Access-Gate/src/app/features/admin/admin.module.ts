@@ -14,6 +14,10 @@ import { LinkStatusComponent } from './components/link-status/link-status.compon
 import { DevicesListComponent } from './components/devices-list/devices-list.component';
 import { WifiCredentialsFormComponent } from './components/wifi-credentials-form/wifi-credentials-form.component';
 
+import { FingerprintRegisterComponent } from './components/fingerprint-register/fingerprint-register.component';
+import { FingerprintStatusComponent } from './components/fingerprint-status/fingerprint-status.component';
+import { FingerprintActionComponent } from './components/fingerprint-action/fingerprint-action.component';
+
 @NgModule({
   declarations: [
     AdminDashboardComponent,
@@ -26,6 +30,11 @@ import { WifiCredentialsFormComponent } from './components/wifi-credentials-form
     LinkStatusComponent,
     DevicesListComponent,
     WifiCredentialsFormComponent,
+    FingerprintActionComponent,
+    FingerprintStatusComponent,
+    FingerprintRegisterComponent,
+    FingerprintStatusComponent,
+    FingerprintActionComponent,
   ],
   imports: [CommonModule, AdminRoutingModule, FormsModule, HttpClientModule],
   exports: [

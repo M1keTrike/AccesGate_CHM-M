@@ -17,6 +17,10 @@ import (
 	"github.com/joho/godotenv"
 
 
+	events "api_resources/src/Events/infrastructure"
+	users "api_resources/src/Users/infraestructure"
+	clients "api_resources/src/clients/infraestructure"
+
 
 	_ "api_resources/docs" // 👈 Swagger docs
 
@@ -62,8 +66,10 @@ func main() {
 
 	// Rutas principales
 	users.Init(router)
-	Nfc_cards.Init(router)
+
 	clients.Init(router)
+
+	events.Init(router)
 	event_attendees.Init(router)
 	Events.Init(router)
 	nfc_assignments.Init(router)

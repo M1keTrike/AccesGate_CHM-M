@@ -17,6 +17,9 @@
     "host": "localhost:8084",
     "basePath": "/",
     "paths": {
+
+        "/events": {
+
         "/api/event-attendees": {
             "post": {
                 "security": [
@@ -254,17 +257,26 @@
             }
         },
         "/api/event-attendees/user/{userId}/events": {
+
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
+
+
                 "description": "Retrieves all events that a user is registered to attend",
+
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
+
+                    "Events"
+                ],
+                "summary": "Lista todos los eventos",
+
                     "Event Attendees"
                 ],
                 "summary": "Get all events for a user",
@@ -277,6 +289,7 @@
                         "required": true
                     }
                 ],
+
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -286,6 +299,7 @@
                                 "$ref": "#/definitions/entities.Event"
                             }
                         }
+
                     },
                     "400": {
                         "description": "Bad Request",
@@ -341,6 +355,7 @@
                                 "type": "string"
                             }
                         }
+
                     }
                 }
             },
@@ -350,7 +365,10 @@
                         "BearerAuth": []
                     }
                 ],
+
+
                 "description": "Assigns an NFC card to a user",
+
                 "consumes": [
                     "application/json"
                 ],
@@ -358,6 +376,19 @@
                     "application/json"
                 ],
                 "tags": [
+
+                    "Events"
+                ],
+                "summary": "Crea un nuevo evento",
+                "parameters": [
+                    {
+                        "description": "Evento a crear",
+                        "name": "event",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.Event"
+
                     "NFC Card Assignments"
                 ],
                 "summary": "Creates a new NFC card assignment",
@@ -369,6 +400,7 @@
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/entities.NfcCardAssignment"
+
                         }
                     }
                 ],
@@ -376,7 +408,11 @@
                     "201": {
                         "description": "Created",
                         "schema": {
+
+                            "$ref": "#/definitions/entities.Event"
+
                             "$ref": "#/definitions/entities.NfcCardAssignment"
+
                         }
                     },
                     "400": {
@@ -400,6 +436,9 @@
                 }
             }
         },
+
+        "/events/creator/{user_id}": {
+
         "/api/nfc-assignments/card/{cardUid}": {
             "get": {
                 "security": [
@@ -453,17 +492,31 @@
             }
         },
         "/api/nfc-assignments/user/{userId}": {
+
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
+
+=======
                 "description": "Retrieves all NFC card assignments associated with a specific user",
+
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
+
+                    "Events"
+                ],
+                "summary": "Lista eventos por creador",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID del creador",
+                        "name": "user_id",
+
                     "NFC Card Assignments"
                 ],
                 "summary": "Gets all NFC card assignments for a user",
@@ -472,6 +525,7 @@
                         "type": "integer",
                         "description": "User ID",
                         "name": "userId",
+
                         "in": "path",
                         "required": true
                     }
@@ -482,7 +536,11 @@
                         "schema": {
                             "type": "array",
                             "items": {
+
+                                "$ref": "#/definitions/entities.Event"
+
                                 "$ref": "#/definitions/entities.NfcCardAssignment"
+
                             }
                         }
                     },
@@ -494,6 +552,13 @@
                                 "type": "string"
                             }
                         }
+
+                    }
+                }
+            }
+        },
+        "/events/{id}": {
+
                     },
                     "500": {
                         "description": "Internal Server Error",
@@ -508,17 +573,30 @@
             }
         },
         "/api/nfc-assignments/{id}": {
+
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
+
+
                 "description": "Retrieves a specific NFC card assignment using its ID",
+
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
+
+                    "Events"
+                ],
+                "summary": "Obtiene un evento por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID del evento",
+
                     "NFC Card Assignments"
                 ],
                 "summary": "Gets an NFC card assignment by ID",
@@ -526,6 +604,7 @@
                     {
                         "type": "integer",
                         "description": "Assignment ID",
+
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -535,6 +614,9 @@
                     "200": {
                         "description": "OK",
                         "schema": {
+
+                            "$ref": "#/definitions/entities.Event"
+
                             "$ref": "#/definitions/entities.NfcCardAssignment"
                         }
                     },
@@ -572,6 +654,13 @@
                     "application/json"
                 ],
                 "tags": [
+                    "Events"
+                ],
+                "summary": "Actualiza un evento",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID del evento",
                     "NFC Card Assignments"
                 ],
                 "summary": "Updates an NFC card assignment",
@@ -584,12 +673,20 @@
                         "required": true
                     },
                     {
+                        "description": "Datos del evento",
+                        "name": "event",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.Event"
+
                         "description": "Updated Assignment Data",
                         "name": "assignment",
                         "in": "body",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/entities.NfcCardAssignment"
+ 
                         }
                     }
                 ],
@@ -621,21 +718,34 @@
                             }
                         }
                     }
-                }
+             
+            },
+            "delete": {
+
             }
         },
         "/api/nfc-assignments/{id}/deactivate": {
             "put": {
+
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
+
                 "description": "Sets an NFC card assignment as inactive",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
+                    "Events"
+                ],
+                "summary": "Elimina un evento",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID del evento",
+
                     "NFC Card Assignments"
                 ],
                 "summary": "Deactivates an NFC card assignment",
@@ -1065,6 +1175,8 @@
                 }
             }
         },
+
+
         "entities.EventAttendee": {
             "type": "object",
             "properties": {
@@ -1101,7 +1213,7 @@
                     "type": "integer"
                 }
             }
-        },
+        }
         "entities.User": {
             "type": "object",
             "properties": {

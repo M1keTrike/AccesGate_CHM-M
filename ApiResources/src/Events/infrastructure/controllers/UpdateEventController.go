@@ -4,6 +4,7 @@ import (
 	"api_resources/src/Events/application"
 	"api_resources/src/Events/domain/entities"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,17 +17,37 @@ func NewUpdateEventController(useCase *application.UpdateEvent) *UpdateEventCont
 	return &UpdateEventController{useCase: useCase}
 }
 
-func (c *UpdateEventController) Handle(ctx *gin.Context) {
+// UpdateEvent godoc
+// @Summary Actualiza un evento
+// @Tags Events
+// @Accept json
+// @Produce json
+// @Param id path int true "ID del evento"
+// @Param event body entities.Event true "Datos del evento"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Security BearerAuth
+// @Router /events/{id} [put]
+func (c *UpdateEventController) Execute(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
+		return
+	}
+
 	var event entities.Event
 	if err := ctx.ShouldBindJSON(&event); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "JSON inválido"})
 		return
 	}
 
-	if err := c.useCase.Execute(event); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	event.ID = id
+
+	if err := c.useCase.Execute(&event); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "No se pudo actualizar el evento"})
 		return
 	}
 
-	ctx.Status(http.StatusOK)
+	ctx.JSON(http.StatusOK, gin.H{"message": "Evento actualizado correctamente"})
 }

@@ -17,7 +17,10 @@ declare global {
     getPrimaryService(
       serviceUUID: string | number
     ): Promise<BluetoothRemoteGATTService>;
+    
+    readonly connected: boolean; 
   }
+  
 
   interface BluetoothRemoteGATTService {
     getCharacteristic(
