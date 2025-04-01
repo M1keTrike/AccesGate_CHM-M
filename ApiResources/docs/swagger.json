@@ -17,9 +17,6 @@
     "host": "localhost:8084",
     "basePath": "/",
     "paths": {
-
-        "/events": {
-
         "/api/event-attendees": {
             "post": {
                 "security": [
@@ -257,26 +254,17 @@
             }
         },
         "/api/event-attendees/user/{userId}/events": {
-
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-
-
                 "description": "Retrieves all events that a user is registered to attend",
-
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-
-                    "Events"
-                ],
-                "summary": "Lista todos los eventos",
-
                     "Event Attendees"
                 ],
                 "summary": "Get all events for a user",
@@ -289,7 +277,6 @@
                         "required": true
                     }
                 ],
-
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -299,7 +286,6 @@
                                 "$ref": "#/definitions/entities.Event"
                             }
                         }
-
                     },
                     "400": {
                         "description": "Bad Request",
@@ -355,7 +341,6 @@
                                 "type": "string"
                             }
                         }
-
                     }
                 }
             },
@@ -365,10 +350,7 @@
                         "BearerAuth": []
                     }
                 ],
-
-
                 "description": "Assigns an NFC card to a user",
-
                 "consumes": [
                     "application/json"
                 ],
@@ -376,19 +358,6 @@
                     "application/json"
                 ],
                 "tags": [
-
-                    "Events"
-                ],
-                "summary": "Crea un nuevo evento",
-                "parameters": [
-                    {
-                        "description": "Evento a crear",
-                        "name": "event",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/entities.Event"
-
                     "NFC Card Assignments"
                 ],
                 "summary": "Creates a new NFC card assignment",
@@ -400,7 +369,6 @@
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/entities.NfcCardAssignment"
-
                         }
                     }
                 ],
@@ -408,11 +376,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-
-                            "$ref": "#/definitions/entities.Event"
-
                             "$ref": "#/definitions/entities.NfcCardAssignment"
-
                         }
                     },
                     "400": {
@@ -436,9 +400,6 @@
                 }
             }
         },
-
-        "/events/creator/{user_id}": {
-
         "/api/nfc-assignments/card/{cardUid}": {
             "get": {
                 "security": [
@@ -492,31 +453,17 @@
             }
         },
         "/api/nfc-assignments/user/{userId}": {
-
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-
-=======
                 "description": "Retrieves all NFC card assignments associated with a specific user",
-
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-
-                    "Events"
-                ],
-                "summary": "Lista eventos por creador",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ID del creador",
-                        "name": "user_id",
-
                     "NFC Card Assignments"
                 ],
                 "summary": "Gets all NFC card assignments for a user",
@@ -525,7 +472,6 @@
                         "type": "integer",
                         "description": "User ID",
                         "name": "userId",
-
                         "in": "path",
                         "required": true
                     }
@@ -536,11 +482,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-
-                                "$ref": "#/definitions/entities.Event"
-
                                 "$ref": "#/definitions/entities.NfcCardAssignment"
-
                             }
                         }
                     },
@@ -552,13 +494,6 @@
                                 "type": "string"
                             }
                         }
-
-                    }
-                }
-            }
-        },
-        "/events/{id}": {
-
                     },
                     "500": {
                         "description": "Internal Server Error",
@@ -573,30 +508,17 @@
             }
         },
         "/api/nfc-assignments/{id}": {
-
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-
-
                 "description": "Retrieves a specific NFC card assignment using its ID",
-
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-
-                    "Events"
-                ],
-                "summary": "Obtiene un evento por ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ID del evento",
-
                     "NFC Card Assignments"
                 ],
                 "summary": "Gets an NFC card assignment by ID",
@@ -604,7 +526,6 @@
                     {
                         "type": "integer",
                         "description": "Assignment ID",
-
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -614,9 +535,6 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-
-                            "$ref": "#/definitions/entities.Event"
-
                             "$ref": "#/definitions/entities.NfcCardAssignment"
                         }
                     },
@@ -654,13 +572,6 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Events"
-                ],
-                "summary": "Actualiza un evento",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ID del evento",
                     "NFC Card Assignments"
                 ],
                 "summary": "Updates an NFC card assignment",
@@ -673,20 +584,12 @@
                         "required": true
                     },
                     {
-                        "description": "Datos del evento",
-                        "name": "event",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/entities.Event"
-
                         "description": "Updated Assignment Data",
                         "name": "assignment",
                         "in": "body",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/entities.NfcCardAssignment"
- 
                         }
                     }
                 ],
@@ -718,22 +621,591 @@
                             }
                         }
                     }
-             
-            },
-            "delete": {
-
+                }
             }
         },
         "/api/nfc-assignments/{id}/deactivate": {
             "put": {
-
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-
                 "description": "Sets an NFC card assignment as inactive",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFC Card Assignments"
+                ],
+                "summary": "Deactivates an NFC card assignment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Assignment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/devices": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Devices"
+                ],
+                "summary": "Obtiene todos los dispositivos",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.Device"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Devices"
+                ],
+                "summary": "Crea un nuevo dispositivo",
+                "parameters": [
+                    {
+                        "description": "Nuevo dispositivo",
+                        "name": "device",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.Device"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/entities.Device"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/devices/hardware/{hardware_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Devices"
+                ],
+                "summary": "Obtiene un dispositivo por hardware_id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Identificador físico del dispositivo",
+                        "name": "hardware_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entities.Device"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/devices/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Devices"
+                ],
+                "summary": "Obtiene un dispositivo por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID del dispositivo",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entities.Device"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Devices"
+                ],
+                "summary": "Actualiza un dispositivo existente",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID del dispositivo",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Dispositivo actualizado",
+                        "name": "device",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.Device"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Devices"
+                ],
+                "summary": "Elimina un dispositivo por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID del dispositivo",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/events": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Lista todos los eventos",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.Event"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Crea un nuevo evento",
+                "parameters": [
+                    {
+                        "description": "Evento a crear",
+                        "name": "event",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.Event"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/entities.Event"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/events/creator/{user_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Lista eventos por creador",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID del creador",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.Event"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/events/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Obtiene un evento por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID del evento",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entities.Event"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Actualiza un evento",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID del evento",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Datos del evento",
+                        "name": "event",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.Event"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -745,14 +1217,6 @@
                     {
                         "type": "integer",
                         "description": "ID del evento",
-
-                    "NFC Card Assignments"
-                ],
-                "summary": "Deactivates an NFC card assignment",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Assignment ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1149,6 +1613,35 @@
                 }
             }
         },
+        "entities.Device": {
+            "type": "object",
+            "properties": {
+                "assigned_to": {
+                    "type": "integer"
+                },
+                "hardware_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "registered_at": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
         "entities.Event": {
             "type": "object",
             "properties": {
@@ -1175,8 +1668,6 @@
                 }
             }
         },
-
-
         "entities.EventAttendee": {
             "type": "object",
             "properties": {
@@ -1213,7 +1704,7 @@
                     "type": "integer"
                 }
             }
-        }
+        },
         "entities.User": {
             "type": "object",
             "properties": {

@@ -30,4 +30,3 @@ func UsersRoutes(router *gin.Engine, handlers UsersHandlers) {
 	protected.DELETE("/:id", handlers.delete.Execute)
 	protected.GET("", handlers.getAll.Execute)
 }
-
