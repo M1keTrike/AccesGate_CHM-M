@@ -30,6 +30,21 @@ definitions:
         example: "123456"
         type: string
     type: object
+  entities.AccessEvent:
+    properties:
+      device_id:
+        type: integer
+      front_id:
+        type: integer
+      id:
+        type: integer
+      status:
+        type: string
+      timestamp:
+        type: string
+      user_id:
+        type: integer
+    type: object
   entities.Device:
     properties:
       assigned_to:
@@ -130,6 +145,263 @@ info:
   title: AccessGate API
   version: "1.0"
 paths:
+  /access-events:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.AccessEvent'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Lista todos los eventos de acceso
+      tags:
+      - Access Events
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Evento de acceso a registrar
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/entities.AccessEvent'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entities.AccessEvent'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Crea un nuevo evento de acceso
+      tags:
+      - Access Events
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Evento de acceso actualizado
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/entities.AccessEvent'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Actualiza un evento de acceso
+      tags:
+      - Access Events
+  /access-events/{id}:
+    delete:
+      parameters:
+      - description: ID del evento de acceso
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Elimina un evento de acceso
+      tags:
+      - Access Events
+    get:
+      parameters:
+      - description: ID del evento de acceso
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.AccessEvent'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Obtiene un evento de acceso por ID
+      tags:
+      - Access Events
+  /access-events/device/{deviceId}:
+    get:
+      parameters:
+      - description: ID del dispositivo
+        in: path
+        name: deviceId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.AccessEvent'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Obtiene eventos de acceso por dispositivo
+      tags:
+      - Access Events
+  /access-events/front/{frontId}:
+    get:
+      parameters:
+      - description: ID del front (puerta)
+        in: path
+        name: frontId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.AccessEvent'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Obtiene eventos de acceso por puerta (front)
+      tags:
+      - Access Events
+  /access-events/user/{userId}:
+    get:
+      parameters:
+      - description: ID del usuario
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.AccessEvent'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Obtiene eventos de acceso por usuario
+      tags:
+      - Access Events
   /api/event-attendees:
     post:
       consumes:
