@@ -47,6 +47,32 @@ definitions:
       start_time:
         type: string
     type: object
+
+
+  entities.EventAttendee:
+    properties:
+      event_id:
+        type: integer
+      id:
+        type: integer
+      registered_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  entities.NfcCardAssignment:
+    properties:
+      assigned_at:
+        type: string
+      card_uid:
+        type: string
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      user_id:
+        type: integer
+    type: object
   entities.User:
     properties:
       biometric_auth:
@@ -84,6 +110,52 @@ info:
 paths:
   /events:
     get:
+
+  /api/event-attendees:
+    post:
+      consumes:
+      - application/json
+      description: Registers a user to attend a specific event
+      parameters:
+      - description: Attendee Registration Data
+        in: body
+        name: attendee
+        required: true
+        schema:
+          $ref: '#/definitions/entities.EventAttendee'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entities.EventAttendee'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Register a user for an event
+      tags:
+      - Event Attendees
+  /api/event-attendees/event/{eventId}/attendees:
+    get:
+      description: Retrieves all users registered to attend a specific event
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventId
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -115,6 +187,90 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/entities.Event'
+
+              $ref: '#/definitions/entities.User'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all attendees for an event
+      tags:
+      - Event Attendees
+  /api/event-attendees/event/{eventId}/user/{userId}:
+    delete:
+      description: Removes a user's registration from a specific event
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventId
+        required: true
+        type: integer
+      - description: User ID
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Remove an attendee from an event
+      tags:
+      - Event Attendees
+  /api/event-attendees/event/{eventId}/user/{userId}/check:
+    get:
+      description: Verifies if a specific user is registered to attend an event
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventId
+        required: true
+        type: integer
+      - description: User ID
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+ 
         "400":
           description: Bad Request
           schema:
@@ -138,6 +294,17 @@ paths:
       - description: ID del evento
         in: path
         name: id
+
+      summary: Check if a user is registered for an event
+      tags:
+      - Event Attendees
+  /api/event-attendees/user/{userId}/events:
+    get:
+      description: Retrieves all events that a user is registered to attend
+      parameters:
+      - description: User ID
+        in: path
+        name: userId
         required: true
         type: integer
       produces:
@@ -146,9 +313,73 @@ paths:
         "200":
           description: OK
           schema:
+
             additionalProperties:
               type: string
             type: object
+
+            items:
+              $ref: '#/definitions/entities.Event'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all events for a user
+      tags:
+      - Event Attendees
+  /api/nfc-assignments:
+    get:
+      description: Retrieves all NFC card assignments in the system
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.NfcCardAssignment'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Gets all NFC card assignments
+      tags:
+      - NFC Card Assignments
+    post:
+      consumes:
+      - application/json
+      description: Assigns an NFC card to a user
+      parameters:
+      - description: Assignment Data
+        in: body
+        name: assignment
+        required: true
+        schema:
+          $ref: '#/definitions/entities.NfcCardAssignment'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entities.NfcCardAssignment'
+
         "400":
           description: Bad Request
           schema:
@@ -169,6 +400,15 @@ paths:
     get:
       parameters:
       - description: ID del evento
+
+      summary: Creates a new NFC card assignment
+      tags:
+      - NFC Card Assignments
+  /api/nfc-assignments/{id}:
+    get:
+      description: Retrieves a specific NFC card assignment using its ID
+      parameters:
+      - description: Assignment ID
         in: path
         name: id
         required: true
@@ -179,7 +419,10 @@ paths:
         "200":
           description: OK
           schema:
+
             $ref: '#/definitions/entities.Event'
+
+            $ref: '#/definitions/entities.NfcCardAssignment'
         "400":
           description: Bad Request
           schema:
@@ -202,6 +445,16 @@ paths:
       - application/json
       parameters:
       - description: ID del evento
+
+      summary: Gets an NFC card assignment by ID
+      tags:
+      - NFC Card Assignments
+    put:
+      consumes:
+      - application/json
+      description: Updates the details of an existing NFC card assignment
+      parameters:
+      - description: Assignment ID
         in: path
         name: id
         required: true
@@ -212,6 +465,12 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/entities.Event'
+      - description: Updated Assignment Data
+        in: body
+        name: assignment
+        required: true
+        schema:
+          $ref: '#/definitions/entities.NfcCardAssignment'
       produces:
       - application/json
       responses:
@@ -235,6 +494,7 @@ paths:
             type: object
       security:
       - BearerAuth: []
+
       summary: Actualiza un evento
       tags:
       - Events
@@ -244,6 +504,86 @@ paths:
       - description: ID del creador
         in: path
         name: user_id
+
+      summary: Updates an NFC card assignment
+      tags:
+      - NFC Card Assignments
+  /api/nfc-assignments/{id}/deactivate:
+    put:
+      description: Sets an NFC card assignment as inactive
+      parameters:
+      - description: Assignment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Deactivates an NFC card assignment
+      tags:
+      - NFC Card Assignments
+  /api/nfc-assignments/card/{cardUid}:
+    get:
+      description: Retrieves the active assignment for a specific NFC card
+      parameters:
+      - description: Card UID
+        in: path
+        name: cardUid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.NfcCardAssignment'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Gets an NFC card assignment by card UID
+      tags:
+      - NFC Card Assignments
+  /api/nfc-assignments/user/{userId}:
+    get:
+      description: Retrieves all NFC card assignments associated with a specific user
+      parameters:
+      - description: User ID
+        in: path
+        name: userId
+
         required: true
         type: integer
       produces:
@@ -253,7 +593,11 @@ paths:
           description: OK
           schema:
             items:
+
               $ref: '#/definitions/entities.Event'
+
+              $ref: '#/definitions/entities.NfcCardAssignment'
+
             type: array
         "400":
           description: Bad Request
@@ -261,11 +605,25 @@ paths:
             additionalProperties:
               type: string
             type: object
+
       security:
       - BearerAuth: []
       summary: Lista eventos por creador
       tags:
       - Events
+
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Gets all NFC card assignments for a user
+      tags:
+      - NFC Card Assignments
+
   /users:
     get:
       produces:

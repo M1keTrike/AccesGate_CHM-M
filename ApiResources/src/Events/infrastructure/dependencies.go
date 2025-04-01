@@ -1,4 +1,4 @@
-package infraestructure
+package infrastructure
 
 import (
 	"api_resources/src/Events/application"
@@ -8,7 +8,9 @@ import (
 )
 
 func Init(router *gin.Engine) {
+
 	repo := NewPostgreSQLEvents()
+
 
 	// Casos de uso
 	createUC := application.NewCreateEvent(repo)
