@@ -1,0 +1,4 @@
+/* fingerprint-status.component.css */
+.enviando { color: orange; }
+.exito    { color: green; }
+.error    { color: red; }

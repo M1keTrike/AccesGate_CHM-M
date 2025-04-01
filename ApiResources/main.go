@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 
-	Nfc_cards "api_resources/src/Nfc_cards/infraestructure"
+	events "api_resources/src/Events/infrastructure"
 	users "api_resources/src/Users/infraestructure"
 	clients "api_resources/src/clients/infraestructure"
 
@@ -55,8 +55,9 @@ func main() {
 
 	// Rutas principales
 	users.Init(router)
-	Nfc_cards.Init(router)
+
 	clients.Init(router)
+	events.Init(router)
 
 	// Swagger route
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

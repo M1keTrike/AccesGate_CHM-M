@@ -16,17 +16,27 @@ func NewDeleteEventController(useCase *application.DeleteEvent) *DeleteEventCont
 	return &DeleteEventController{useCase: useCase}
 }
 
-func (c *DeleteEventController) Handle(ctx *gin.Context) {
+// DeleteEvent godoc
+// @Summary Elimina un evento
+// @Tags Events
+// @Produce json
+// @Param id path int true "ID del evento"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Security BearerAuth
+// @Router /events/{id} [delete]
+func (c *DeleteEventController) Execute(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
 		return
 	}
 
 	if err := c.useCase.Execute(id); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "No se pudo eliminar el evento"})
 		return
 	}
 
-	ctx.Status(http.StatusOK)
+	ctx.JSON(http.StatusOK, gin.H{"message": "Evento eliminado correctamente"})
 }
