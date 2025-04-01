@@ -15,6 +15,17 @@ func NewGetEventAttendeesController(useCase *application.GetEventAttendees) *Get
     return &GetEventAttendeesController{useCase: useCase}
 }
 
+// GetEventAttendees godoc
+// @Summary Get all attendees for an event
+// @Description Retrieves all users registered to attend a specific event
+// @Tags Event Attendees
+// @Produce json
+// @Param eventId path int true "Event ID"
+// @Success 200 {array} entities.User
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Security BearerAuth
+// @Router /api/event-attendees/event/{eventId}/attendees [get]
 func (c *GetEventAttendeesController) Execute(ctx *gin.Context) {
     eventID, err := strconv.Atoi(ctx.Param("eventId"))
     if err != nil {

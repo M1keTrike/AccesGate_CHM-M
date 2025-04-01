@@ -15,6 +15,18 @@ func NewRegisterAttendeeController(useCase *application.RegisterAttendee) *Regis
     return &RegisterAttendeeController{useCase: useCase}
 }
 
+// RegisterAttendee godoc
+// @Summary Register a user for an event
+// @Description Registers a user to attend a specific event
+// @Tags Event Attendees
+// @Accept json
+// @Produce json
+// @Param attendee body entities.EventAttendee true "Attendee Registration Data"
+// @Success 201 {object} entities.EventAttendee
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Security BearerAuth
+// @Router /api/event-attendees [post]
 func (c *RegisterAttendeeController) Execute(ctx *gin.Context) {
     var attendee entities.EventAttendee
     if err := ctx.ShouldBindJSON(&attendee); err != nil {

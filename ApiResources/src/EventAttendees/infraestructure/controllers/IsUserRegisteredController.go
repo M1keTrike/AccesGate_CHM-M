@@ -15,6 +15,18 @@ func NewIsUserRegisteredController(useCase *application.IsUserRegistered) *IsUse
     return &IsUserRegisteredController{useCase: useCase}
 }
 
+// IsUserRegistered godoc
+// @Summary Check if a user is registered for an event
+// @Description Verifies if a specific user is registered to attend an event
+// @Tags Event Attendees
+// @Produce json
+// @Param eventId path int true "Event ID"
+// @Param userId path int true "User ID"
+// @Success 200 {object} map[string]bool
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Security BearerAuth
+// @Router /api/event-attendees/event/{eventId}/user/{userId}/check [get]
 func (c *IsUserRegisteredController) Execute(ctx *gin.Context) {
     eventID, err := strconv.Atoi(ctx.Param("eventId"))
     if err != nil {

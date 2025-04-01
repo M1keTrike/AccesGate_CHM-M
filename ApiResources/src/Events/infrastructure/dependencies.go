@@ -1,4 +1,4 @@
-package infraestructure
+package infrastructure
 
 import (
 	"api_resources/src/Events/application"
@@ -9,7 +9,7 @@ import (
 
 func Init(router *gin.Engine) {
 	// Adaptador secundario PostgreSQL
-	eventRepo := NewEventPostgreSQL()
+	eventRepo := NewPostgreSQL()
 
 	// Casos de uso
 	createEventUC := application.NewCreateEvent(eventRepo)

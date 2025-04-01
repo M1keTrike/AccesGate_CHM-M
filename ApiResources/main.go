@@ -7,6 +7,7 @@ import (
 	clients "api_resources/src/clients/infraestructure"
 	event_attendees "api_resources/src/EventAttendees/infraestructure"
 	Events "api_resources/src/Events/infrastructure"
+	nfc_assignments "api_resources/src/NfcCardAssignments/infrastructure"
 	
 
 	"time"
@@ -65,7 +66,8 @@ func main() {
 	clients.Init(router)
 	event_attendees.Init(router)
 	Events.Init(router)
-	router.Run(":8080")
+	nfc_assignments.Init(router)
+	//router.Run(":8080")
 
 
 	// Swagger route
