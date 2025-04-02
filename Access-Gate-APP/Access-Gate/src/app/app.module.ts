@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AdminModule } from './features/admin/admin.module';
+import { OrganizerModule } from './features/organizer/organizer.module';
 
 // Firebase
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -27,9 +28,9 @@ import { environment } from '../environments/environment';
     HttpClientModule,
     CommonModule,
     ReactiveFormsModule,
-
     AppRoutingModule,
     AdminModule,
+    OrganizerModule
   ],
   providers: [
     provideFirebaseApp(() => initializeApp(environment.firebase)),

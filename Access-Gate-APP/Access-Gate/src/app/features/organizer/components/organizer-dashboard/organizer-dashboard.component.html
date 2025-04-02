@@ -1,0 +1,15 @@
+<div class="organizer-dashboard">
+    <h1>Panel de Organizador</h1>
+  
+    <div class="buttons-container">
+      <button routerLink="/organizer/create-event">📅 Crear Nuevo Evento</button>
+      <button routerLink="/organizer/my-events">🎫 Mis Eventos</button>
+      <button routerLink="/organizer/manage-attendees">👥 Gestionar Asistentes</button>
+      <button routerLink="/organizer/event-stats">📊 Estadísticas</button>
+    </div>
+  
+    <div class="no-events" *ngIf="events.length === 0">
+      <p>No tienes eventos creados aún.</p>
+      <button routerLink="/organizer/create-event">Crear tu primer evento</button>
+    </div>
+</div>
