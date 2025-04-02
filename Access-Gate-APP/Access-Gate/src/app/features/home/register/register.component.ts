@@ -46,7 +46,7 @@ export class RegisterComponent implements OnInit {
         next: (response) => {
           // After successful registration, log in the user
           this.usersService.login({
-            username: userData.username,
+            email: userData.email,
             password: userData.password
           }).subscribe({
             next: (loginResponse) => {

@@ -10,17 +10,17 @@
               
               <div class="relative">
                 <input 
-                  formControlName="username"
+                  formControlName="email"
                   type="text" 
                   class="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-purple-600"
-                  placeholder="Username"
+                  placeholder="Email"
                 />
                 <label class="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">
-                  Username
+                  Email
                 </label>
-                <div *ngIf="loginForm.get('username')?.errors?.['required'] && loginForm.get('username')?.touched" 
+                <div *ngIf="loginForm.get('email')?.errors?.['required'] && loginForm.get('email')?.touched" 
                      class="text-red-500 text-xs mt-1">
-                  Username is required
+                     Email is required
                 </div>
               </div>
 

@@ -11,12 +11,14 @@ export class EventService {
     private apiUrl = `${environment.apiBaseUrl}/events`;
 
     constructor(private http: HttpClient) { }
+
     private getHeaders(): HttpHeaders {
+        const token = localStorage.getItem('Authorization');
         return new HttpHeaders({
-          'Content-Type': 'application/json',
-          'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzEyMDI4NjY3fQ.Kp6uAqcY0wvFBsWAeGZRFtKqQxSXIQUQAwkBsLgUxU0'
+            'Content-Type': 'application/json',
+            'Authorization': token || ''
         });
-      }
+    }
 
     createEvent(event: Omit<Event, 'id' | 'created_at'>): Observable<Event> {
         return this.http.post<Event>(this.apiUrl, event, {

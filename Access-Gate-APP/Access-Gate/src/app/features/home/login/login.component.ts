@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      username: ['', Validators.required],
+      email: ['', Validators.required],
       password: ['', Validators.required]
     });
   }
@@ -30,11 +30,13 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       this.usersService.login(this.loginForm.value).subscribe({
         next: (response) => {
-          this.usersService.setToken(response.token);
+          console.log('Login successful:', response);
+        
+          this.usersService.setToken(`Bearer ${response.token}`);
           this.router.navigate(['/admin']);
         },
         error: (error) => {
-          this.loginError = 'Invalid username or password';
+          this.loginError = 'Invalid email or password';
           console.error('Login error:', error);
         }
       });
