@@ -10,7 +10,7 @@ interface LoginResponse {
 }
 
 interface LoginCredentials {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -19,34 +19,31 @@ interface LoginCredentials {
 })
 export class UsersService {
   private apiUrl = `${environment.apiBaseUrl}/users`;
-  private token: string | null = '';
+  private token: string;
 
   constructor(private http: HttpClient) {
-    this.token = localStorage.getItem('token');
+    this.token = localStorage.getItem('Authorization') || '';
+    console.log(this.token);
   }
 
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      'authorization': 'Bearer' + this.token
+      'Authorization':  this.token
     });
   }
 
   login(credentials: LoginCredentials): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    });
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials, );
   }
 
   setToken(token: string): void {
     this.token = token;
-    localStorage.setItem('token', token);
+    localStorage.setItem('Authorization', token);
   }
 
   logout(): void {
-    this.token = null;
+    this.token = "";
     localStorage.removeItem('token');
   }
 

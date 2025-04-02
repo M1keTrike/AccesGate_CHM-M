@@ -35,9 +35,12 @@ export class AssignGuestsComponent implements OnInit {
       userId: ['', Validators.required]
     });
   }
-  token = localStorage.getItem('token');
+  token = localStorage.getItem('Authorization');
   ngOnInit(): void {
-    console.log(this.token)
+    if (!this.token) {
+      this.showError('No authorization token found. Please login again.');
+      return;
+    }
     this.loadData();
   }  
   
