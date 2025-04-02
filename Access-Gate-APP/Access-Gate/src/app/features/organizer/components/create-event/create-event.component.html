@@ -1,0 +1,50 @@
+<div class="create-event-container">
+  <h2>Create New Event</h2>
+
+  <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="event-form">
+    <mat-form-field appearance="fill">
+      <mat-label>Event Name</mat-label>
+      <input matInput formControlName="name" placeholder="Enter event name">
+      <mat-error *ngIf="eventForm.get('name')?.errors?.['required']">
+        Name is required
+      </mat-error>
+      <mat-error *ngIf="eventForm.get('name')?.errors?.['minlength']">
+        Name must be at least 3 characters
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" rows="4" placeholder="Enter event description"></textarea>
+      <mat-error *ngIf="eventForm.get('description')?.errors?.['required']">
+        Description is required
+      </mat-error>
+      <mat-error *ngIf="eventForm.get('description')?.errors?.['minlength']">
+        Description must be at least 10 characters
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Start Time</mat-label>
+      <input matInput type="datetime-local" formControlName="start_time">
+      <mat-error *ngIf="eventForm.get('start_time')?.errors?.['required']">
+        Start time is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>End Time</mat-label>
+      <input matInput type="datetime-local" formControlName="end_time">
+      <mat-error *ngIf="eventForm.get('end_time')?.errors?.['required']">
+        End time is required
+      </mat-error>
+    </mat-form-field>
+
+    <div class="form-actions">
+      <button mat-button type="button" routerLink="/organizer/dashboard">Cancel</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!eventForm.valid || isLoading">
+        {{ isLoading ? 'Creating...' : 'Create Event' }}
+      </button>
+    </div>
+  </form>
+</div>

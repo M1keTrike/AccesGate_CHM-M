@@ -29,13 +29,13 @@ func (pg *PostgreSQL) CreateEvent(event *entities.Event) error {
 		VALUES ($1, $2, $3, $4, $5, $6)
 		RETURNING id`
 
-	event.CreatedAt = time.Now()
+	event.CreatedAt = time.Now().UTC() // Use UTC time
 	err := pg.conn.DB.QueryRow(
 		query,
 		event.Name,
 		event.Description,
-		event.StartTime.Format("2006-01-02 15:04:05"),
-		event.EndTime.Format("2006-01-02 15:04:05"),
+		event.StartTime.UTC().Format("2006-01-02 15:04:05"),
+		event.EndTime.UTC().Format("2006-01-02 15:04:05"),
 		event.CreatedBy,
 		event.CreatedAt.Format("2006-01-02 15:04:05"),
 	).Scan(&event.ID)
@@ -48,7 +48,7 @@ func (pg *PostgreSQL) CreateEvent(event *entities.Event) error {
 	return nil
 }
 
-// GetAllEvents devuelve todos los eventos
+// Modify the GetAllEvents function
 func (pg *PostgreSQL) GetAllEvents() ([]entities.Event, error) {
 	query := `SELECT id, name, description, start_time, end_time, created_by, created_at FROM events`
 	rows, err := pg.conn.DB.Query(query)
@@ -61,19 +61,19 @@ func (pg *PostgreSQL) GetAllEvents() ([]entities.Event, error) {
 	var events []entities.Event
 	for rows.Next() {
 		var event entities.Event
-		var startTimeStr, endTimeStr, createdAtStr string
+		var startTime, endTime, createdAt time.Time
 
 		if err := rows.Scan(
 			&event.ID, &event.Name, &event.Description,
-			&startTimeStr, &endTimeStr, &event.CreatedBy, &createdAtStr,
+			&startTime, &endTime, &event.CreatedBy, &createdAt,
 		); err != nil {
 			log.Printf("[GetAllEvents] Error al escanear fila: %v", err)
 			continue
 		}
 
-		event.StartTime, _ = time.Parse("2006-01-02 15:04:05", startTimeStr)
-		event.EndTime, _ = time.Parse("2006-01-02 15:04:05", endTimeStr)
-		event.CreatedAt, _ = time.Parse("2006-01-02 15:04:05", createdAtStr)
+		event.StartTime = startTime
+		event.EndTime = endTime
+		event.CreatedAt = createdAt
 
 		events = append(events, event)
 	}
@@ -81,19 +81,18 @@ func (pg *PostgreSQL) GetAllEvents() ([]entities.Event, error) {
 	return events, nil
 }
 
-// GetEventByID obtiene un evento por su ID
+// Modify GetEventByID similarly
 func (pg *PostgreSQL) GetEventByID(id int) (*entities.Event, error) {
 	query := `SELECT id, name, description, start_time, end_time, created_by, created_at FROM events WHERE id = $1`
 	var event entities.Event
-	var startTimeStr, endTimeStr, createdAtStr string
+	var startTime, endTime, createdAt time.Time
 
 	err := pg.conn.DB.QueryRow(query, id).Scan(
 		&event.ID, &event.Name, &event.Description,
-		&startTimeStr, &endTimeStr, &event.CreatedBy, &createdAtStr,
+		&startTime, &endTime, &event.CreatedBy, &createdAt,
 	)
 
 	if err == sql.ErrNoRows {
-		log.Printf("[GetEventByID] Evento con ID %d no encontrado", id)
 		return nil, fmt.Errorf("evento no encontrado")
 	}
 	if err != nil {
@@ -101,14 +100,14 @@ func (pg *PostgreSQL) GetEventByID(id int) (*entities.Event, error) {
 		return nil, fmt.Errorf("error al buscar el evento")
 	}
 
-	event.StartTime, _ = time.Parse("2006-01-02 15:04:05", startTimeStr)
-	event.EndTime, _ = time.Parse("2006-01-02 15:04:05", endTimeStr)
-	event.CreatedAt, _ = time.Parse("2006-01-02 15:04:05", createdAtStr)
+	event.StartTime = startTime
+	event.EndTime = endTime
+	event.CreatedAt = createdAt
 
 	return &event, nil
 }
 
-// GetEventsByCreator devuelve eventos creados por un usuario
+// Update GetEventsByCreator similarly
 func (pg *PostgreSQL) GetEventsByCreator(userID int) ([]entities.Event, error) {
 	query := `SELECT id, name, description, start_time, end_time, created_by, created_at FROM events WHERE created_by = $1`
 	rows, err := pg.conn.DB.Query(query, userID)
@@ -121,19 +120,19 @@ func (pg *PostgreSQL) GetEventsByCreator(userID int) ([]entities.Event, error) {
 	var events []entities.Event
 	for rows.Next() {
 		var event entities.Event
-		var startTimeStr, endTimeStr, createdAtStr string
+		var startTime, endTime, createdAt time.Time
 
 		if err := rows.Scan(
 			&event.ID, &event.Name, &event.Description,
-			&startTimeStr, &endTimeStr, &event.CreatedBy, &createdAtStr,
+			&startTime, &endTime, &event.CreatedBy, &createdAt,
 		); err != nil {
 			log.Printf("[GetEventsByCreator] Error al escanear fila: %v", err)
 			continue
 		}
 
-		event.StartTime, _ = time.Parse("2006-01-02 15:04:05", startTimeStr)
-		event.EndTime, _ = time.Parse("2006-01-02 15:04:05", endTimeStr)
-		event.CreatedAt, _ = time.Parse("2006-01-02 15:04:05", createdAtStr)
+		event.StartTime = startTime
+		event.EndTime = endTime
+		event.CreatedAt = createdAt
 
 		events = append(events, event)
 	}
