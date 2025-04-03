@@ -1,6 +1,22 @@
 <div class="security-container">
   <h1>Event Security Control</h1>
 
+  <div class="bluetooth-controls">
+    <button (click)="connectBluetooth()" class="bluetooth-btn" [class.connected]="isConnected">
+      {{ isConnected ? '🔵 Connected' : '⚪ Connect Bluetooth' }}
+    </button>
+    
+    <div class="control-buttons" *ngIf="isConnected">
+      <button (click)="togglePir()" class="control-btn" [class.active]="isPirEnabled">
+        {{ isPirEnabled ? '🔒 Disable PIR Sensor' : '🔓 Enable PIR Sensor' }}
+      </button>
+      
+      <button (click)="toggleAccessMode()" class="control-btn" [class.active]="isAccessModeEnabled">
+        {{ isAccessModeEnabled ? '🚫 Disable Access Mode' : '✅ Enable Access Mode' }}
+      </button>
+    </div>
+  </div>
+
   <div class="events-list" *ngIf="!loading && events.length > 0">
     <div class="event-card" *ngFor="let event of events">
       <div class="event-info">
