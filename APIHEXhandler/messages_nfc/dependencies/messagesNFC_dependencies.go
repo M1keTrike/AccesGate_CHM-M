@@ -29,7 +29,7 @@ func (d *MessageDependencies) Execute(r *gin.Engine) {
 	publishNFCUseCase := service.NewSendWSNFCService(webSocketService)
 	sendNFCUseCase := application.NewSendMessageUseCase(publishNFCUseCase)
 	receiveNFCUseCase := application.NewRecieveNFCMessageUseCase(sendNFCUseCase)
-	recieveNFCController := controllers.NewReceiveMessageNFCController(receiveNFCUseCase)
+	recieveNFCController := controllers.NewReceiveNFCController(receiveNFCUseCase)
 	routers.AttachReceiveRoutes(r, recieveNFCController)
 
 }

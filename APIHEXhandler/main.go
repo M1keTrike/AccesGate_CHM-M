@@ -5,6 +5,9 @@ import (
 	"os"
 
 	aglomerationDeps "github.com/M1keTrike/EventDriven/messages_aglomeration/dependencies"
+	alarmDeps "github.com/M1keTrike/EventDriven/messages_alarm/dependencies"
+	fingerprintDeps "github.com/M1keTrike/EventDriven/messages_fingerprint/dependencies"
+	fingerprintRegistrationDeps "github.com/M1keTrike/EventDriven/messages_fingerprint_registration/dependencies"
 	vaccessDeps "github.com/M1keTrike/EventDriven/messages_v_access/dependencies"
 
 	"github.com/M1keTrike/EventDriven/messages_nfc/dependencies"
@@ -19,7 +22,6 @@ func main() {
 	}
 
 	PORT := os.Getenv("PORT")
-
 	r := gin.Default()
 
 	messageNFCDependencies := dependencies.NewMessageDependencies()
@@ -31,6 +33,14 @@ func main() {
 	messageVAccessDependencies := vaccessDeps.NewMessageAgloemrationDependencies()
 	messageVAccessDependencies.Execute(r)
 
-	r.Run(":" + PORT)
+	messageFingerprintDependencies := fingerprintDeps.NewMessageFingerprintDependencies()
+	messageFingerprintDependencies.Execute(r)
 
+	messageFingerprintRegistrationDeps := fingerprintRegistrationDeps.NewMessageFingerprintRegistrationDependencies()
+	messageFingerprintRegistrationDeps.Execute(r)
+
+	messageAlarmDeps := alarmDeps.NewMessageAlarmDependencies()
+	messageAlarmDeps.Execute(r)
+
+	r.Run(":" + PORT)
 }
