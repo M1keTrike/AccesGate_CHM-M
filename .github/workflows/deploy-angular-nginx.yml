@@ -63,4 +63,5 @@ jobs:
             sudo tar -xzf /home/***/access-gate.tar.gz -C /var/www/accessgate/
             sudo chown -R www-data:www-data /var/www/accessgate
             sudo chmod -R 755 /var/www/accessgate
+            sudo nginx -t && sudo systemctl reload nginx
 
