@@ -35,18 +35,20 @@ export class AssignGuestsComponent implements OnInit {
       userId: ['', Validators.required]
     });
   }
+
   token = localStorage.getItem('Authorization');
+
   ngOnInit(): void {
     if (!this.token) {
       this.showError('No authorization token found. Please login again.');
       return;
     }
     this.loadData();
-  }  
-  
+  }
+
   private loadData(): void {
     this.isLoading = true;
-    
+
     forkJoin({
       events: this.eventService.getAllEvents(),
       users: this.userService.getUsersByRole('attendee')
@@ -57,31 +59,34 @@ export class AssignGuestsComponent implements OnInit {
         this.filteredUsers = result.users;
         this.isLoading = false;
       },
-      error: (err: any) => {
+      error: () => {
         this.showError('Error loading initial data');
         this.isLoading = false;
       }
     });
   }
 
-  onEventSelect(eventId: number): void {
-    this.selectedEventId = eventId;
-    if (eventId) {
-      this.isLoading = true;
-      this.eventAttendeeService.getEventAttendees(eventId).subscribe({
-        next: (attendees: User[]) => {
-          console.log('Received attendees:', attendees); // Add this debug log
-          this.attendees = attendees;
-          this.filterAvailableUsers();
-          this.isLoading = false;
-        },
-        error: (err: any) => {
-          console.error('Error loading attendees:', err); // Add this debug log
-          this.showError('Error loading attendees');
-          this.isLoading = false;
-        }
-      });
+  onEventSelect(event: EventTarget | any): void {
+    const eventId = Number(event.target.value); // Extrae el ID correctamente
+    if (!isNaN(eventId)) {
+      this.selectedEventId = eventId;
+      this.loadAttendees(eventId);
     }
+  }
+
+  private loadAttendees(eventId: number): void {
+    this.isLoading = true;
+    this.eventAttendeeService.getEventAttendees(eventId).subscribe({
+      next: (attendees: User[]) => {
+        this.attendees = attendees;
+        this.filterAvailableUsers();
+        this.isLoading = false;
+      },
+      error: () => {
+        this.showError('Error loading attendees');
+        this.isLoading = false;
+      }
+    });
   }
 
   private filterAvailableUsers(): void {
@@ -94,19 +99,27 @@ export class AssignGuestsComponent implements OnInit {
       this.isLoading = true;
       const { eventId, userId } = this.assignForm.value;
 
+      // Ensure both IDs are numbers
       const newAttendee = {
-        event_id: eventId,
-        user_id: userId
+        event_id: Number(eventId),
+        user_id: Number(userId)
       };
 
       this.eventAttendeeService.registerAttendee(newAttendee).subscribe({
-        next: () => {
+        next: (response) => {
           this.showSuccess('Guest assigned successfully');
-          this.onEventSelect(eventId);
-          this.assignForm.reset({ eventId });
+          this.onEventSelect({ target: { value: eventId } } as unknown as Event);
+          this.assignForm.get('userId')?.reset();  // Only reset the user selection
+          this.isLoading = false;
         },
-        error: (err: any) => {
-          this.showError('Error assigning guest');
+        error: (error) => {
+          let errorMessage = 'Error assigning guest';
+          if (error.error?.message) {
+            errorMessage = error.error.message;
+          } else if (error.status === 400) {
+            errorMessage = 'Invalid data format or duplicate assignment';
+          }
+          this.showError(errorMessage);
           this.isLoading = false;
         }
       });
@@ -119,9 +132,11 @@ export class AssignGuestsComponent implements OnInit {
       this.eventAttendeeService.removeAttendee(this.selectedEventId, userId).subscribe({
         next: () => {
           this.showSuccess('Attendee removed successfully');
-          this.onEventSelect(this.selectedEventId!);
+          if (this.selectedEventId !== null) {
+            this.loadAttendees(this.selectedEventId);
+          }
         },
-        error: (err: any) => {
+        error: () => {
           this.showError('Error removing attendee');
           this.isLoading = false;
         }
