@@ -1,0 +1,34 @@
+<div class="update-event-container">
+  <h2>Update Event</h2>
+
+  <div class="loading" *ngIf="loading">
+    <p>Loading event details...</p>
+  </div>
+
+  <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+    <div class="form-group">
+      <label for="name">Event Name</label>
+      <input id="name" type="text" formControlName="name">
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" formControlName="description"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="start_time">Start Time</label>
+      <input id="start_time" type="datetime-local" formControlName="start_time">
+    </div>
+
+    <div class="form-group">
+      <label for="end_time">End Time</label>
+      <input id="end_time" type="datetime-local" formControlName="end_time">
+    </div>
+
+    <div class="form-actions">
+      <button type="button" routerLink="/organizer/my-events">Cancel</button>
+      <button type="submit" [disabled]="!eventForm.valid">Update Event</button>
+    </div>
+  </form>
+</div>
