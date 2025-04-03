@@ -25,7 +25,7 @@ func NewGetUserEventsController(useCase *application.GetUserEvents) *GetUserEven
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Security BearerAuth
-// @Router /api/event-attendees/user/{userId}/events [get]
+// @Router /event-attendees/user/{userId}/events [get]
 func (c *GetUserEventsController) Execute(ctx *gin.Context) {
     userID, err := strconv.Atoi(ctx.Param("userId"))
     if err != nil {

@@ -26,7 +26,7 @@ func NewIsUserRegisteredController(useCase *application.IsUserRegistered) *IsUse
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Security BearerAuth
-// @Router /api/event-attendees/event/{eventId}/user/{userId}/check [get]
+// @Router /event-attendees/event/{eventId}/user/{userId}/check [get]
 func (c *IsUserRegisteredController) Execute(ctx *gin.Context) {
     eventID, err := strconv.Atoi(ctx.Param("eventId"))
     if err != nil {
