@@ -14,7 +14,7 @@ type EventAttendeesHandlers struct {
 }
 
 func EventAttendeesRoutes(router *gin.Engine, handlers EventAttendeesHandlers) {
-    group := router.Group("/api/event-attendees")
+    group := router.Group("/event-attendees")
     {
         group.POST("/register", handlers.register.Execute)
         group.DELETE("/events/:eventId/users/:userId", handlers.remove.Execute)
