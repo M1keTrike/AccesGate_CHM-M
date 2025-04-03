@@ -15,6 +15,7 @@ import { CreateEventComponent } from './components/create-event/create-event.com
 import { MyEventsComponent } from './components/my-events/my-events.component';
 import { EventStatsComponent } from './components/event-stats/event-stats.component';
 import { UpdateEventComponent } from './components/update-event/update-event.component';
+import { SecurityModule } from '../security/security.module';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { UpdateEventComponent } from './components/update-event/update-event.com
     RouterModule,
     ReactiveFormsModule,
     OrganizerRoutingModule,
+    SecurityModule,
     // Angular Material Modules
     MatFormFieldModule,
     MatInputModule,

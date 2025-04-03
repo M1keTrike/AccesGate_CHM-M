@@ -13,7 +13,11 @@ const routes: Routes = [
   { path: 'my-events', component: MyEventsComponent },
   { path: 'event-stats', component: EventStatsComponent },
   { path: 'event/:id/edit', component: CreateEventComponent },
-  { path: 'update-event/:id', component: UpdateEventComponent }
+  { path: 'update-event/:id', component: UpdateEventComponent },
+  { 
+    path: 'security', 
+    loadChildren: () => import('../security/security.module').then(m => m.SecurityModule)
+  }
 ];
 
 @NgModule({

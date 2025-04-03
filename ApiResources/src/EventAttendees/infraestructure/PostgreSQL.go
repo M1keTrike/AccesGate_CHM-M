@@ -24,13 +24,14 @@ func NewPostgreSQL() *PostgreSQL {
 
 func (pg *PostgreSQL) RegisterAttendee(attendee *entities.EventAttendee) error {
     query := `
-        INSERT INTO event_attendees (user_id, event_id, registered_at) 
-        VALUES ($1, $2, $3) 
+        INSERT INTO event_attendees (user_id, event_id, registered_at, attended) 
+        VALUES ($1, $2, $3, $4) 
         RETURNING id`
     
     attendee.RegisteredAt = time.Now()
+    attendee.Attended = false // Default value for new registrations
     formattedTime := attendee.RegisteredAt.Format("2006-01-02 15:04:05")
-    err := pg.conn.DB.QueryRow(query, attendee.UserID, attendee.EventID, formattedTime).Scan(&attendee.ID)
+    err := pg.conn.DB.QueryRow(query, attendee.UserID, attendee.EventID, formattedTime, attendee.Attended).Scan(&attendee.ID)
     if err != nil {
         if err == sql.ErrNoRows {
             return fmt.Errorf("error registering attendee: no rows affected")
@@ -69,7 +70,8 @@ func parseDateTime(dateStr string) (time.Time, error) {
 
 func (pg *PostgreSQL) GetEventAttendees(eventID int) ([]entities.EventAttendee, error) {
     attendees := []entities.EventAttendee{}
-    query := "SELECT id, user_id, event_id, registered_at FROM event_attendees WHERE event_id = $1"
+    // Use COALESCE para manejar valores NULL
+    query := "SELECT id, user_id, event_id, registered_at, COALESCE(attended, false) as attended FROM event_attendees WHERE event_id = $1"
     
     rows, err := pg.conn.DB.Query(query, eventID)
     if err != nil {
@@ -80,7 +82,7 @@ func (pg *PostgreSQL) GetEventAttendees(eventID int) ([]entities.EventAttendee, 
     for rows.Next() {
         var attendee entities.EventAttendee
         var registeredAtStr string
-        if err := rows.Scan(&attendee.ID, &attendee.UserID, &attendee.EventID, &registeredAtStr); err != nil {
+        if err := rows.Scan(&attendee.ID, &attendee.UserID, &attendee.EventID, &registeredAtStr, &attendee.Attended); err != nil {
             return nil, fmt.Errorf("error scanning attendee: %v", err)
         }
         parsedTime, err := parseDateTime(registeredAtStr)
@@ -100,7 +102,7 @@ func (pg *PostgreSQL) GetEventAttendees(eventID int) ([]entities.EventAttendee, 
 
 func (pg *PostgreSQL) GetUserEvents(userID int) ([]entities.EventAttendee, error) {
     attendees := []entities.EventAttendee{}
-    query := "SELECT id, user_id, event_id, registered_at FROM event_attendees WHERE user_id = $1"
+    query := "SELECT id, user_id, event_id, registered_at, COALESCE(attended, false) as attended FROM event_attendees WHERE user_id = $1"
     
     rows, err := pg.conn.DB.Query(query, userID)
     if err != nil {
@@ -111,7 +113,7 @@ func (pg *PostgreSQL) GetUserEvents(userID int) ([]entities.EventAttendee, error
     for rows.Next() {
         var attendee entities.EventAttendee
         var registeredAtStr string
-        if err := rows.Scan(&attendee.ID, &attendee.UserID, &attendee.EventID, &registeredAtStr); err != nil {
+        if err := rows.Scan(&attendee.ID, &attendee.UserID, &attendee.EventID, &registeredAtStr, &attendee.Attended); err != nil {
             return nil, fmt.Errorf("error scanning attendee: %v", err)
         }
         parsedTime, err := parseDateTime(registeredAtStr)
