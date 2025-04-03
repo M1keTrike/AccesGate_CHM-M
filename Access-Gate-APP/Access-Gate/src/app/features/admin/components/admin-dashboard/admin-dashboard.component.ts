@@ -1,6 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Messaging, getToken, onMessage } from '@angular/fire/messaging';
 import { HttpClient } from '@angular/common/http';
+import { UsersService } from '../../../../services/Users.Service';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -15,7 +17,9 @@ export class AdminDashboardComponent implements OnInit {
 
   constructor(
     @Inject(Messaging) private messaging: Messaging,
-    private http: HttpClient
+    private http: HttpClient,
+    private usersService: UsersService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -74,5 +78,10 @@ export class AdminDashboardComponent implements OnInit {
         timerProgressBar: true,
       });
     });
+  }
+
+  logout() {
+    this.usersService.logout();
+    this.router.navigate(['/login']);
   }
 }

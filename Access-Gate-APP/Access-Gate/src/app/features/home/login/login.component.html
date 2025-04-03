@@ -39,7 +39,9 @@
                   Password is required
                 </div>
               </div>
-
+              <div *ngIf="loginError" class="text-red-500 text-center mt-4">
+                {{ loginError }}
+              </div>
               <div class="relative pt-4">
                 <button 
                   type="submit"
@@ -60,7 +62,4 @@
       </div>
     </div>
   </div>
-</div>
-<div *ngIf="loginError" class="text-red-500 text-center mt-4">
-  {{ loginError }}
 </div>
