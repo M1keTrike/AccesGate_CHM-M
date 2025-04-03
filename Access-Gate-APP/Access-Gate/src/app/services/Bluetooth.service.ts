@@ -7,21 +7,17 @@ export class BluetoothService {
   private device: BluetoothDevice | null = null;
   private server: BluetoothRemoteGATTServer | null = null;
 
-  // UUID del servicio principal del ESP32
+  // UUID del servicio principal del ESP32 (debe coincidir con SERVICE_UUID)
   private readonly WIFI_SERVICE_UUID = '12345678-1234-1234-1234-1234567890ab';
 
-  // Características BLE (coinciden con las del ESP32)
+  // Características BLE (deben coincidir con las definiciones del ESP32)
   private readonly WIFI_SSID_CHAR_UUID = '12345678-1234-1234-1234-1234567890ac';
   private readonly WIFI_PASS_CHAR_UUID = '12345678-1234-1234-1234-1234567890ad';
-  private readonly WIFI_STATUS_CHAR_UUID =
-    '12345678-1234-1234-1234-1234567890ae';
+  private readonly WIFI_STATUS_CHAR_UUID = '12345678-1234-1234-1234-1234567890ae';
   private readonly REGISTER_FP_UUID = '12345678-1234-1234-1234-1234567890af';
+  private readonly ENABLE_PIR_UUID = '12345678-1234-1234-1234-1234567890a2';
+  private readonly ENABLE_INGRESO_UUID = '12345678-1234-1234-1234-1234567890a1';
 
-  // 1) UUID para habilitar/deshabilitar PIR
-  private readonly ENABLE_PIR_UUID = '12345678-1234-1234-1234-1234567890ag';
-
-  // 2) UUID para habilitar/deshabilitar "modo de ingreso"
-  private readonly ENABLE_INGRESO_UUID = '12345678-1234-1234-1234-1234567890ah';
 
   async connect(): Promise<void> {
     if (!('bluetooth' in navigator)) {
@@ -29,20 +25,13 @@ export class BluetoothService {
       return;
     }
 
-    // Si ya está conectado, no volver a conectar
-    if (this.device && this.device.gatt?.connected && this.server) {
-      console.log('🔄 Ya hay una conexión activa con:', this.device.name);
-      return;
-    }
-
     try {
       this.device = await navigator.bluetooth.requestDevice({
         filters: [{ namePrefix: 'ESP32' }],
-        // Aseguramos que se incluyan los servicios necesarios
-        optionalServices: [this.WIFI_SERVICE_UUID],
+        optionalServices: [this.WIFI_SERVICE_UUID]
       });
 
-      this.server = (await this.device.gatt?.connect()) || null;
+      this.server = await this.device.gatt?.connect() || null;
       console.log('✅ Conectado al dispositivo:', this.device?.name);
     } catch (error) {
       console.error('❌ Error al conectar vía Bluetooth:', error);
@@ -142,17 +131,21 @@ export class BluetoothService {
     if (!this.server) {
       throw new Error('No hay conexión Bluetooth');
     }
-
-    const service = await this.server.getPrimaryService(this.WIFI_SERVICE_UUID);
-    const ingresoCharacteristic = await service.getCharacteristic(
-      this.ENABLE_INGRESO_UUID
-    );
-
-    const value = new TextEncoder().encode(enabled ? '1' : '0');
-    await ingresoCharacteristic.writeValue(value);
-
-    console.log('Modo Ingreso:', enabled ? 'ACTIVO' : 'INACTIVO');
+  
+    try {
+      const service = await this.server.getPrimaryService(this.WIFI_SERVICE_UUID);
+      console.log("Servicio encontrado:", service);
+      const ingresoCharacteristic = await service.getCharacteristic(this.ENABLE_INGRESO_UUID);
+      
+      const value = new TextEncoder().encode(enabled ? '1' : '0');
+      await ingresoCharacteristic.writeValue(value);
+  
+      console.log('Modo Ingreso:', enabled ? 'ACTIVO' : 'INACTIVO');
+    } catch (error) {
+      console.error('❌ Error al escribir en la característica BLE:', error);
+    }
   }
+  
 
   getDeviceName(): string | null {
     return this.device?.name || null;

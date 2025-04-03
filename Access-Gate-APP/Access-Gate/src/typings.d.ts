@@ -15,16 +15,15 @@ declare global {
   interface BluetoothRemoteGATTServer {
     connect(): Promise<BluetoothRemoteGATTServer>;
     getPrimaryService(
-      serviceUUID: string | number
+      serviceUUID: BluetoothServiceUUID
     ): Promise<BluetoothRemoteGATTService>;
     
     readonly connected: boolean; 
   }
   
-
   interface BluetoothRemoteGATTService {
     getCharacteristic(
-      characteristicUUID: string | number
+      characteristicUUID: BluetoothCharacteristicUUID
     ): Promise<BluetoothRemoteGATTCharacteristic>;
   }
 
@@ -32,4 +31,9 @@ declare global {
     writeValue(value: BufferSource): Promise<void>;
     readValue(): Promise<DataView>;
   }
+
+  // Añadimos tipos específicos para UUID de Bluetooth
+  type BluetoothServiceUUID = string | number | UUID;
+  type BluetoothCharacteristicUUID = string | number | UUID;
+  type UUID = string;
 }
