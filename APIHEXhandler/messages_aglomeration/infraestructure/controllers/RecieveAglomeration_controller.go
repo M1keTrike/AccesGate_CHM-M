@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"encoding/json"
+
 	"github.com/M1keTrike/EventDriven/messages_aglomeration/application"
 	"github.com/gin-gonic/gin"
 )
@@ -25,7 +27,40 @@ func (r *ReceiveAglomerationController) Execute(c *gin.Context) {
 		return
 	}
 
-	err := r.ReceiveAglomerationUseCase.Execute(req.Message)
+	// Parse the incoming message
+	var messageData map[string]interface{}
+	if err := json.Unmarshal([]byte(req.Message), &messageData); err != nil {
+		c.JSON(400, gin.H{"error": "Invalid message format"})
+		return
+	}
+
+	// Extract fields
+	mac, ok := messageData["mac"].(string)
+	if !ok {
+		c.JSON(400, gin.H{"error": "Missing or invalid MAC address"})
+		return
+	}
+
+	evento, ok := messageData["evento"].(string)
+	if !ok {
+		c.JSON(400, gin.H{"error": "Missing or invalid evento"})
+		return
+	}
+
+	// Create clean message
+	cleanMessage := map[string]string{
+		"mac":    mac,
+		"evento": evento,
+	}
+
+	// Convert to JSON
+	finalMessage, err := json.Marshal(cleanMessage)
+	if err != nil {
+		c.JSON(500, gin.H{"error": "Error creating message"})
+		return
+	}
+
+	err = r.ReceiveAglomerationUseCase.Execute(string(finalMessage))
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Internal server error"})
 		return

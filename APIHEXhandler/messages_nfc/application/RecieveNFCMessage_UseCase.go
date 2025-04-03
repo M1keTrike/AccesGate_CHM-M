@@ -14,9 +14,9 @@ func NewRecieveNFCMessageUseCase(sm_uc *SendNFCMessageUseCase) RecieveNFCMessage
 	return RecieveNFCMessageUseCase{sm_uc: sm_uc}
 }
 
-func (r *RecieveNFCMessageUseCase) Execute(uid string) error {
+func (r *RecieveNFCMessageUseCase) Execute(msg string) error {
 
-	message := domain.NewMessage(uid)
+	message := domain.NewMessage(msg)
 
 	fmt.Println(message)
 

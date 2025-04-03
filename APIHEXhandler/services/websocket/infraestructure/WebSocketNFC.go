@@ -34,6 +34,7 @@ func (w *WebSocketEmitter) Send(content []byte) error {
 	message := map[string]string{"content": string(content)}
 	jsonMessage, err := json.Marshal(message)
 	if err != nil {
+		log.Printf("Error enviando mensaje al WebSocket: %v", err)
 		return err
 	}
 
@@ -43,7 +44,7 @@ func (w *WebSocketEmitter) Send(content []byte) error {
 		return err
 	}
 
-	fmt.Printf("Mensaje enviado al WebSocket [%s]: %s\n", w.topic, content)
+	fmt.Printf("Mensaje enviado al WebSocket [%s]: %s\n", w.topic, string(jsonMessage))
 	return nil
 }
 

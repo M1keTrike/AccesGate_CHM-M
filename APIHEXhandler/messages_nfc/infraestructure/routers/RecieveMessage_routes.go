@@ -5,12 +5,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AttachReceiveRoutes(r *gin.Engine, receiveController *controllers.ReceiveNFCMessageController) {
+func AttachReceiveRoutes(r *gin.Engine, receiveController *controllers.ReceiveNFCController) {
 
 	nfc := r.Group("/nfc")
 	{
-		nfc.POST("/receive_nfc", receiveController.Execute)
+		nfc.POST("/receive_nfc", receiveController.Handle)
 	}
-
 
 }

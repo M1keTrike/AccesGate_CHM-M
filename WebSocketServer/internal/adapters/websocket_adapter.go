@@ -1,6 +1,7 @@
 package adapters
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"sync"
@@ -62,7 +63,13 @@ func (ws *WebSocketAdapter) HandleWebSocket(c *gin.Context) {
 			break
 		}
 
-		fmt.Printf("Mensaje recibido en el servidor [%s]: %s\n", topic, msg.Content)
+		var prettyMessage map[string]interface{}
+		if err := json.Unmarshal([]byte(msg.Content), &prettyMessage); err != nil {
+			fmt.Printf("Mensaje recibido en el servidor [%s]: %s\n", topic, msg.Content)
+		} else {
+			prettyJSON, _ := json.MarshalIndent(prettyMessage, "", "  ")
+			fmt.Printf("Mensaje recibido en el servidor [%s]:\n%s\n", topic, string(prettyJSON))
+		}
 
 		ws.SendMessage(topic, &msg)
 	}

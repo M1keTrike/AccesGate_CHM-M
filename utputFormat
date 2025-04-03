@@ -1,0 +1,26 @@
+HTTP/1.1 401 Unauthorized
+Server: Jetty(12.0.16)
+Date: Thu, 03 Apr 2025 09:41:18 GMT
+X-Content-Type-Options: nosniff
+Set-Cookie: remember-me=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0
+WWW-Authenticate: Basic realm="Jenkins"
+Cache-Control: must-revalidate,no-cache,no-store
+Content-Type: text/html;charset=iso-8859-1
+Content-Length: 458
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1"/>
+<title>Error 401 Unauthorized</title>
+</head>
+<body><h2>HTTP ERROR 401 Unauthorized</h2>
+<table>
+<tr><th>URI:</th><td>/nfc/receive_nfc</td></tr>
+<tr><th>STATUS:</th><td>401</td></tr>
+<tr><th>MESSAGE:</th><td>Unauthorized</td></tr>
+<tr><th>SERVLET:</th><td>Stapler</td></tr>
+</table>
+<hr/><a href="https://jetty.org/">Powered by Jetty:// 12.0.16</a><hr/>
+
+</body>
+</html>

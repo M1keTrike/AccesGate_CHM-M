@@ -43,7 +43,7 @@ func (w *WebSocketAglomerationEmitter) Send(content []byte) error {
 		return err
 	}
 
-	fmt.Printf("Mensaje enviado al WebSocket [%s]: %s\n", w.topic, content)
+	fmt.Printf("Mensaje enviado al WebSocket [%s]: %s\n", w.topic, string(jsonMessage))
 	return nil
 }
 
