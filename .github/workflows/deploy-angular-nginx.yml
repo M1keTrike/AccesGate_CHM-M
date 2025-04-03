@@ -41,7 +41,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          source: Access-Gate-APP/Access-Gate/dist/access-gate/browser/access-gate.tar.gz
+          source: Access-Gate-APP/Access-Gate/dist/access-gate/access-gate.tar.gz
           target: "/home/ubuntu/"
 
       - name: Deploy on EC2 (extract and replace frontend)
