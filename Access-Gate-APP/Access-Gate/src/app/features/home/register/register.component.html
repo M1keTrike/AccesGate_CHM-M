@@ -1,12 +1,15 @@
-<div class="min-h-screen bg-gradient-to-br from-[#424242] to-[#b98809] py-6 flex flex-col justify-center sm:py-12">
-  <div class="relative py-3 sm:max-w-2xl sm:mx-auto">
-    <div class="absolute inset-0 bg-gradient-to-r from-[#FFEB3B] to-[#B8860B] shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-    <div class="relative px-6 py-12 bg-[#212121] shadow-lg sm:rounded-3xl sm:p-24">
-      <div class="max-w-2xl mx-auto">
+<div class="min-h-screen bg-gradient-to-br from-[#424242] to-[#b98809] py-3 sm:py-6 flex flex-col justify-center px-4 sm:px-0">
+  <div class="relative py-2 sm:py-3 w-full max-w-sm mx-auto">
+    <!-- Div amarillo degradado - Aumentado para que sobresalga más -->
+    <div class="absolute inset-0 -top-2 -bottom-2 -left-2 -right-2 bg-gradient-to-r from-[#FFEB3B] to-[#B8860B] shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
+    
+    <!-- Contenedor principal con z-index para superposición -->
+    <div class="relative px-4 py-8 sm:px-6 sm:py-12 bg-[#212121] shadow-lg rounded-3xl z-10">
+      <div class="max-w-md mx-auto">
         <div class="divide-y divide-gray-200">
-          <div class="py-10 text-base leading-6 space-y-6 text-gray-700 sm:text-xl sm:leading-7">
-            <h2 class="text-3xl font-bold text-center mb-8 text-[#FFD700]">Register</h2>
-            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+          <div class="py-6 sm:py-10 text-base leading-6 space-y-4 sm:space-y-6 text-gray-700 sm:text-xl sm:leading-7">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-6 sm:mb-10 text-[#FFD700]">Register</h2>
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-4 sm:space-y-6">
               
               <div class="relative">
                 <input 
@@ -18,6 +21,10 @@
                 <label class="absolute left-0 -top-3.5 text-[#FFD700] text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-[#424242] peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#FFD700] peer-focus:text-sm">
                   Full Name
                 </label>
+                <div *ngIf="registerForm.get('name')?.errors?.['required'] && registerForm.get('name')?.touched" 
+                     class="text-red-500 text-xs mt-1">
+                     Name is required
+                </div>
               </div>
 
               <div class="relative">
@@ -30,6 +37,14 @@
                 <label class="absolute left-0 -top-3.5 text-[#FFD700] text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-[#424242] peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#FFD700] peer-focus:text-sm">
                   Email
                 </label>
+                <div *ngIf="registerForm.get('email')?.errors?.['required'] && registerForm.get('email')?.touched" 
+                     class="text-red-500 text-xs mt-1">
+                     Email is required
+                </div>
+                <div *ngIf="registerForm.get('email')?.errors?.['email'] && registerForm.get('email')?.touched" 
+                     class="text-red-500 text-xs mt-1">
+                     Please enter a valid email
+                </div>
               </div>
 
               <div class="relative">
@@ -42,6 +57,14 @@
                 <label class="absolute left-0 -top-3.5 text-[#FFD700] text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-[#424242] peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#FFD700] peer-focus:text-sm">
                   Password
                 </label>
+                <div *ngIf="registerForm.get('password')?.errors?.['required'] && registerForm.get('password')?.touched" 
+                     class="text-red-500 text-xs mt-1">
+                  Password is required
+                </div>
+                <div *ngIf="registerForm.get('password')?.errors?.['minlength'] && registerForm.get('password')?.touched" 
+                     class="text-red-500 text-xs mt-1">
+                  Password must be at least 6 characters
+                </div>
               </div>
 
               <div class="relative">
@@ -54,19 +77,31 @@
                 <label class="absolute left-0 -top-3.5 text-[#FFD700] text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-[#424242] peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#FFD700] peer-focus:text-sm">
                   Confirm Password
                 </label>
+                <div *ngIf="registerForm.get('confirmPassword')?.errors?.['required'] && registerForm.get('confirmPassword')?.touched" 
+                     class="text-red-500 text-xs mt-1">
+                  Please confirm your password
+                </div>
+                <div *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched" 
+                     class="text-red-500 text-xs mt-1">
+                  Passwords do not match
+                </div>
+              </div>
+
+              <div *ngIf="registerError" class="text-red-500 text-center mt-2 sm:mt-4 text-sm sm:text-base">
+                {{ registerError }}
               </div>
 
               <div class="relative pt-4">
                 <button 
                   type="submit"
                   [disabled]="!registerForm.valid"
-                  class="w-full bg-[#FFD700] text-[#212121] rounded-md px-2 py-3 hover:bg-[#FFEB3B] focus:outline-none focus:ring-2 focus:ring-[#FFD700] focus:ring-opacity-50 transform hover:-translate-y-0.5 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                  class="w-full bg-[#FFD700] text-[#212121] rounded-md px-2 py-2 sm:py-3 hover:bg-[#FFEB3B] focus:outline-none focus:ring-2 focus:ring-[#FFD700] focus:ring-opacity-50 transform hover:-translate-y-0.5 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base">
                   Register
                 </button>
               </div>
 
               <div class="text-center mt-4">
-                <a routerLink="/login" class="text-sm text-[#FFD700] hover:text-[#FFEB3B]">
+                <a routerLink="/login" class="text-sm sm:text-base text-[#FFD700] hover:text-[#FFEB3B]">
                   Already have an account? Login
                 </a>
               </div>
@@ -77,6 +112,3 @@
     </div>
   </div>
 </div>
-<div *ngIf="registerError" class="text-red-500 text-center mt-4">
-    {{ registerError }}
-  </div>

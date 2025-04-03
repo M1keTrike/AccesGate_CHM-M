@@ -1,9 +1,44 @@
-<div class="organizer-dashboard">
-    <h1>Panel de Organizador</h1>
-  
-    <div class="buttons-container">
-      <button routerLink="/organizer/create-event">📅 Crear Nuevo Evento</button>
-      <button routerLink="/organizer/my-events">🎫 Mis Eventos</button>
-      <button routerLink="/organizer/security/events">🔒 Control de Seguridad</button>
+<div class="min-h-screen bg-gradient-to-br from-[#424242] to-[#b98809] py-8 flex flex-col items-center justify-center px-4">
+  <div class="relative w-full max-w-4xl mx-auto">
+    <!-- Div amarillo degradado que sobresale -->
+    <div class="absolute inset-0 -top-2 -bottom-2 -left-2 -right-2 bg-gradient-to-r from-[#FFEB3B] to-[#B8860B] shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
+    
+    <!-- Contenedor principal -->
+    <div class="relative px-6 py-8 bg-[#212121] shadow-lg rounded-3xl sm:p-12 z-10">
+      <button routerLink="/admin" class="bg-[#2A2A2A] text-[#FFD700] border border-[#FFD700] px-4 py-2 rounded-md hover:bg-[#FFD700] hover:text-[#212121] transition duration-200 text-sm sm:text-base">
+        ← Volver al Panel
+      </button>
+      <h1 class="text-3xl sm:text-4xl font-bold text-center mb-10 text-[#FFD700] border-[#FFD700]">Panel de Organizador </h1>
+      
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Botón Crear Evento -->
+        <button 
+          routerLink="/organizer/create-event"
+          class="bg-[#2A2A2A] border-2 border-[#FFD700] text-[#FFD700] p-6 rounded-xl hover:bg-[#FFD700] hover:text-[#212121] transition-all duration-300 flex flex-col items-center justify-center gap-3 transform hover:-translate-y-1 hover:shadow-lg"
+        >
+          <span class="text-3xl">📅</span>
+          <span class="text-lg font-medium">Crear Nuevo Evento</span>
+        </button>
+
+        <!-- Botón Mis Eventos -->
+        <button 
+          routerLink="/organizer/my-events"
+          class="bg-[#2A2A2A] border-2 border-[#FFD700] text-[#FFD700] p-6 rounded-xl hover:bg-[#FFD700] hover:text-[#212121] transition-all duration-300 flex flex-col items-center justify-center gap-3 transform hover:-translate-y-1 hover:shadow-lg"
+        >
+          <span class="text-3xl">🎫</span>
+          <span class="text-lg font-medium">Mis Eventos</span>
+        </button>
+
+        <!-- Botón Control de Seguridad -->
+        <button 
+          routerLink="/organizer/security/events"
+          class="bg-[#2A2A2A] border-2 border-[#FFD700] text-[#FFD700] p-6 rounded-xl hover:bg-[#FFD700] hover:text-[#212121] transition-all duration-300 flex flex-col items-center justify-center gap-3 transform hover:-translate-y-1 hover:shadow-lg"
+        >
+          <span class="text-3xl">🔒</span>
+          <span class="text-lg font-medium">Control de Seguridad</span>
+        </button>
+      </div>
     </div>
+  </div>
 </div>
