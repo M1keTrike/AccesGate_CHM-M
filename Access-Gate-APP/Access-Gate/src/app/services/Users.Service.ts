@@ -22,29 +22,41 @@ export class UsersService {
   private token: string;
 
   constructor(private http: HttpClient) {
-    this.token = localStorage.getItem('Authorization') || '';
-    console.log(this.token);
+    try {
+      this.token = localStorage.getItem('Authorization') || '';
+    } catch (error) {
+      console.warn('LocalStorage access error:', error);
+      this.token = '';
+    }
   }
 
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization':  this.token
+      'Authorization': `${this.token}`
     });
   }
 
   login(credentials: LoginCredentials): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials, );
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    });
   }
 
   setToken(token: string): void {
-    this.token = token;
-    localStorage.setItem('Authorization', token);
+    try {
+      this.token = token;
+      localStorage.setItem('Authorization', token);
+    } catch (error) {
+      console.warn('LocalStorage access error:', error);
+    }
   }
 
   logout(): void {
     this.token = "";
-    localStorage.removeItem('token');
+    localStorage.removeItem('Authorization');
   }
 
   getUsersByRole(role: string): Observable<User[]> {
@@ -69,6 +81,13 @@ export class UsersService {
   createUser(data: User): Observable<User> {
     return this.http.post<User>(this.apiUrl, data, {
       headers: this.getHeaders()
+    });
+  }
+  RegisterUser(data: User): Observable<User> {
+    return this.http.post<User>(this.apiUrl, data, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
     });
   }
 

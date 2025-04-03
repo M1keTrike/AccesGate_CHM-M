@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UsersService } from '../../../services/Users.Service';
+import { User } from '../../admin/models/IUsers';
 
 @Component({
   selector: 'app-register',
@@ -19,7 +20,7 @@ export class RegisterComponent implements OnInit {
     private router: Router
   ) {
     this.registerForm = this.fb.group({
-      fullName: ['', Validators.required],
+      name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]
@@ -35,19 +36,25 @@ export class RegisterComponent implements OnInit {
 
   onSubmit(): void {
     if (this.registerForm.valid) {
-      const userData = {
-        ...this.registerForm.value,
-        role: 'user',
-        username: this.registerForm.value.email // Using email as username
-      };
-      delete userData.confirmPassword;
+      
+      const userData: User = {
+        id: 0,
+        name: this.registerForm.value.name,
+        email: this.registerForm.value.email,
+        password_hash: this.registerForm.value.password,
+        role: 'admin',
+        created_at: ""
 
-      this.usersService.createUser(userData).subscribe({
+      };
+      
+      console.log('📤 Sending registration data:', userData);
+      
+      this.usersService.RegisterUser(userData).subscribe({
         next: (response) => {
-          // After successful registration, log in the user
+          console.log('✅ Registration response:', response);
           this.usersService.login({
             email: userData.email,
-            password: userData.password
+            password: userData.password_hash
           }).subscribe({
             next: (loginResponse) => {
               this.usersService.setToken(loginResponse.token);
