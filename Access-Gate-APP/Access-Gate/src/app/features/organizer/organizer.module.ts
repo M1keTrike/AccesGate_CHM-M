@@ -13,7 +13,6 @@ import { OrganizerRoutingModule } from './organizer-routing.module';
 import { OrganizerDashboardComponent } from './components/organizer-dashboard/organizer-dashboard.component';
 import { CreateEventComponent } from './components/create-event/create-event.component';
 import { MyEventsComponent } from './components/my-events/my-events.component';
-import { ManageAttendeesComponent } from './components/manage-attendees/manage-attendees.component';
 import { EventStatsComponent } from './components/event-stats/event-stats.component';
 import { UpdateEventComponent } from './components/update-event/update-event.component';
 
@@ -22,7 +21,6 @@ import { UpdateEventComponent } from './components/update-event/update-event.com
     OrganizerDashboardComponent,
     CreateEventComponent,
     MyEventsComponent,
-    ManageAttendeesComponent,
     EventStatsComponent,
     UpdateEventComponent
   ],
@@ -41,7 +39,6 @@ import { UpdateEventComponent } from './components/update-event/update-event.com
     OrganizerDashboardComponent,
     CreateEventComponent,
     MyEventsComponent,
-    ManageAttendeesComponent,
     EventStatsComponent
   ]
 })
