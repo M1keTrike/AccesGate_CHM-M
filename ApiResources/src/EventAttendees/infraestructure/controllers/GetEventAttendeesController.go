@@ -25,7 +25,7 @@ func NewGetEventAttendeesController(useCase *application.GetEventAttendees) *Get
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Security BearerAuth
-// @Router /api/event-attendees/event/{eventId}/attendees [get]
+// @Router /event-attendees/events/{eventId}/attendees [get]
 func (c *GetEventAttendeesController) Execute(ctx *gin.Context) {
     eventID, err := strconv.Atoi(ctx.Param("eventId"))
     if err != nil {
