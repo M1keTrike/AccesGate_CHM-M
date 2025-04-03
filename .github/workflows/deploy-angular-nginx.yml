@@ -57,7 +57,10 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
+            sudo mkdir -p /var/www/accessgate
+            sudo chown -R $USER:$USER /var/www/accessgate
             sudo rm -rf /var/www/accessgate/*
-            tar -xzf /home/ubuntu/access-gate.tar.gz -C /var/www/accessgate/
+            sudo tar -xzf /home/***/access-gate.tar.gz -C /var/www/accessgate/
             sudo chown -R www-data:www-data /var/www/accessgate
             sudo chmod -R 755 /var/www/accessgate
+
