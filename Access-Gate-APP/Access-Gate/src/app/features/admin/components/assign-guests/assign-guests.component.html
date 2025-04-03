@@ -1,99 +1,108 @@
-<div class="assign-guests-container">
-    <div class="header-section">
-      <h2 class="page-title">Assign Guests to Events</h2>
-      <mat-divider></mat-divider>
-    </div>
-  
-    <!-- Form Section -->
-    <mat-card class="form-card">
-      <mat-card-header>
-        <mat-card-title>Assign New Guest</mat-card-title>
-      </mat-card-header>
-      <mat-divider></mat-divider>
-      
-      <mat-card-content>
-        <form [formGroup]="assignForm" (ngSubmit)="assignGuest()" class="assignment-form">
-          <div class="form-fields">
-            <!-- Event Selection -->
-            <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Select Event</mat-label>
-              <mat-select formControlName="eventId" (selectionChange)="onEventSelect($event.value)" required>
-                <mat-option *ngFor="let event of events" [value]="event.id">
-                  {{ event.name }} ({{ event.start_time | date:'mediumDate' }})
-                </mat-option>
-              </mat-select>
-              <mat-icon matSuffix>event</mat-icon>
-              <mat-error *ngIf="assignForm.get('eventId')?.hasError('required')">
-                Please select an event
-              </mat-error>
-            </mat-form-field>
-  
-            <!-- Guest Selection -->
-            <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Select Guest</mat-label>
-              <mat-select formControlName="userId" required>
-                <mat-option *ngFor="let user of filteredUsers" [value]="user.id">
-                  {{ user.name }} ({{ user.email }})
-                </mat-option>
-              </mat-select>
-              <mat-icon matSuffix>person</mat-icon>
-              <mat-error *ngIf="assignForm.get('userId')?.hasError('required')">
-                Please select a guest
-              </mat-error>
-            </mat-form-field>
+<div class="min-h-screen bg-gradient-to-br from-[#424242] to-[#b98809] py-6 flex flex-col justify-center sm:py-12">
+  <div class="relative py-3 sm:max-w-4xl sm:mx-auto">
+    <div class="absolute inset-0 bg-gradient-to-r from-[#FFEB3B] to-[#B8860B] shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+    <div class="relative px-6 py-12 bg-[#212121] shadow-lg sm:rounded-3xl sm:p-24">
+      <div class="max-w-4xl mx-auto">
+        <div class="divide-y divide-gray-200">
+          <h2 class="text-4xl font-bold text-center mb-10 text-[#FFD700]">Assign Guests to Events</h2>
+
+          <!-- Form Section -->
+          <div class="py-8">
+            <h3 class="text-2xl font-semibold text-[#FFD700] mb-6">Assign New Guest</h3>
+            <form [formGroup]="assignForm" (ngSubmit)="assignGuest()" class="space-y-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Event Selection -->
+                <div class="relative">
+                  <mat-form-field appearance="outline" class="w-full">
+                    <mat-label class="text-[#FFD700]">Select Event</mat-label>
+                    <mat-select formControlName="eventId" (selectionChange)="onEventSelect($event.value)" required class="text-[#FFD700]">
+                      <mat-option *ngFor="let event of events" [value]="event.id" class="text-white !text-white">
+                        {{ event.name }} ({{ event.start_time | date:'mediumDate' }})
+                      </mat-option>
+                    </mat-select>
+                    <mat-icon matSuffix class="text-[#FFD700]">event</mat-icon>
+                    <mat-error *ngIf="assignForm.get('eventId')?.hasError('required')">
+                      Please select an event
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <!-- Guest Selection -->
+                <div class="relative">
+                  <mat-form-field appearance="outline" class="w-full">
+                    <mat-label class="text-[#FFD700]">Select Guest</mat-label>
+                    <mat-select formControlName="userId" required class="text-[#FFD700]">
+                      <mat-option *ngFor="let user of filteredUsers" [value]="user.id" class="text-white !text-white">
+                        {{ user.name }} ({{ user.email }})
+                      </mat-option>
+                    </mat-select>
+                    <mat-icon matSuffix class="text-[#FFD700]">person</mat-icon>
+                    <mat-error *ngIf="assignForm.get('userId')?.hasError('required')">
+                      Please select a guest
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="flex justify-center pt-4">
+                <button type="submit" 
+                        [disabled]="!assignForm.valid || isLoading"
+                        class="w-full md:w-auto bg-[#FFD700] text-[#212121] rounded-md px-8 py-3 hover:bg-[#FFEB3B] focus:outline-none focus:ring-2 focus:ring-[#FFD700] focus:ring-opacity-50 transform hover:-translate-y-0.5 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                  <span *ngIf="!isLoading">Assign Guest</span>
+                  <mat-spinner *ngIf="isLoading" diameter="24" class="mx-auto"></mat-spinner>
+                </button>
+              </div>
+            </form>
           </div>
-  
-          <!-- Submit Button -->
-          <div class="form-actions">
-            <button mat-raised-button 
-                    color="primary" 
-                    type="submit" 
-                    [disabled]="!assignForm.valid || isLoading"
-                    class="submit-button">
-              <span *ngIf="!isLoading">Assign Guest</span>
-              <mat-spinner *ngIf="isLoading" diameter="24" class="spinner"></mat-spinner>
-            </button>
-          </div>
-        </form>
-      </mat-card-content>
-    </mat-card>
-  
-    <!-- Attendees List Section -->
-    <mat-card class="attendees-card" *ngIf="selectedEventId">
-      <mat-card-header>
-        <mat-card-title>Current Attendees</mat-card-title>
-        <mat-card-subtitle>
-          {{ attendees.length }} {{ attendees.length === 1 ? 'attendee' : 'attendees' }} registered
-        </mat-card-subtitle>
-      </mat-card-header>
-      <mat-divider></mat-divider>
-      
-      <mat-card-content>
-        <mat-list class="attendees-list">
-          <!-- Attendees List -->
-          <mat-list-item *ngFor="let attendee of attendees" class="attendee-item">
-            <div class="attendee-info">
-              <mat-icon matListItemIcon>person</mat-icon>
-              <div matListItemTitle>{{ attendee.name }}</div>
-              <div matListItemLine>{{ attendee.email }}</div>
+
+          <!-- Attendees List Section -->
+          <div class="py-8" *ngIf="selectedEventId">
+            <div class="flex justify-between items-center mb-6">
+              <h3 class="text-2xl font-semibold text-[#FFD700]">Current Attendees</h3>
+              <span class="text-[#FFD700] text-sm">
+                {{ attendees.length }} {{ attendees.length === 1 ? 'attendee' : 'attendees' }} registered
+              </span>
             </div>
-            
-            <button mat-icon-button 
-                    color="warn" 
-                    (click)="removeAttendee(attendee.id)"
-                    matTooltip="Remove attendee"
-                    aria-label="Remove attendee">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </mat-list-item>
-  
-          <!-- Empty State -->
-          <mat-list-item *ngIf="attendees.length === 0" class="empty-state">
-            <mat-icon matListItemIcon>info</mat-icon>
-            <div matListItemTitle>No attendees registered for this event</div>
-            <div matListItemLine>Select guests to assign them to this event</div>
-          </mat-list-item>
-        </mat-list>
-      </mat-card-content>
-    </mat-card>
+
+            <!-- Attendees Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div *ngFor="let attendee of attendees" 
+                   class="bg-[#2A2A2A] rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow duration-200">
+                <div class="flex items-start justify-between">
+                  <div class="flex-1">
+                    <div class="flex items-center space-x-3">
+                      <div class="w-10 h-10 rounded-full bg-[#FFD700] flex items-center justify-center">
+                        <mat-icon class="text-[#212121]">person</mat-icon>
+                      </div>
+                      <div>
+                        <h4 class="text-[#FFD700] font-semibold">{{ attendee.name }}</h4>
+                        <p class="text-[#B8860B] text-sm">{{ attendee.email }}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <button (click)="removeAttendee(attendee.id)"
+                          class="text-red-500 hover:text-red-600 transition-colors duration-200"
+                          matTooltip="Remove attendee">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          
+
+              <!-- Empty State -->
+              <div *ngIf="attendees.length === 0" 
+                   class="col-span-full bg-[#2A2A2A] rounded-lg p-6 text-center">
+                <mat-icon class="text-[#FFD700] text-4xl mb-2">info</mat-icon>
+                <h4 class="text-[#FFD700] font-semibold mb-1">No attendees registered</h4>
+                <p class="text-[#B8860B]">Select guests to assign them to this event</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+

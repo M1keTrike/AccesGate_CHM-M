@@ -70,11 +70,13 @@ export class AssignGuestsComponent implements OnInit {
       this.isLoading = true;
       this.eventAttendeeService.getEventAttendees(eventId).subscribe({
         next: (attendees: User[]) => {
+          console.log('Received attendees:', attendees); // Add this debug log
           this.attendees = attendees;
           this.filterAvailableUsers();
           this.isLoading = false;
         },
         error: (err: any) => {
+          console.error('Error loading attendees:', err); // Add this debug log
           this.showError('Error loading attendees');
           this.isLoading = false;
         }
