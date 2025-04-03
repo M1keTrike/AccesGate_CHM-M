@@ -3,18 +3,17 @@ import { RouterModule, Routes } from '@angular/router';
 import { OrganizerDashboardComponent } from './components/organizer-dashboard/organizer-dashboard.component';
 import { CreateEventComponent } from './components/create-event/create-event.component';
 import { MyEventsComponent } from './components/my-events/my-events.component';
-import { ManageAttendeesComponent } from './components/manage-attendees/manage-attendees.component';
 import { EventStatsComponent } from './components/event-stats/event-stats.component';
+import { UpdateEventComponent } from './components/update-event/update-event.component';
 
 const routes: Routes = [
   { path: '', component: OrganizerDashboardComponent },
   { path: 'dashboard', component: OrganizerDashboardComponent },
   { path: 'create-event', component: CreateEventComponent },
   { path: 'my-events', component: MyEventsComponent },
-  { path: 'manage-attendees', component: ManageAttendeesComponent },
   { path: 'event-stats', component: EventStatsComponent },
   { path: 'event/:id/edit', component: CreateEventComponent },
-  { path: 'event/:id/attendees', component: ManageAttendeesComponent }
+  { path: 'update-event/:id', component: UpdateEventComponent }
 ];
 
 @NgModule({
