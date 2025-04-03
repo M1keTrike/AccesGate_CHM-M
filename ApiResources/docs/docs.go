@@ -2320,6 +2320,9 @@ const docTemplate = `{
         "entities.EventAttendee": {
             "type": "object",
             "properties": {
+                "attended": {
+                    "type": "boolean"
+                },
                 "event_id": {
                     "type": "integer"
                 },

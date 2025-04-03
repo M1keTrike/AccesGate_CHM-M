@@ -1,0 +1,30 @@
+<div class="attendees-control-container">
+  <div class="header">
+    <button routerLink="/organizer/security/events" class="back-btn">
+      ← Back to Events
+    </button>
+    <h1>Event Attendees Control</h1>
+  </div>
+
+  <div class="attendees-list" *ngIf="!loading && attendees.length > 0">
+    <div class="attendee-card" *ngFor="let attendee of attendees">
+      <div class="attendee-info">
+        <h3>User ID: {{ attendee.user_id }}</h3>
+        <p>Registered at: {{ attendee.registered_at | date:'medium' }}</p>
+      </div>
+      <div class="attendance-status" [class.attended]="attendee.attended">
+        <button (click)="updateAttendanceStatus(attendee.user_id, !attendee.attended)">
+          {{ attendee.attended ? '✅ Present' : '⏳ Mark as Present' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-attendees" *ngIf="!loading && attendees.length === 0">
+    <p>No registered attendees for this event.</p>
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    <p>Loading attendees...</p>
+  </div>
+</div>
