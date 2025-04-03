@@ -32,7 +32,8 @@ jobs:
       - name: Archive build output
         run: |
           cd Access-Gate-APP/Access-Gate/dist/access-gate/browser
-          tar -czf access-gate.tar.gz *
+          tar -czf ../../access-gate.tar.gz *
+
 
       - name: Upload via SCP to EC2
         uses: appleboy/scp-action@v0.1.4
