@@ -1,5 +1,10 @@
 <div class="my-events-container">
-  <h1>My Events</h1>
+  <div class="header-section">
+    <h1>My Events</h1>
+    <button routerLink="/organizer/dashboard" class="back-btn">
+      🏠 Back to Dashboard
+    </button>
+  </div>
 
   <div class="events-grid" *ngIf="!loading && events.length > 0">
     <div class="event-card" *ngFor="let event of events">
