@@ -26,7 +26,7 @@ func NewRemoveAttendeeController(useCase *application.RemoveAttendee) *RemoveAtt
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Security BearerAuth
-// @Router /api/event-attendees/event/{eventId}/user/{userId} [delete]
+// @Router /event-attendees/events/{eventId}/users/{userId} [delete]
 func (c *RemoveAttendeeController) Execute(ctx *gin.Context) {
     eventID, err := strconv.Atoi(ctx.Param("eventId"))
     if err != nil {

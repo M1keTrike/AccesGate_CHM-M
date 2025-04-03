@@ -26,7 +26,7 @@ func NewRegisterAttendeeController(useCase *application.RegisterAttendee) *Regis
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Security BearerAuth
-// @Router /api/event-attendees [post]
+// @Router /event-attendees [post]
 func (c *RegisterAttendeeController) Execute(ctx *gin.Context) {
     var attendee entities.EventAttendee
     if err := ctx.ShouldBindJSON(&attendee); err != nil {
