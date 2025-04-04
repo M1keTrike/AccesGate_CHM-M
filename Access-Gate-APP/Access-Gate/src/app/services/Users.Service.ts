@@ -89,8 +89,8 @@ export class UsersService {
       headers: this.getHeaders()
     });
   }
-  RegisterUser(data: User): Observable<User> {
-    return this.http.post<User>(this.apiUrl, data, {
+  RegisterAdminUser(data: User): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/admin`, data, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })

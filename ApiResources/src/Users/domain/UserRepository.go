@@ -6,6 +6,7 @@ import (
 
 type UserRepository interface {
 	CreateUser(user *entities.User) error
+	CreateUserAdmin(user *entities.User) error // New method
 	GetUserByID(id int) (entities.User, error)
 	GetUserByEmail(email string) (*entities.User, error)
 	GetAllUsers() ([]entities.User, error)

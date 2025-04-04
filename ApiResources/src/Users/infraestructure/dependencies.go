@@ -12,6 +12,7 @@ func Init(router *gin.Engine) {
 
 	// Casos de uso
 	createUserService := application.NewCreateUserUseCase(os)
+	createUserAdminService := application.NewCreateUserAdminUseCase(os) // New use case
 	getUserService := application.NewGetUserByID(os)
 	updateUserService := application.NewUpdateUser(os)
 	deleteUserService := application.NewDeleteUser(os)
@@ -23,6 +24,7 @@ func Init(router *gin.Engine) {
 
 	// Controladores
 	createUserController := controllers.NewCreateUserController(*createUserService)
+	createUserAdminController := controllers.NewCreateUserAdminController(createUserAdminService) // New controller
 	getUserController := controllers.NewGetUserByIDController(*getUserService)
 	updateUserController := controllers.NewUpdateUserController(*updateUserService)
 	deleteUserController := controllers.NewDeleteUserController(*deleteUserService)
@@ -34,6 +36,7 @@ func Init(router *gin.Engine) {
 
 	UsersRoutes(router, UsersHandlers{
 		create:         createUserController,
+		createAdmin:    createUserAdminController, // New handler
 		get:            getUserController,
 		update:         updateUserController,
 		delete:         deleteUserController,
