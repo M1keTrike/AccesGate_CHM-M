@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { BluetoothService } from '../../../../services/Bluetooth.service';
+import { DeviceService } from '../../../../services/device.service';
 
 @Component({
   selector: 'app-wifi-credentials-form',
@@ -15,7 +16,10 @@ export class WifiCredentialsFormComponent {
 
   @Output() wifiConnected = new EventEmitter<string>(); // MAC como string
 
-  constructor(private bluetoothService: BluetoothService) {}
+  constructor(
+    private bluetoothService: BluetoothService,
+    private deviceService: DeviceService
+  ) {}
 
   async connectToWiFi() {
     this.isConnecting = true;
@@ -23,15 +27,14 @@ export class WifiCredentialsFormComponent {
 
     try {
       const mac = await this.bluetoothService.sendWiFiCredentials(this.ssid, this.password);
-
       if (mac) {
-        this.wifiConnected.emit(mac); // Emitir MAC al componente padre
-      } else {
-        this.errorMessage = 'Error: no se recibió dirección MAC del dispositivo.';
+        // Register the device with the API
+        await this.deviceService.registerDevice(mac);
+        this.wifiConnected.emit(mac);
       }
-    } catch (error) {
-      console.error('Error al conectar al Wi-Fi:', error);
-      this.errorMessage = 'No se pudo conectar a la red Wi-Fi.';
+    } catch (error: any) {
+      console.error('Error:', error);
+      this.errorMessage = error.message;
     } finally {
       this.isConnecting = false;
     }
