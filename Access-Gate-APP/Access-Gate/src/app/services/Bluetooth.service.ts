@@ -98,7 +98,9 @@ export class BluetoothService {
           try {
             const data = JSON.parse(value);
             if (data.status === 'connected' && data.mac) {
-              // Verify authentication token and get user ID
+              // Store MAC address in localStorage
+              localStorage.setItem('device_mac', data.mac);
+              console.log('mac guardada en localStorage', data.mac)
               const token = this.authService.getToken();
               if (!token) {
                 reject(new Error('No hay sesión activa'));

@@ -1,6 +1,44 @@
-<h2>Escanear Tarjeta NFC</h2>
+<div class="min-h-screen bg-gradient-to-br from-[#424242] to-[#b98809] py-6 flex flex-col justify-center sm:py-12 px-4">
+  <div class="relative py-3 w-full sm:max-w-2xl mx-auto">
+    <!-- Div amarillo degradado que sobresale -->
+    <div class="absolute inset-0 -top-2 -bottom-2 -left-2 -right-2 bg-gradient-to-r from-[#FFEB3B] to-[#B8860B] shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
+    
+    <!-- Contenedor principal -->
+    <div class="relative px-4 py-8 bg-[#212121] shadow-lg rounded-3xl sm:p-12 z-10">
+      <button routerLink="/admin/create-user" class="bg-[#2A2A2A] text-[#FFD700] border border-[#FFD700] px-4 py-2 rounded-md hover:bg-[#FFD700] hover:text-[#212121] transition duration-200 text-sm sm:text-base">
+        ← Volver a Crear Usuario
+      </button>
+      
+      <h2 class="text-3xl sm:text-4xl font-bold text-center mb-8 text-[#FFD700]">Escanear Tarjeta NFC</h2>
+      
+      <div class="space-y-6">
+        <!-- Campo NFC -->
+        <div class="relative">
+          <input 
+            type="text" 
+            id="nfcInput" 
+            [(ngModel)]="nfcCode"
+            class="peer h-10 w-full border-b-2 border-[#424242] text-[#FFD700] bg-transparent placeholder-transparent focus:outline-none focus:border-[#FFEB3B]"
+            placeholder="Código NFC"
+          >
+          <label 
+            for="nfcInput" 
+            class="absolute left-0 -top-3.5 text-[#FFD700] text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-[#424242] peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#FFD700] peer-focus:text-sm"
+          >
+            Código NFC
+          </label>
+        </div>
 
-<label for="nfcInput">Ingrese el código NFC:</label>
-<input type="text" id="nfcInput" [(ngModel)]="nfcCode">
-
-<button (click)="confirmNFC()">Confirmar</button>
+        <!-- Botón de confirmación -->
+        <div class="pt-6">
+          <button 
+            (click)="confirmNFC()"
+            class="w-full bg-[#FFD700] text-[#212121] rounded-md px-4 py-3 hover:bg-[#FFEB3B] focus:outline-none focus:ring-2 focus:ring-[#FFD700] focus:ring-opacity-50 transform hover:-translate-y-0.5 transition duration-200"
+          >
+            Confirmar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
