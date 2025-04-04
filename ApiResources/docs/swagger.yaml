@@ -5,6 +5,9 @@ definitions:
       biometric_auth:
         example: false
         type: boolean
+      created_by:
+        example: 1
+        type: integer
       email:
         example: admin@example.com
         type: string
@@ -118,6 +121,8 @@ definitions:
         type: boolean
       created_at:
         type: string
+      created_by:
+        type: integer
       email:
         type: string
       fingerprint_id:

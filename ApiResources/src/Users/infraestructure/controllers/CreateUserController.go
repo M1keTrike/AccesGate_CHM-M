@@ -17,6 +17,7 @@ type CreateUserRequest struct {
 	Role          string `json:"role" example:"admin"`
 	FingerprintID int16  `json:"fingerprint_id" example:"0"`
 	BiometricAuth bool   `json:"biometric_auth" example:"false"`
+	CreatedBy     int    `json:"created_by" example:"1"`
 }
 
 type CreateUserController struct {
@@ -52,13 +53,12 @@ func (c *CreateUserController) Execute(ctx *gin.Context) {
 		Role:          req.Role,
 		FingerprintID: req.FingerprintID,
 		BiometricAuth: req.BiometricAuth,
+		CreatedBy:     req.CreatedBy,
 	}
 
 	err := c.useCase.Execute(user)
 	if err != nil {
-		
 		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
-			// 23505 es el código de error de PostgreSQL para unique_violation
 			ctx.JSON(http.StatusConflict, gin.H{"error": "El correo electrónico ya está registrado"})
 			return
 		}
