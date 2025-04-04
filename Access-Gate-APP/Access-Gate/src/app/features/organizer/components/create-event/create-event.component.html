@@ -1,50 +1,104 @@
-<div class="create-event-container">
-  <h2>Create New Event</h2>
+<div class="min-h-screen bg-gradient-to-br from-[#424242] to-[#b98809] py-8 flex flex-col items-center justify-center-safe px-4">
+  <div class="relative w-full max-w-2xl mx-auto">
+    <!-- Div amarillo degradado que sobresale -->
+    <div class="absolute inset-0 -top-2 -bottom-2 -left-2 -right-2 bg-gradient-to-r from-[#FFEB3B] to-[#B8860B] shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
+    
+    <!-- Contenedor principal -->
+    <div class="relative px-6 py-8 bg-[#212121] shadow-lg rounded-3xl sm:p-12 z-10">
+      <h2 class="text-3xl font-bold text-center mb-8 text-[#FFD700]">Create New Event</h2>
 
-  <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="event-form">
-    <mat-form-field appearance="fill">
-      <mat-label>Event Name</mat-label>
-      <input matInput formControlName="name" placeholder="Enter event name">
-      <mat-error *ngIf="eventForm.get('name')?.errors?.['required']">
-        Name is required
-      </mat-error>
-      <mat-error *ngIf="eventForm.get('name')?.errors?.['minlength']">
-        Name must be at least 3 characters
-      </mat-error>
-    </mat-form-field>
+      <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Event Name -->
+        <div class="relative">
+          <input 
+            matInput
+            formControlName="name" 
+            class="w-full bg-[#2A2A2A] border-b-2 border-[#FFD700] text-[#FFD700] px-3 py-2 focus:outline-none focus:border-[#FFEB3B] peer"
+            placeholder=" "
+          >
+          <label class="absolute left-0 -top-5 text-[#FFD700] text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-[#B8860B] peer-placeholder-shown:top-2 peer-focus:-top-5 peer-focus:text-[#FFD700] peer-focus:text-sm">
+            Event Name
+          </label>
+          <div *ngIf="eventForm.get('name')?.errors?.['required'] && eventForm.get('name')?.touched" 
+               class="text-red-500 text-xs mt-1">
+            Name is required
+          </div>
+          <div *ngIf="eventForm.get('name')?.errors?.['minlength'] && eventForm.get('name')?.touched" 
+               class="text-red-500 text-xs mt-1">
+            Name must be at least 3 characters
+          </div>
+        </div>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Description</mat-label>
-      <textarea matInput formControlName="description" rows="4" placeholder="Enter event description"></textarea>
-      <mat-error *ngIf="eventForm.get('description')?.errors?.['required']">
-        Description is required
-      </mat-error>
-      <mat-error *ngIf="eventForm.get('description')?.errors?.['minlength']">
-        Description must be at least 10 characters
-      </mat-error>
-    </mat-form-field>
+        <!-- Description -->
+        <div class="relative">
+          <textarea 
+            formControlName="description"
+            rows="4"
+            class="w-full bg-[#2A2A2A] border-b-2 border-[#FFD700] text-[#FFD700] px-3 py-2 focus:outline-none focus:border-[#FFEB3B] peer"
+            placeholder=" "
+          ></textarea>
+          <label class="absolute left-0 -top-5 text-[#FFD700] text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-[#B8860B] peer-placeholder-shown:top-2 peer-focus:-top-5 peer-focus:text-[#FFD700] peer-focus:text-sm">
+            Description
+          </label>
+          <div *ngIf="eventForm.get('description')?.errors?.['required'] && eventForm.get('description')?.touched" 
+               class="text-red-500 text-xs mt-1">
+            Description is required
+          </div>
+          <div *ngIf="eventForm.get('description')?.errors?.['minlength'] && eventForm.get('description')?.touched" 
+               class="text-red-500 text-xs mt-1">
+            Description must be at least 10 characters
+          </div>
+        </div>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Start Time</mat-label>
-      <input matInput type="datetime-local" formControlName="start_time">
-      <mat-error *ngIf="eventForm.get('start_time')?.errors?.['required']">
-        Start time is required
-      </mat-error>
-    </mat-form-field>
+        <!-- Date/Time Fields -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Start Time -->
+          <div class="relative">
+            <label class="block text-[#FFD700] text-sm mb-1">Start Time</label>
+            <input 
+              type="datetime-local"
+              formControlName="start_time"
+              class="w-full bg-[#2A2A2A] border border-[#FFD700] text-[#FFD700] px-3 py-2 rounded focus:outline-none focus:ring-1 focus:ring-[#FFEB3B]"
+            >
+            <div *ngIf="eventForm.get('start_time')?.errors?.['required'] && eventForm.get('start_time')?.touched" 
+                 class="text-red-500 text-xs mt-1">
+              Start time is required
+            </div>
+          </div>
 
-    <mat-form-field appearance="fill">
-      <mat-label>End Time</mat-label>
-      <input matInput type="datetime-local" formControlName="end_time">
-      <mat-error *ngIf="eventForm.get('end_time')?.errors?.['required']">
-        End time is required
-      </mat-error>
-    </mat-form-field>
+          <!-- End Time -->
+          <div class="relative">
+            <label class="block text-[#FFD700] text-sm mb-1">End Time</label>
+            <input 
+              type="datetime-local"
+              formControlName="end_time"
+              class="w-full bg-[#2A2A2A] border border-[#FFD700] text-[#FFD700] px-3 py-2 rounded focus:outline-none focus:ring-1 focus:ring-[#FFEB3B]"
+            >
+            <div *ngIf="eventForm.get('end_time')?.errors?.['required'] && eventForm.get('end_time')?.touched" 
+                 class="text-red-500 text-xs mt-1">
+              End time is required
+            </div>
+          </div>
+        </div>
 
-    <div class="form-actions">
-      <button mat-button type="button" routerLink="/organizer/dashboard">Cancel</button>
-      <button mat-raised-button color="primary" type="submit" [disabled]="!eventForm.valid || isLoading">
-        {{ isLoading ? 'Creating...' : 'Create Event' }}
-      </button>
+        <!-- Form Actions -->
+        <div class="flex flex-col sm:flex-row justify-end gap-4 pt-6">
+          <button 
+            type="button" 
+            routerLink="/organizer/dashboard"
+            class="bg-transparent border border-[#FFD700] text-[#FFD700] px-6 py-2 rounded hover:bg-[#FFD700] hover:text-[#212121] transition duration-200"
+          >
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            [disabled]="!eventForm.valid || isLoading"
+            class="bg-[#FFD700] text-[#212121] px-6 py-2 rounded hover:bg-[#FFEB3B] focus:outline-none focus:ring-2 focus:ring-[#FFD700] focus:ring-opacity-50 transform hover:-translate-y-0.5 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {{ isLoading ? 'Creating...' : 'Create Event' }}
+          </button>
+        </div>
+      </form>
     </div>
-  </form>
+  </div>
 </div>

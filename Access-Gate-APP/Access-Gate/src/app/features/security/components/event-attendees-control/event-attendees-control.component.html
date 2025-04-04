@@ -1,30 +1,54 @@
-<div class="attendees-control-container">
-  <div class="header">
-    <button routerLink="/organizer/security/events" class="back-btn">
-      ← Back to Events
-    </button>
-    <h1>Event Attendees Control</h1>
-  </div>
+<div class="min-h-screen bg-gradient-to-br from-[#424242] to-[#b98809] py-8 px-4 flex flex-col items-center justify-center-safe">
+  <div class="max-w-4xl mx-auto">
+    <!-- Div amarillo degradado que sobresale -->
+    <div class="relative mb-10">
+      <div class="absolute inset-0 -top-2 -bottom-2 -left-2 -right-2 bg-gradient-to-r from-[#FFEB3B] to-[#B8860B] shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
+      
+      <!-- Contenedor principal -->
+      <div class="relative px-6 py-8 bg-[#212121] shadow-lg rounded-3xl z-10">
+        <!-- Header section -->
+        <div class="mb-8">
+          <button 
+            routerLink="/organizer/security/events"
+            class="bg-[#2A2A2A] border border-[#FFD700] text-[#FFD700] px-4 py-2 rounded-md hover:bg-[#FFD700] hover:text-[#212121] transition duration-200 flex items-center gap-2 mb-6"
+          >
+            <span>←</span>
+            <span>Back to Events</span>
+          </button>
+          <h1 class="text-3xl font-bold text-[#FFD700] text-center">Event Attendees Control</h1>
+        </div>
 
-  <div class="attendees-list" *ngIf="!loading && attendees.length > 0">
-    <div class="attendee-card" *ngFor="let attendee of attendees">
-      <div class="attendee-info">
-        <h3>User ID: {{ attendee.user_id }}</h3>
-        <p>Registered at: {{ attendee.registered_at | date:'medium' }}</p>
-      </div>
-      <div class="attendance-status" [class.attended]="attendee.attended">
-        <button (click)="updateAttendanceStatus(attendee.user_id, !attendee.attended)">
-          {{ attendee.attended ? '✅ Present' : '⏳ Mark as Present' }}
-        </button>
+        <!-- Loading state -->
+        <div *ngIf="loading" class="text-center py-8">
+          <p class="text-[#FFD700] text-lg">Loading attendees...</p>
+        </div>
+
+        <!-- Empty state -->
+        <div *ngIf="!loading && attendees.length === 0" class="bg-[#2A2A2A] rounded-xl p-8 text-center border border-[#FFD700]/20">
+          <p class="text-[#FFD700]">No registered attendees for this event.</p>
+        </div>
+
+        <!-- Attendees list -->
+        <div *ngIf="!loading && attendees.length > 0" class="space-y-4">
+          <div *ngFor="let attendee of attendees" class="bg-[#2A2A2A] rounded-xl p-6 border border-[#FFD700]/20 hover:border-[#FFD700]/50 transition duration-300">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div class="attendee-info">
+                <h3 class="text-xl font-semibold text-[#FFD700]">User ID: {{ attendee.user_id }}</h3>
+                <p class="text-[#B8860B] text-sm mt-1">Registered at: {{ attendee.registered_at | date:'medium' }}</p>
+              </div>
+              <button 
+                (click)="updateAttendanceStatus(attendee.user_id, !attendee.attended)"
+                class="bg-[#FFD700] text-[#212121] px-4 py-2 rounded-md hover:bg-[#FFEB3B] transition duration-200 flex items-center justify-center gap-2 min-w-[180px]"
+                [class.bg-green-500]="attendee.attended"
+                [class.hover:bg-green-600]="attendee.attended"
+              >
+                <span class="text-lg">{{ attendee.attended ? '✅' : '⏳' }}</span>
+                <span>{{ attendee.attended ? 'Present' : 'Mark as Present' }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-
-  <div class="no-attendees" *ngIf="!loading && attendees.length === 0">
-    <p>No registered attendees for this event.</p>
-  </div>
-
-  <div class="loading" *ngIf="loading">
-    <p>Loading attendees...</p>
   </div>
 </div>
