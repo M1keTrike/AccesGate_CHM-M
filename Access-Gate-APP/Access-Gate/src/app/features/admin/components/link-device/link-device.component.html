@@ -1,16 +1,38 @@
-<div class="link-device-container">
-  <h2>Vincular Microcontrolador</h2>
+<div class="min-h-screen bg-gradient-to-br from-[#424242] to-[#b98809] py-8 px-4  flex flex-col items-center justify-center-safe">
+  <div class="max-w-4xl mx-auto">
+    <!-- Div amarillo degradado que sobresale -->
+    <div class="relative mb-10">
+      <div class="absolute inset-0 -top-2 -bottom-2 -left-2 -right-2 bg-gradient-to-r from-[#FFEB3B] to-[#B8860B] shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
+      
+      <!-- Contenedor principal -->
+      <div class="relative px-6 py-8 bg-[#212121] shadow-lg rounded-3xl z-10">
+        <button routerLink="/admin" class="bg-[#2A2A2A] text-[#FFD700] border border-[#FFD700] px-4 py-2 rounded-md hover:bg-[#FFD700] hover:text-[#212121] transition duration-200 text-sm sm:text-base">
+          ← Volver al Panel
+        </button>
+        <h2 class="text-2xl sm:text-3xl font-bold text-center mb-8 mt-8 text-[#FFD700]">Vincular Microcontrolador</h2>
 
-  <app-devices-list
-    (deviceConnected)="onBluetoothConnected()"
-  ></app-devices-list>
+        <!-- Lista de dispositivos Bluetooth -->
+        <div class="bg-[#2A2A2A] rounded-xl p-6 mb-8 border border-[#FFD700]/30">
+          <h3 class="text-xl font-semibold text-[#FFD700] mb-4">Dispositivos Bluetooth Disponibles</h3>
+          <app-devices-list
+            (deviceConnected)="onBluetoothConnected()"
+          ></app-devices-list>
+        </div>
 
-  <app-wifi-credentials-form
-    *ngIf="bluetoothStatus === 'connected'"
-    (wifiConnected)="onWiFiConnected($event)"
-  >
-  </app-wifi-credentials-form>
+        <!-- Formulario WiFi (solo visible cuando Bluetooth está conectado) -->
+        <div *ngIf="bluetoothStatus === 'connected'" class="bg-[#2A2A2A] rounded-xl p-6 mb-8 border border-[#FFD700]/30">
+          <h3 class="text-xl font-semibold text-[#FFD700] mb-4">Configurar Credenciales WiFi</h3>
+          <app-wifi-credentials-form
+            (wifiConnected)="onWiFiConnected($event)"
+          ></app-wifi-credentials-form>
+        </div>
 
-  <app-link-status [status]="bluetoothStatus" [macAddress]="macAddress">
-  </app-link-status>
+        <!-- Estado de la conexión -->
+        <div class="bg-[#2A2A2A] rounded-xl p-6 border border-[#FFD700]/30">
+          <h3 class="text-xl font-semibold text-[#FFD700] mb-4">Estado de la Conexión</h3>
+          <app-link-status [status]="bluetoothStatus" [macAddress]="macAddress"></app-link-status>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

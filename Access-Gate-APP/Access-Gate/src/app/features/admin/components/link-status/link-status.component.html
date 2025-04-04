@@ -1,16 +1,35 @@
-<div class="link-status">
-    <h3>Estado de vinculación</h3>
-  
-    <p *ngIf="status === 'disconnected'">🔌 Dispositivo no conectado.</p>
-  
-    <p *ngIf="status === 'connected'">
-      ✅ Dispositivo conectado por Bluetooth.<br>
-      Introduce las credenciales Wi-Fi.
-    </p>
-  
-    <p *ngIf="status === 'wifi-connected'">
-      🌐 Conectado a red Wi-Fi.<br>
-      📡 Dirección MAC: <strong>{{ macAddress }}</strong>
-    </p>
+<div class="bg-[#2A2A2A] rounded-xl p-6 border border-[#FFD700]/30">
+  <h3 class="text-xl font-semibold text-[#FFD700] mb-4">Estado de vinculación</h3>
+
+  <div class="space-y-4">
+    <!-- Estado: Disconnected -->
+    <div *ngIf="status === 'disconnected'" class="bg-[#212121] rounded-lg p-4 border border-red-500/30 flex items-start gap-3">
+      <span class="text-2xl text-red-500">🔌</span>
+      <div>
+        <p class="text-red-500 font-medium">Dispositivo no conectado</p>
+        <p class="text-[#B8860B] text-sm mt-1">Conecta un dispositivo Bluetooth para comenzar</p>
+      </div>
+    </div>
+
+    <!-- Estado: Connected -->
+    <div *ngIf="status === 'connected'" class="bg-[#212121] rounded-lg p-4 border border-[#FFD700]/30 flex items-start gap-3">
+      <span class="text-2xl text-green-500">✅</span>
+      <div>
+        <p class="text-green-500 font-medium">Dispositivo conectado por Bluetooth</p>
+        <p class="text-[#B8860B] text-sm mt-1">Introduce las credenciales Wi-Fi para continuar</p>
+      </div>
+    </div>
+
+    <!-- Estado: WiFi Connected -->
+    <div *ngIf="status === 'wifi-connected'" class="bg-[#212121] rounded-lg p-4 border border-green-500/30 flex items-start gap-3">
+      <span class="text-2xl text-blue-400">🌐</span>
+      <div>
+        <p class="text-blue-400 font-medium">Conectado a red Wi-Fi</p>
+        <p class="text-[#FFD700] text-sm mt-1 flex items-center gap-2">
+          <span>📡</span>
+          <span>Dirección MAC: <strong class="text-white">{{ macAddress }}</strong></span>
+        </p>
+      </div>
+    </div>
   </div>
-  
+</div>
