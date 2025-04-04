@@ -23,8 +23,17 @@ export class MyEventsComponent implements OnInit {
     this.loadEvents();
   }
 
+  private getCurrentUserId(): number {
+    const token = localStorage.getItem('Authorization');
+    if (token) {
+      const tokenPayload = JSON.parse(atob(token.split('.')[1]));
+      return tokenPayload.user_id;
+    }
+    return 0;
+  }
+
   private loadEvents() {
-    const userId = 1; // Replace with actual user ID from auth service
+    const userId = this.getCurrentUserId();
     this.eventService.getEventsByCreator(userId).subscribe({
       next: (events) => {
         this.events = events;
