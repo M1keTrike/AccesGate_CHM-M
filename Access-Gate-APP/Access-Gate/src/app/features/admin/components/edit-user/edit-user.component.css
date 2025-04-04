@@ -1,0 +1,23 @@
+.success-snackbar {
+    background-color: #4CAF50 !important;
+    color: white !important;
+}
+
+.error-snackbar {
+    background-color: #F44336 !important;
+    color: white !important;
+}
+
+/* Estilos para el spinner de carga */
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

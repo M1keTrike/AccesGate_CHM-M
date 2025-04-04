@@ -8,52 +8,47 @@
       <h1 class="text-3xl sm:text-4xl font-bold text-center mb-10 text-[#FFD700] ">Panel de Administración</h1>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- Botón Crear Usuario -->
-        <button 
-          routerLink="/admin/create-user" 
-          class="bg-[#2A2A2A] border border-[#FFD700] text-[#FFD700] p-4 rounded-lg hover:bg-[#FFD700] hover:text-[#212121] transition-all duration-200 flex items-center justify-center gap-2 transform hover:-translate-y-1"
-        >
-          <span class="text-xl">👤</span>
-          <span>Crear Usuario</span>
-        </button>
 
-        <!-- Botón Crear Evento -->
+        <!-- Botón Crear Evento - Visible para todos -->
         <button 
           routerLink="/organizer" 
           class="bg-[#2A2A2A] border border-[#FFD700] text-[#FFD700] p-4 rounded-lg hover:bg-[#FFD700] hover:text-[#212121] transition-all duration-200 flex items-center justify-center gap-2 transform hover:-translate-y-1"
         >
           <span class="text-xl">📅</span>
-          <span>Crear Evento</span>
+          <span>Eventos</span>
         </button>
 
-        <!-- Botón Asignar Invitados -->
-        <button 
-          routerLink="/admin/assign-guests" 
-          class="bg-[#2A2A2A] border border-[#FFD700] text-[#FFD700] p-4 rounded-lg hover:bg-[#FFD700] hover:text-[#212121] transition-all duration-200 flex items-center justify-center gap-2 transform hover:-translate-y-1"
-        >
-          <span class="text-xl">🎟️</span>
-          <span>Asignar Invitados</span>
-        </button>
+        <!-- Botones solo visibles para administradores -->
+        <ng-container *ngIf="!isOrganizer()">
+          <!-- Botón Asignar Invitados -->
+          <button 
+            routerLink="/admin/assign-guests" 
+            class="bg-[#2A2A2A] border border-[#FFD700] text-[#FFD700] p-4 rounded-lg hover:bg-[#FFD700] hover:text-[#212121] transition-all duration-200 flex items-center justify-center gap-2 transform hover:-translate-y-1"
+          >
+            <span class="text-xl">🎟️</span>
+            <span>Asignar Invitados</span>
+          </button>
 
-        <!-- Botón Ver Usuarios -->
-        <button 
-          routerLink="/admin/view-users" 
-          class="bg-[#2A2A2A] border border-[#FFD700] text-[#FFD700] p-4 rounded-lg hover:bg-[#FFD700] hover:text-[#212121] transition-all duration-200 flex items-center justify-center gap-2 transform hover:-translate-y-1"
-        >
-          <span class="text-xl">📋</span>
-          <span>Ver Usuarios</span>
-        </button>
+          <!-- Botón Ver Usuarios -->
+          <button 
+            routerLink="/admin/view-users" 
+            class="bg-[#2A2A2A] border border-[#FFD700] text-[#FFD700] p-4 rounded-lg hover:bg-[#FFD700] hover:text-[#212121] transition-all duration-200 flex items-center justify-center gap-2 transform hover:-translate-y-1"
+          >
+            <span class="text-xl">📋</span>
+            <span>Usuarios</span>
+          </button>
 
-        <!-- Botón Vincular Dispositivo -->
-        <button 
-          routerLink="/admin/link-device" 
-          class="bg-[#2A2A2A] border border-[#FFD700] text-[#FFD700] p-4 rounded-lg hover:bg-[#FFD700] hover:text-[#212121] transition-all duration-200 flex items-center justify-center gap-2 transform hover:-translate-y-1"
-        >
-          <span class="text-xl">📱</span>
-          <span>Vincular Dispositivo</span>
-        </button>
+          <!-- Botón Vincular Dispositivo -->
+          <button 
+            routerLink="/admin/link-device" 
+            class="bg-[#2A2A2A] border border-[#FFD700] text-[#FFD700] p-4 rounded-lg hover:bg-[#FFD700] hover:text-[#212121] transition-all duration-200 flex items-center justify-center gap-2 transform hover:-translate-y-1"
+          >
+            <span class="text-xl">📱</span>
+            <span>Vincular Dispositivo</span>
+          </button>
+        </ng-container>
 
-        <!-- Botón Registrar Seguridad -->
+        <!-- Botón Registrar Seguridad - Visible para todos -->
         <button 
           routerLink="/admin/fingerprint-register" 
           class="bg-[#2A2A2A] border border-[#FFD700] text-[#FFD700] p-4 rounded-lg hover:bg-[#FFD700] hover:text-[#212121] transition-all duration-200 flex items-center justify-center gap-2 transform hover:-translate-y-1"

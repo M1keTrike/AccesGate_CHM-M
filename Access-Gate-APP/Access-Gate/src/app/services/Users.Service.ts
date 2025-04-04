@@ -102,4 +102,10 @@ export class UsersService {
       headers: this.getHeaders()
     });
   }
+
+  updateUser(id: number, data: User): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/${id}`, data, {
+      headers: this.getHeaders()
+    });
+  }
 }

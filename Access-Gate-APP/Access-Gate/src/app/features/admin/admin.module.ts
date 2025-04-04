@@ -32,6 +32,7 @@ import { WifiCredentialsFormComponent } from './components/wifi-credentials-form
 import { FingerprintRegisterComponent } from './components/fingerprint-register/fingerprint-register.component';
 import { FingerprintStatusComponent } from './components/fingerprint-status/fingerprint-status.component';
 import { FingerprintActionComponent } from './components/fingerprint-action/fingerprint-action.component';
+import { EditUserComponent } from './components/edit-user/edit-user.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { FingerprintActionComponent } from './components/fingerprint-action/fing
     FingerprintRegisterComponent,
     FingerprintStatusComponent,
     FingerprintActionComponent,
+    EditUserComponent,
   ],
   imports: [
     CommonModule,
@@ -78,6 +80,7 @@ import { FingerprintActionComponent } from './components/fingerprint-action/fing
     AssignGuestsComponent,
     ViewUsersComponent,
     ScanNfcComponent,
+    EditUserComponent
   ],
 })
 export class AdminModule {}

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpHeaders} from '@angular/common/http';
 import { Observable, forkJoin, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
@@ -13,8 +13,21 @@ import { UsersService } from '../../../services/Users.Service';
 })
 export class EventAttendeeService {
   private apiUrl = `${environment.apiBaseUrl}/event-attendees`;
+  private token: string;
+  constructor(private http: HttpClient, private userService: UsersService) { try {
+    this.token = localStorage.getItem('Authorization') || '';
+  } catch (error) {
+    console.warn('LocalStorage access error:', error);
+    this.token = '';
+  }
+}
 
-  constructor(private http: HttpClient, private userService: UsersService) { }
+private getHeaders(): HttpHeaders {
+  return new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `${this.token}`
+  });
+}
 
   registerAttendee(attendee: Omit<EventAttendee, 'id' | 'registered_at'>): Observable<EventAttendee> {
     return this.http.post<EventAttendee>(`${this.apiUrl}/register`, attendee);
@@ -40,7 +53,9 @@ export class EventAttendeeService {
   }
 
   getUserEvents(userId: number): Observable<Event[]> {
-    return this.http.get<Event[]>(`${this.apiUrl}/users/${userId}/events`);
+    return this.http.get<Event[]>(`${this.apiUrl}/users/${userId}/events`, {
+      headers: this.getHeaders()
+    });
   }
 
   isUserRegistered(eventId: number, userId: number): Observable<boolean> {
