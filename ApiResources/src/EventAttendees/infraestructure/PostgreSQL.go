@@ -145,3 +145,27 @@ func (pg *PostgreSQL) IsUserRegistered(eventID, userID int) (bool, error) {
     
     return exists, nil
 }
+
+func (pg *PostgreSQL) UpdateAttendanceStatus(eventID, userID int, attended bool) error {
+    query := `
+        UPDATE event_attendees 
+        SET attended = $1 
+        WHERE event_id = $2 AND user_id = $3
+    `
+    
+    result, err := pg.conn.DB.Exec(query, attended, eventID, userID)
+    if err != nil {
+        return fmt.Errorf("error updating attendance status: %v", err)
+    }
+
+    rowsAffected, err := result.RowsAffected()
+    if err != nil {
+        return fmt.Errorf("error getting rows affected: %v", err)
+    }
+
+    if rowsAffected == 0 {
+        return fmt.Errorf("no attendee found with eventID %d and userID %d", eventID, userID)
+    }
+
+    return nil
+}

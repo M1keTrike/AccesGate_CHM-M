@@ -12,32 +12,33 @@ export class SecurityService {
 
   constructor(private http: HttpClient) { }
 
-  private getHeaders() {
+  private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('Authorization');
-    return {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `${token}`
-      })
-    };
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `${token}`
+    });
   }
 
   // Obtener todos los eventos
   getAllEvents(): Observable<Event[]> {
-    return this.http.get<Event[]>(`${this.apiUrl}/events`, this.getHeaders());
+    return this.http.get<Event[]>(`${this.apiUrl}/events`, { headers: this.getHeaders() });
   }
 
   // Obtener asistentes de un evento específico
   getEventAttendees(eventId: number): Observable<EventAttendee[]> {
-    return this.http.get<EventAttendee[]>(`${this.apiUrl}/event-attendees/events/${eventId}/attendees`, this.getHeaders());
+    return this.http.get<EventAttendee[]>(
+      `${this.apiUrl}/event-attendees/events/${eventId}/attendees`, 
+      { headers: this.getHeaders() }
+    );
   }
 
   // Actualizar el estado de asistencia
   updateAttendanceStatus(eventId: number, userId: number, attended: boolean): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/event-attendees/attendance`, {
-      event_id: eventId,
-      user_id: userId,
-      attended: attended
-    }, this.getHeaders());
+    return this.http.put(
+      `${this.apiUrl}/event-attendees/events/${eventId}/users/${userId}/attendance`,
+      { attended },
+      { headers: this.getHeaders() }
+    );
   }
 }

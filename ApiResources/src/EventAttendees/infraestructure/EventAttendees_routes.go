@@ -6,11 +6,12 @@ import (
 )
 
 type EventAttendeesHandlers struct {
-    register       *controllers.RegisterAttendeeController
-    remove         *controllers.RemoveAttendeeController
-    getAttendees   *controllers.GetEventAttendeesController
-    getUserEvents  *controllers.GetUserEventsController
-    isRegistered   *controllers.IsUserRegisteredController
+    register           *controllers.RegisterAttendeeController
+    remove             *controllers.RemoveAttendeeController
+    getAttendees       *controllers.GetEventAttendeesController
+    getUserEvents      *controllers.GetUserEventsController
+    isRegistered       *controllers.IsUserRegisteredController
+    updateAttendance   *controllers.UpdateAttendanceController
 }
 
 func EventAttendeesRoutes(router *gin.Engine, handlers EventAttendeesHandlers) {
@@ -21,5 +22,6 @@ func EventAttendeesRoutes(router *gin.Engine, handlers EventAttendeesHandlers) {
         group.GET("/events/:eventId/attendees", handlers.getAttendees.Execute)
         group.GET("/users/:userId/events", handlers.getUserEvents.Execute)
         group.GET("/events/:eventId/users/:userId/check", handlers.isRegistered.Execute)
+        group.PUT("/events/:eventId/users/:userId/attendance", handlers.updateAttendance.Execute)
     }
 }

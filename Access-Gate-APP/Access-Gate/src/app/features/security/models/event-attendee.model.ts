@@ -4,6 +4,7 @@ export interface EventAttendee {
     event_id: number;
     registered_at: Date;
     attended: boolean;
+    nfc_id: string; // Add this field
     user?: {
         id: number;
         name: string;
