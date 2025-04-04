@@ -38,6 +38,15 @@ export class AssignGuestsComponent implements OnInit {
 
   token = localStorage.getItem('Authorization');
 
+  private getCurrentUserId(): number {
+    const token = localStorage.getItem('Authorization');
+    if (token) {
+      const tokenPayload = JSON.parse(atob(token.split('.')[1]));
+      return tokenPayload.user_id;
+    }
+    return 0;
+  }
+
   ngOnInit(): void {
     if (!this.token) {
       this.showError('No authorization token found. Please login again.');
@@ -48,17 +57,20 @@ export class AssignGuestsComponent implements OnInit {
 
   private loadData(): void {
     this.isLoading = true;
+    const currentUserId = this.getCurrentUserId();
 
     forkJoin({
       events: this.eventService.getAllEvents(),
       users: this.userService.getUsersByRole('attendee')
     }).subscribe({
       next: (result: { events: Event[], users: User[] }) => {
-        this.events = result.events;
+        // Filtrar eventos por el usuario actual
+        this.events = result.events.filter(event => event.created_by === currentUserId);
         this.users = result.users;
         this.filteredUsers = result.users;
         this.isLoading = false;
       },
+
       error: () => {
         this.showError('Error loading initial data');
         this.isLoading = false;

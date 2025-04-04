@@ -46,10 +46,19 @@ export class CreateEventComponent implements OnInit {
     }
   }
 
+  private getCurrentUserId(): number {
+    const token = localStorage.getItem('Authorization');
+    if (token) {
+      const tokenPayload = JSON.parse(atob(token.split('.')[1]));
+      return tokenPayload.user_id;
+    }
+    return 0;
+  }
+
   onSubmit(): void {
     if (this.eventForm.valid) {
       this.isLoading = true;
-      const userId = parseInt(localStorage.getItem('userId') || '1', 10);
+      const userId = this.getCurrentUserId();
       
       // Format the dates correctly
       const startTime = new Date(this.eventForm.value.start_time);
