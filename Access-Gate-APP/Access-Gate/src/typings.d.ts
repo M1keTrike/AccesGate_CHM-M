@@ -30,6 +30,16 @@ declare global {
   interface BluetoothRemoteGATTCharacteristic {
     writeValue(value: BufferSource): Promise<void>;
     readValue(): Promise<DataView>;
+    startNotifications(): Promise<BluetoothRemoteGATTCharacteristic>;
+    stopNotifications(): Promise<BluetoothRemoteGATTCharacteristic>;
+    addEventListener(
+      type: 'characteristicvaluechanged',
+      listener: (event: { target: { value: DataView } }) => void
+    ): void;
+    removeEventListener(
+      type: 'characteristicvaluechanged',
+      listener: (event: { target: { value: DataView } }) => void
+    ): void;
   }
 
   // Añadimos tipos específicos para UUID de Bluetooth

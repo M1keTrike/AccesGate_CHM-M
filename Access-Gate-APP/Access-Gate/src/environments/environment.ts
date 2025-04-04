@@ -1,6 +1,7 @@
 export const environment = {
     production: false,
     apiBaseUrl: 'http://54.209.117.43:8084',
+
     firebase: {
       apiKey: "AIzaSyCRTQ721jWEeJU3J_BnfbvLvh7M2k3Ml8s",
       authDomain: "accessgate-ch-mm.firebaseapp.com",
