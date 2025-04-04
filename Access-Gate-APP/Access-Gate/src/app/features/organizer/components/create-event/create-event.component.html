@@ -64,6 +64,10 @@
                  class="text-red-500 text-xs mt-1">
               Start time is required
             </div>
+            <div *ngIf="eventForm.get('start_time')?.errors?.['dateInPast'] && eventForm.get('start_time')?.touched" 
+                 class="text-red-500 text-xs mt-1">
+              Start time cannot be in the past
+            </div>
           </div>
 
           <!-- End Time -->
@@ -77,6 +81,10 @@
             <div *ngIf="eventForm.get('end_time')?.errors?.['required'] && eventForm.get('end_time')?.touched" 
                  class="text-red-500 text-xs mt-1">
               End time is required
+            </div>
+            <div *ngIf="eventForm.errors?.['endBeforeStart']" 
+                 class="text-red-500 text-xs mt-1">
+              End time must be after start time
             </div>
           </div>
         </div>
