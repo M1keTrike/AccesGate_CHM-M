@@ -16,7 +16,7 @@ export class CreateUserComponent implements OnInit {
   name: string = '';
   email: string = '';
   password: string = '';
-  role: string = 'user';
+  role: string = '';
 
   constructor(
     private router: Router,
@@ -53,17 +53,33 @@ export class CreateUserComponent implements OnInit {
     return this.nfcCardsService.createNfcCard(newNfcCard);
   }
 
+  getCurrentUserId(): number {
+    const token = localStorage.getItem('Authorization');
+    if (token) {
+      const tokenPayload = JSON.parse(atob(token.split('.')[1]));
+      return tokenPayload.user_id;
+    }
+    throw new Error('No se encontró el token de autorización');
+  }
+
   createUser() {
-    const newUser: User = {
-      id: 0, 
-      name: this.name,
-      email: this.email,
-      password_hash: this.password, 
-      role: this.role,
-      created_at: new Date().toISOString()
-    };
-    console.log(newUser)
-    return this.usersService.createUser(newUser);
+    try {
+      const currentUserId = this.getCurrentUserId();
+      const newUser: User = {
+        id: 0,
+        name: this.name,
+        email: this.email,
+        password_hash: this.password,
+        role: this.role,
+        created_at: new Date().toISOString(),
+        created_by: currentUserId
+      };
+      console.log('Creando usuario:', newUser);
+      return this.usersService.createUser(newUser);
+    } catch (error) {
+      console.error('Error al obtener el ID del usuario actual:', error);
+      throw error;
+    }
   }
 
   onSubmit() {
@@ -73,7 +89,12 @@ export class CreateUserComponent implements OnInit {
         this.createUser().subscribe(
           (user: User) => {
             console.log('User created:', user);
-            this.router.navigate(['/']); // Navigate to the desired route after creation
+            // Limpiar los campos después de crear el usuario exitosamente
+            this.nfc = '';
+            this.name = '';
+            this.email = '';
+            this.password = '';
+            this.role = '';
           },
           (error) => {
             console.error('Error creating user:', error);

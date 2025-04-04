@@ -7,7 +7,7 @@ import { NfcCard } from '../models/iNfc_cards';
   providedIn: 'root'
 })
 export class NfcCardsService {
-  private apiUrl = 'http://localhost:8080/nfc_cards';
+  private apiUrl = 'http://localhost:8084/nfc_cards';
 
   constructor(private http: HttpClient) {}
 

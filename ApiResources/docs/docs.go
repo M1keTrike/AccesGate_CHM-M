@@ -2204,6 +2204,10 @@ const docTemplate = `{
                     "type": "boolean",
                     "example": false
                 },
+                "created_by": {
+                    "type": "integer",
+                    "example": 1
+                },
                 "email": {
                     "type": "string",
                     "example": "admin@example.com"
@@ -2373,6 +2377,9 @@ const docTemplate = `{
                 },
                 "created_at": {
                     "type": "string"
+                },
+                "created_by": {
+                    "type": "integer"
                 },
                 "email": {
                     "type": "string"

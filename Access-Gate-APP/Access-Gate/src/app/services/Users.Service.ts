@@ -65,6 +65,12 @@ export class UsersService {
     });
   }
 
+  getUsersByCreatedBy(createdBy: number): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/created-by/${createdBy}`, {
+      headers: this.getHeaders()
+    });
+  }
+
   // Update other methods to use headers as well
   getAllUsers(): Observable<User[]> {
     return this.http.get<User[]>(this.apiUrl, {

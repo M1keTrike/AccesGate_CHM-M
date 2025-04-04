@@ -8,14 +8,15 @@ import (
 )
 
 type UsersHandlers struct {
-	create     *controllers.CreateUserController
-	get        *controllers.GetUserByIDController
-	update     *controllers.UpdateUserController
-	delete     *controllers.DeleteUserController
-	getAll     *controllers.GetAllUsersController
-	getByEmail *controllers.GetUserByEmailController
-	login      *controllers.LoginController // 👈 nuevo campo
-	getByRole  *controllers.GetUsersByRoleController
+	create         *controllers.CreateUserController
+	get            *controllers.GetUserByIDController
+	update         *controllers.UpdateUserController
+	delete         *controllers.DeleteUserController
+	getAll         *controllers.GetAllUsersController
+	getByEmail     *controllers.GetUserByEmailController
+	login          *controllers.LoginController // 👈 nuevo campo
+	getByRole      *controllers.GetUsersByRoleController
+	getByCreatedBy *controllers.GetUsersByCreatedByController
 }
 
 func UsersRoutes(router *gin.Engine, handlers UsersHandlers) {
@@ -28,6 +29,7 @@ func UsersRoutes(router *gin.Engine, handlers UsersHandlers) {
 	protected.GET("/email", handlers.getByEmail.Execute) // ← ahora protegida ✅
 	protected.GET("/:id", handlers.get.Execute)
 	protected.GET("/role/:role", handlers.getByRole.Execute)
+	protected.GET("/created-by/:created_by", handlers.getByCreatedBy.Execute)
 	protected.PUT("/:id", handlers.update.Execute)
 	protected.DELETE("/:id", handlers.delete.Execute)
 	protected.GET("", handlers.getAll.Execute)

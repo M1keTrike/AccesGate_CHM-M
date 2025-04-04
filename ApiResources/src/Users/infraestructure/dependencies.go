@@ -19,6 +19,7 @@ func Init(router *gin.Engine) {
 	getUserByEmailService := application.NewGetUserByEmail(os)
 	loginService := application.NewLoginUseCase(os)
 	getUsersByRoleService := application.NewGetUsersByRole(os)
+	getUsersByCreatedByService := application.NewGetUsersByCreatedByUseCase(os)
 
 	// Controladores
 	createUserController := controllers.NewCreateUserController(*createUserService)
@@ -29,15 +30,17 @@ func Init(router *gin.Engine) {
 	getUserByEmailController := controllers.NewGetUserByEmailController(*getUserByEmailService)
 	loginController := controllers.NewLoginController(loginService)
 	getUsersByRoleController := controllers.NewGetUsersByRoleController(*getUsersByRoleService)
+	getUsersByCreatedByController := controllers.NewGetUsersByCreatedByController(getUsersByCreatedByService)
 
 	UsersRoutes(router, UsersHandlers{
-		create:     createUserController,
-		get:        getUserController,
-		update:     updateUserController,
-		delete:     deleteUserController,
-		getAll:     getAllUsersController,
-		getByEmail: getUserByEmailController,
-		login:      loginController,
-		getByRole:  getUsersByRoleController,
+		create:         createUserController,
+		get:            getUserController,
+		update:         updateUserController,
+		delete:         deleteUserController,
+		getAll:         getAllUsersController,
+		getByEmail:     getUserByEmailController,
+		login:          loginController,
+		getByRole:      getUsersByRoleController,
+		getByCreatedBy: getUsersByCreatedByController,
 	})
 }

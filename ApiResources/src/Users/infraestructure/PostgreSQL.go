@@ -26,7 +26,7 @@ func (pg *PostgreSQL) GetUserByID(userID int) (entities.User, error) {
 	user := entities.User{}
 	query := `
 		SELECT id, name, email, password_hash, role,
-		       created_at, updated_at, fingerprint_id, biometric_auth
+		       created_at, updated_at, fingerprint_id, biometric_auth, created_by
 		FROM users
 		WHERE id = $1`
 	row := pg.conn.DB.QueryRow(query, userID)
@@ -36,7 +36,7 @@ func (pg *PostgreSQL) GetUserByID(userID int) (entities.User, error) {
 
 	err := row.Scan(
 		&user.ID, &user.Name, &user.Email, &user.PasswordHash, &user.Role,
-		&createdAt, &updatedAt, &fingerprintID, &user.BiometricAuth,
+		&createdAt, &updatedAt, &fingerprintID, &user.BiometricAuth, &user.CreatedBy,
 	)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -69,24 +69,23 @@ func (pg *PostgreSQL) CreateUser(user *entities.User) error {
 	query := `
 		INSERT INTO users (
 			name, email, password_hash, role,
-			created_at, updated_at, fingerprint_id, biometric_auth
+			created_at, updated_at, fingerprint_id, biometric_auth, created_by
 		)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 		RETURNING id`
 	err := pg.conn.DB.QueryRow(
 		query,
 		user.Name, user.Email, user.PasswordHash, user.Role,
-		user.CreatedAt, user.UpdatedAt, user.FingerprintID, user.BiometricAuth,
+		user.CreatedAt, user.UpdatedAt, user.FingerprintID, user.BiometricAuth, user.CreatedBy,
 	).Scan(&user.ID)
 	if err != nil {
 		log.Printf("[CreateUser] Error al crear usuario '%s': %v", user.Email, err)
-		return err 
+		return err
 	}
 
 	log.Printf("[CreateUser] Usuario '%s' creado con ID %d", user.Email, user.ID)
 	return nil
 }
-
 
 func (pg *PostgreSQL) UpdateUser(user *entities.User) error {
 	user.UpdatedAt = time.Now()
@@ -99,13 +98,14 @@ func (pg *PostgreSQL) UpdateUser(user *entities.User) error {
 			role = $4,
 			updated_at = $5,
 			fingerprint_id = $6,
-			biometric_auth = $7
-		WHERE id = $8`
+			biometric_auth = $7,
+			created_by = $8
+		WHERE id = $9`
 
 	_, err := pg.conn.ExecutePreparedQuery(
 		query,
 		user.Name, user.Email, user.PasswordHash, user.Role,
-		user.UpdatedAt, user.FingerprintID, user.BiometricAuth, user.ID,
+		user.UpdatedAt, user.FingerprintID, user.BiometricAuth, user.CreatedBy, user.ID,
 	)
 	if err != nil {
 		log.Printf("[UpdateUser] Error al actualizar usuario con ID %d: %v", user.ID, err)
@@ -132,7 +132,7 @@ func (pg *PostgreSQL) GetAllUsers() ([]entities.User, error) {
 	users := []entities.User{}
 	query := `
 		SELECT id, name, email, password_hash, role,
-		       created_at, updated_at, fingerprint_id, biometric_auth
+		       created_at, updated_at, fingerprint_id, biometric_auth, created_by
 		FROM users`
 	rows, err := pg.conn.DB.Query(query)
 	if err != nil {
@@ -148,7 +148,7 @@ func (pg *PostgreSQL) GetAllUsers() ([]entities.User, error) {
 
 		err := rows.Scan(
 			&user.ID, &user.Name, &user.Email, &user.PasswordHash, &user.Role,
-			&createdAt, &updatedAt, &fingerprintID, &user.BiometricAuth,
+			&createdAt, &updatedAt, &fingerprintID, &user.BiometricAuth, &user.CreatedBy,
 		)
 		if err != nil {
 			log.Printf("[GetAllUsers] Error al escanear fila: %v", err)
@@ -212,54 +212,109 @@ func (pg *PostgreSQL) GetUserByEmail(email string) (*entities.User, error) {
 }
 
 func (pg *PostgreSQL) GetUsersByRole(role string) ([]entities.User, error) {
-    users := []entities.User{}
-    query := `
+	users := []entities.User{}
+	query := `
         SELECT id, name, email, password_hash, role,
-               created_at, updated_at, fingerprint_id, biometric_auth
+               created_at, updated_at, fingerprint_id, biometric_auth, created_by
         FROM users 
         WHERE role = $1`
-    
-    rows, err := pg.conn.DB.Query(query, role)
-    if err != nil {
-        log.Printf("[GetUsersByRole] Error al obtener usuarios con rol %s: %v", role, err)
-        return nil, fmt.Errorf("error al obtener usuarios por rol")
-    }
-    defer rows.Close()
 
-    for rows.Next() {
-        var user entities.User
-        var createdAt, updatedAt sql.NullTime
-        var fingerprintID sql.NullInt16
+	rows, err := pg.conn.DB.Query(query, role)
+	if err != nil {
+		log.Printf("[GetUsersByRole] Error al obtener usuarios con rol %s: %v", role, err)
+		return nil, fmt.Errorf("error al obtener usuarios por rol")
+	}
+	defer rows.Close()
 
-        err := rows.Scan(
-            &user.ID,
-            &user.Name,
-            &user.Email,
-            &user.PasswordHash,
-            &user.Role,
-            &createdAt,
-            &updatedAt,
-            &fingerprintID,
-            &user.BiometricAuth,
-        )
-        if err != nil {
-            log.Printf("[GetUsersByRole] Error al escanear usuario: %v", err)
-            return nil, fmt.Errorf("error al procesar usuarios")
-        }
+	for rows.Next() {
+		var user entities.User
+		var createdAt, updatedAt sql.NullTime
+		var fingerprintID sql.NullInt16
 
-        if createdAt.Valid {
-            user.CreatedAt = createdAt.Time
-        }
-        if updatedAt.Valid {
-            user.UpdatedAt = updatedAt.Time
-        }
-        if fingerprintID.Valid {
-            user.FingerprintID = fingerprintID.Int16
-        }
+		err := rows.Scan(
+			&user.ID,
+			&user.Name,
+			&user.Email,
+			&user.PasswordHash,
+			&user.Role,
+			&createdAt,
+			&updatedAt,
+			&fingerprintID,
+			&user.BiometricAuth,
+			&user.CreatedBy,
+		)
+		if err != nil {
+			log.Printf("[GetUsersByRole] Error al escanear usuario: %v", err)
+			return nil, fmt.Errorf("error al procesar usuarios")
+		}
 
-        users = append(users, user)
-    }
+		if createdAt.Valid {
+			user.CreatedAt = createdAt.Time
+		}
+		if updatedAt.Valid {
+			user.UpdatedAt = updatedAt.Time
+		}
+		if fingerprintID.Valid {
+			user.FingerprintID = fingerprintID.Int16
+		}
 
-    log.Printf("[GetUsersByRole] Se obtuvieron %d usuarios con rol %s", len(users), role)
-    return users, nil
+		users = append(users, user)
+	}
+
+	log.Printf("[GetUsersByRole] Se obtuvieron %d usuarios con rol %s", len(users), role)
+	return users, nil
+}
+
+func (pg *PostgreSQL) GetUsersByCreatedBy(createdBy int) ([]entities.User, error) {
+	users := []entities.User{}
+	query := `
+        SELECT id, name, email, password_hash, role,
+               created_at, updated_at, fingerprint_id, biometric_auth, created_by
+        FROM users 
+        WHERE created_by = $1`
+
+	rows, err := pg.conn.DB.Query(query, createdBy)
+	if err != nil {
+		log.Printf("[GetUsersByCreatedBy] Error al obtener usuarios creados por %d: %v", createdBy, err)
+		return nil, fmt.Errorf("error al obtener usuarios por creador")
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var user entities.User
+		var createdAt, updatedAt sql.NullTime
+		var fingerprintID sql.NullInt16
+
+		err := rows.Scan(
+			&user.ID,
+			&user.Name,
+			&user.Email,
+			&user.PasswordHash,
+			&user.Role,
+			&createdAt,
+			&updatedAt,
+			&fingerprintID,
+			&user.BiometricAuth,
+			&user.CreatedBy,
+		)
+		if err != nil {
+			log.Printf("[GetUsersByCreatedBy] Error al escanear usuario: %v", err)
+			return nil, fmt.Errorf("error al procesar usuarios")
+		}
+
+		if createdAt.Valid {
+			user.CreatedAt = createdAt.Time
+		}
+		if updatedAt.Valid {
+			user.UpdatedAt = updatedAt.Time
+		}
+		if fingerprintID.Valid {
+			user.FingerprintID = fingerprintID.Int16
+		}
+
+		users = append(users, user)
+	}
+
+	log.Printf("[GetUsersByCreatedBy] Se obtuvieron %d usuarios creados por el usuario %d", len(users), createdBy)
+	return users, nil
 }

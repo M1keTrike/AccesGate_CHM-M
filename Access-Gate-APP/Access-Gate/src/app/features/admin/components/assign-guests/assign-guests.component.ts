@@ -61,7 +61,7 @@ export class AssignGuestsComponent implements OnInit {
 
     forkJoin({
       events: this.eventService.getAllEvents(),
-      users: this.userService.getUsersByRole('attendee')
+      users: this.userService.getUsersByCreatedBy(currentUserId)
     }).subscribe({
       next: (result: { events: Event[], users: User[] }) => {
         // Filtrar eventos por el usuario actual
