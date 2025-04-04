@@ -1,7 +1,7 @@
 export const environment = {
     production: false,
 
-    apiBaseUrl:'https://access-gate-api.acstree.xyz',
+    apiBaseUrl:'http://localhost:8084',
 
     firebase: {
       apiKey: "AIzaSyCRTQ721jWEeJU3J_BnfbvLvh7M2k3Ml8s",
