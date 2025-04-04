@@ -24,11 +24,40 @@ export class CreateEventComponent implements OnInit {
   ) {
     this.eventForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
-      description: ['', [Validators.required, Validators.minLength(5)]],
-      start_time: ['', Validators.required],
-      end_time: ['', Validators.required]
-    });
+      description: ['', [Validators.required, Validators.minLength(10)]],
+      start_time: ['', [Validators.required, this.dateNotInPast()]],
+      end_time: ['', [Validators.required]]
+    }, { validators: this.dateRangeValidator });
   }
+
+  private dateNotInPast() {
+    return (control: any) => {
+      if (control.value) {
+        const selectedDate = new Date(control.value);
+        const now = new Date();
+        if (selectedDate < now) {
+          return { dateInPast: true };
+        }
+      }
+      return null;
+    };
+  }
+
+  private dateRangeValidator(group: FormGroup) {
+    const start = group.get('start_time')?.value;
+    const end = group.get('end_time')?.value;
+    
+    if (start && end) {
+      const startDate = new Date(start);
+      const endDate = new Date(end);
+      
+      if (endDate <= startDate) {
+        return { endBeforeStart: true };
+      }
+    }
+    return null;
+  }
+  
 
   ngOnInit(): void {
     const token = localStorage.getItem('Authorization');

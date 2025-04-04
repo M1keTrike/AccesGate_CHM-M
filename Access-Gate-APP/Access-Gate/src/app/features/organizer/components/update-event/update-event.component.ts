@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EventService } from '../../services/eventService.service';
 import { Event } from '../../models/Event';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-update-event',
@@ -19,20 +20,49 @@ export class UpdateEventComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private eventService: EventService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private snackBar: MatSnackBar
   ) {
     this.eventForm = this.fb.group({
-      name: ['', Validators.required],
-      description: ['', Validators.required],
-      start_time: ['', Validators.required],
-      end_time: ['', Validators.required]
-    });
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      description: ['', [Validators.required, Validators.minLength(10)]],
+      start_time: ['', [Validators.required, this.dateNotInPast()]],
+      end_time: ['', [Validators.required]]
+    }, { validators: this.dateRangeValidator });
   }
 
   ngOnInit() {
     this.eventId = Number(this.route.snapshot.paramMap.get('id'));
     this.loadEvent();
     console.log("id del evento: ",this.eventId);
+  }
+
+  private dateNotInPast() {
+    return (control: any) => {
+      if (control.value) {
+        const selectedDate = new Date(control.value);
+        const now = new Date();
+        if (selectedDate < now) {
+          return { dateInPast: true };
+        }
+      }
+      return null;
+    };
+  }
+
+  private dateRangeValidator(group: FormGroup) {
+    const start = group.get('start_time')?.value;
+    const end = group.get('end_time')?.value;
+    
+    if (start && end) {
+      const startDate = new Date(start);
+      const endDate = new Date(end);
+      
+      if (endDate <= startDate) {
+        return { endBeforeStart: true };
+      }
+    }
+    return null;
   }
 
   private loadEvent() {
@@ -60,7 +90,7 @@ export class UpdateEventComponent implements OnInit {
 
   onSubmit() {
     if (!this.eventId || !this.eventForm.valid) {
-      console.log('Please fill all required fields correctly');
+      this.showError('Por favor, complete todos los campos correctamente');
       return;
     }
 
@@ -84,19 +114,31 @@ export class UpdateEventComponent implements OnInit {
 
     this.eventService.updateEvent(this.eventId, updatedEvent).subscribe({
       next: (response) => {
-        console.log('Response from server:', response);
-        console.log('Event updated successfully');
+        this.showSuccess('Evento actualizado exitosamente');
         this.router.navigate(['/organizer/my-events']);
       },
       error: (error) => {
-        console.error('Error details:', error);
         if (error.status === 401) {
-          console.log('Session expired or unauthorized. Please login again.');
+          this.showError('Sesión expirada o no autorizada. Por favor, inicie sesión nuevamente.');
           this.router.navigate(['/login']);
         } else {
-          console.log(`Error updating event: ${error.error?.message || error.statusText || 'Unknown error'}`);
+          this.showError(`Error al actualizar el evento: ${error.error?.message || error.statusText || 'Error desconocido'}`);
         }
       }
+    });
+  }
+
+  private showSuccess(message: string): void {
+    this.snackBar.open(message, 'Cerrar', { 
+      duration: 3000,
+      panelClass: ['success-snackbar']
+    });
+  }
+
+  private showError(message: string): void {
+    this.snackBar.open(message, 'Cerrar', { 
+      duration: 3000,
+      panelClass: ['error-snackbar']
     });
   }
 }
