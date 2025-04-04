@@ -1,0 +1,81 @@
+<div class="min-h-screen bg-gradient-to-br from-[#424242] to-[#b98809] py-8 flex flex-col items-center px-4 justify-center">
+  <div class="relative w-full max-w-2xl mx-auto">
+    <!-- Div amarillo degradado que sobresale -->
+    <div class="absolute inset-0 -top-2 -bottom-2 -left-2 -right-2 bg-gradient-to-r from-[#FFEB3B] to-[#B8860B] shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
+    
+    <!-- Contenedor principal -->
+    <div class="relative px-6 py-8 bg-[#212121] shadow-lg rounded-3xl sm:p-12 z-10">
+      <button 
+        routerLink="/admin/view-users" 
+        class="bg-[#2A2A2A] text-[#FFD700] border border-[#FFD700] px-4 py-2 rounded-md hover:bg-[#FFD700] hover:text-[#212121] transition duration-200 text-sm sm:text-base mb-6"
+      >
+        ← Volver a Usuarios
+      </button>
+
+      <h1 class="text-3xl sm:text-4xl font-bold text-center mb-10 text-[#FFD700]">Editar Usuario</h1>
+
+      <!-- Formulario -->
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Campo Nombre -->
+        <div class="space-y-2">
+          <label class="block text-[#FFD700] text-sm font-medium">Nombre</label>
+          <input 
+            type="text" 
+            formControlName="name"
+            class="w-full px-4 py-2 rounded-lg bg-[#2A2A2A] text-[#FFD700] border border-[#424242] focus:border-[#FFD700] focus:outline-none transition-colors"
+            [ngClass]="{'border-red-500': userForm.get('name')?.invalid && userForm.get('name')?.touched}"
+          >
+          <div *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched" class="text-red-500 text-sm">
+            <span *ngIf="userForm.get('name')?.errors?.['required']">El nombre es requerido</span>
+            <span *ngIf="userForm.get('name')?.errors?.['minlength']">El nombre debe tener al menos 3 caracteres</span>
+          </div>
+        </div>
+
+        <!-- Campo Email -->
+        <div class="space-y-2">
+          <label class="block text-[#FFD700] text-sm font-medium">Email</label>
+          <input 
+            type="email" 
+            formControlName="email"
+            class="w-full px-4 py-2 rounded-lg bg-[#2A2A2A] text-[#FFD700] border border-[#424242] focus:border-[#FFD700] focus:outline-none transition-colors"
+            [ngClass]="{'border-red-500': userForm.get('email')?.invalid && userForm.get('email')?.touched}"
+          >
+          <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="text-red-500 text-sm">
+            <span *ngIf="userForm.get('email')?.errors?.['required']">El email es requerido</span>
+            <span *ngIf="userForm.get('email')?.errors?.['email']">El email no es válido</span>
+          </div>
+        </div>
+
+        <!-- Campo Rol -->
+        <div class="space-y-2">
+          <label class="block text-[#FFD700] text-sm font-medium">Rol</label>
+          <select 
+            formControlName="role"
+            class="w-full px-4 py-2 rounded-lg bg-[#2A2A2A] text-[#FFD700] border border-[#424242] focus:border-[#FFD700] focus:outline-none transition-colors"
+            [ngClass]="{'border-red-500': userForm.get('role')?.invalid && userForm.get('role')?.touched}"
+          >
+            <option value="">Seleccione un rol</option>
+            <option value="admin">Administrador</option>
+            <option value="organizer">Organizador</option>
+            <option value="guest">Invitado</option>
+          </select>
+          <div *ngIf="userForm.get('role')?.invalid && userForm.get('role')?.touched" class="text-red-500 text-sm">
+            <span *ngIf="userForm.get('role')?.errors?.['required']">El rol es requerido</span>
+          </div>
+        </div>
+
+        <!-- Botón Submit -->
+        <div class="pt-4">
+          <button 
+            type="submit"
+            [disabled]="userForm.invalid || isLoading"
+            class="w-full bg-[#FFD700] text-[#212121] py-3 rounded-lg font-medium hover:bg-[#B8860B] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            <span *ngIf="isLoading" class="animate-spin">🔄</span>
+            <span>{{ isLoading ? 'Actualizando...' : 'Actualizar Usuario' }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

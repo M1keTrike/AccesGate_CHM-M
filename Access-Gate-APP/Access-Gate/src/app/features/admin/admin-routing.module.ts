@@ -8,6 +8,7 @@ import { ViewUsersComponent } from './components/view-users/view-users.component
 import { ScanNfcComponent } from './components/scan-nfc/scan-nfc.component';
 import { LinkDeviceComponent } from './components/link-device/link-device.component';
 import { FingerprintRegisterComponent } from './components/fingerprint-register/fingerprint-register.component';
+import { EditUserComponent } from './components/edit-user/edit-user.component';
 
 const routes: Routes = [
   { path: '', component: AdminDashboardComponent },
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'view-users', component: ViewUsersComponent },
   { path: 'link-device', component: LinkDeviceComponent },
   { path: 'fingerprint-register', component: FingerprintRegisterComponent },
+  { path: 'edit-user/:id', component: EditUserComponent },
 ];
 
 @NgModule({
