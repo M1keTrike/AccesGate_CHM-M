@@ -1,12 +1,15 @@
-<div class="min-h-screen bg-gradient-to-br from-[#424242] to-[#b98809] py-6 flex flex-col justify-center sm:py-12">
-  <div class="relative py-3 sm:max-w-2xl sm:mx-auto">
-    <div class="absolute inset-0 bg-gradient-to-r from-[#FFEB3B] to-[#B8860B] shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-    <div class="relative px-6 py-12 bg-[#212121] shadow-lg sm:rounded-3xl sm:p-24">
-      <div class="max-w-2xl mx-auto">
+<div class="min-h-screen bg-gradient-to-br from-[#424242] to-[#b98809] py-6 flex flex-col justify-center sm:py-12 px-4">
+  <div class="relative py-3 w-full sm:max-w-2xl mx-auto">
+    <!-- Div amarillo degradado - Aumenté el tamaño y ajusté la posición -->
+    <div class="absolute inset-0 -top-2 -bottom-2 -left-2 -right-2 bg-gradient-to-r from-[#FFEB3B] to-[#B8860B] shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
+    
+    <!-- Contenedor principal - Ajusté el z-index para que quede sobre el div amarillo -->
+    <div class="relative px-4 py-8 bg-[#212121] shadow-lg rounded-3xl sm:p-12 md:p-24 z-10">
+      <div class="w-full mx-auto">
         <div class="divide-y divide-gray-200">
-          <div class="py-10 text-base leading-6 space-y-6 text-gray-700 sm:text-xl sm:leading-7">
-            <h2 class="text-4xl font-bold text-center mb-10 text-[#FFD700]">Login</h2>
-            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+          <div class="py-6 text-base leading-6 space-y-6 text-gray-700 sm:text-lg sm:leading-7">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-6 sm:mb-10 text-[#FFD700]">Login</h2>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4 sm:space-y-6">
               
               <div class="relative">
                 <input 
@@ -39,20 +42,22 @@
                   Password is required
                 </div>
               </div>
-              <div *ngIf="loginError" class="text-red-500 text-center mt-4">
+              
+              <div *ngIf="loginError" class="text-red-500 text-center mt-2 sm:mt-4 text-sm sm:text-base">
                 {{ loginError }}
               </div>
-              <div class="relative pt-4">
+              
+              <div class="relative pt-2 sm:pt-4">
                 <button 
                   type="submit"
                   [disabled]="!loginForm.valid"
-                  class="w-full bg-[#FFD700] text-[#212121] rounded-md px-2 py-3 hover:bg-[#FFEB3B] focus:outline-none focus:ring-2 focus:ring-[#FFD700] focus:ring-opacity-50 transform hover:-translate-y-0.5 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                  class="w-full bg-[#FFD700] text-[#212121] rounded-md px-2 py-2 sm:py-3 text-sm sm:text-base hover:bg-[#FFEB3B] focus:outline-none focus:ring-2 focus:ring-[#FFD700] focus:ring-opacity-50 transform hover:-translate-y-0.5 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
                   Login
                 </button>
               </div>
 
-              <div class="text-center mt-4">
-                <a routerLink="/register" class="text-sm text-[#FFD700] hover:text-[#FFEB3B]">
+              <div class="text-center mt-2 sm:mt-4">
+                <a routerLink="/register" class="text-xs sm:text-sm text-[#FFD700] hover:text-[#FFEB3B]">
                   Don't have an account? Register
                 </a>
               </div>
