@@ -20,6 +20,7 @@ export class EventSecurityListComponent implements OnInit {
   isAccessModeEnabled: boolean = false;
   isConnected: boolean = false;
   isSecurityRole: boolean = true;
+  isOrganizerRole: boolean = true;
   idCreatedBy: number = 0;
 
   constructor(
@@ -67,8 +68,11 @@ export class EventSecurityListComponent implements OnInit {
     const token = localStorage.getItem('Authorization');
     if (token) {
       const tokenPayload = JSON.parse(atob(token.split('.')[1]));
-      if(tokenPayload.role === 'security'){
+      console.log('Token Payload:', tokenPayload);
+      if(tokenPayload.role === 'security' ){
         this.isSecurityRole=false
+      }else if(tokenPayload.role ==='organizer'){
+        this.isOrganizerRole=false
       }
       return tokenPayload.user_id;
     }
@@ -79,7 +83,7 @@ export class EventSecurityListComponent implements OnInit {
     this.loading = true;
     const currentUserId = this.getCurrentUserId();
 
-    if (!this.isSecurityRole) {
+    if (!this.isSecurityRole|| !this.isOrganizerRole) {
       this.usersService.getUserById(currentUserId).subscribe({
         next: (user) => {
           this.idCreatedBy = user.created_by ?? 0;

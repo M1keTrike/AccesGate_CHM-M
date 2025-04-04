@@ -15,6 +15,7 @@ export class MyEventsComponent implements OnInit {
   events: Event[] = [];
   loading: boolean = true;
   isAttendee: boolean = false;
+  isOrganizerRole: boolean = false;
 
   constructor(
     private eventService: EventService,
@@ -32,6 +33,7 @@ export class MyEventsComponent implements OnInit {
     if (token) {
       const tokenPayload = JSON.parse(atob(token.split('.')[1]));
       this.isAttendee = tokenPayload.role === 'attendee';
+      this.isOrganizerRole = tokenPayload.role === 'organizer';
     }
   }
 
@@ -48,7 +50,7 @@ export class MyEventsComponent implements OnInit {
     this.loading = true;
     const currentUserId = this.getCurrentUserId();
 
-    if (this.isAttendee) {
+    if (this.isAttendee|| this.isOrganizerRole) {
       this.usersService.getUserById(currentUserId).subscribe({
         next: (user) => {
           const creatorId = user.created_by ?? currentUserId;
