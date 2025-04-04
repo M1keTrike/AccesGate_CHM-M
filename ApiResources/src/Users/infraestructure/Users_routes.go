@@ -9,6 +9,7 @@ import (
 
 type UsersHandlers struct {
 	create         *controllers.CreateUserController
+	createAdmin    *controllers.CreateUserAdminController // New handler
 	get            *controllers.GetUserByIDController
 	update         *controllers.UpdateUserController
 	delete         *controllers.DeleteUserController
@@ -21,6 +22,7 @@ type UsersHandlers struct {
 
 func UsersRoutes(router *gin.Engine, handlers UsersHandlers) {
 	router.POST("/users", handlers.create.Execute)
+	router.POST("/users/admin", handlers.createAdmin.Execute) // New route
 	router.POST("/users/login", handlers.login.Execute)
 
 	protected := router.Group("/users")

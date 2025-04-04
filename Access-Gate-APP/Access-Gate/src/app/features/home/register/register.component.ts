@@ -43,13 +43,13 @@ export class RegisterComponent implements OnInit {
         email: this.registerForm.value.email,
         password_hash: this.registerForm.value.password,
         role: 'admin',
-        created_at: ""
-
+        created_at: new Date().toISOString(), // Ensure this field is correctly formatted
+        // Add any other required fields here
       };
       
       console.log('📤 Sending registration data:', userData);
       
-      this.usersService.RegisterUser(userData).subscribe({
+      this.usersService.RegisterAdminUser(userData).subscribe({
         next: (response) => {
           console.log('✅ Registration response:', response);
           this.usersService.login({

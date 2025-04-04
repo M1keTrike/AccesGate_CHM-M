@@ -86,6 +86,32 @@ func (pg *PostgreSQL) CreateUser(user *entities.User) error {
 	log.Printf("[CreateUser] Usuario '%s' creado con ID %d", user.Email, user.ID)
 	return nil
 }
+func (pg *PostgreSQL) CreateUserAdmin(user *entities.User) error {
+	now := time.Now()
+	user.CreatedAt = now
+	user.UpdatedAt = now
+
+	query := `
+		INSERT INTO users (
+			name, email, password_hash, role,
+			created_at, updated_at, fingerprint_id, biometric_auth
+		)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+		RETURNING id`
+	err := pg.conn.DB.QueryRow(
+		query,
+		user.Name, user.Email, user.PasswordHash, user.Role,
+		user.CreatedAt, user.UpdatedAt, user.FingerprintID, user.BiometricAuth,
+	).Scan(&user.ID)
+	if err != nil {
+		log.Printf("[CreateUser] Error al crear usuario '%s': %v", user.Email, err)
+		return err
+	}
+
+	log.Printf("[CreateUser] Usuario '%s' creado con ID %d", user.Email, user.ID)
+	return nil
+}
+
 
 func (pg *PostgreSQL) UpdateUser(user *entities.User) error {
 	user.UpdatedAt = time.Now()
