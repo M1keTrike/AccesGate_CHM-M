@@ -46,6 +46,20 @@
           </div>
         </div>
 
+        <!-- Campo Contraseña -->
+        <div class="space-y-2">
+          <label class="block text-[#FFD700] text-sm font-medium">Contraseña</label>
+          <input 
+            type="password" 
+            formControlName="password"
+            class="w-full px-4 py-2 rounded-lg bg-[#2A2A2A] text-[#FFD700] border border-[#424242] focus:border-[#FFD700] focus:outline-none transition-colors"
+            [ngClass]="{'border-red-500': userForm.get('password')?.invalid && userForm.get('password')?.touched}"
+          >
+          <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched" class="text-red-500 text-sm">
+            <span *ngIf="userForm.get('password')?.errors?.['required']">La contraseña es requerida</span>
+          </div>
+        </div>
+
         <!-- Campo Rol -->
         <div class="space-y-2">
           <label class="block text-[#FFD700] text-sm font-medium">Rol</label>

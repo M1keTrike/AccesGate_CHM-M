@@ -15,6 +15,7 @@ export class EditUserComponent implements OnInit {
     userForm: FormGroup;
     isLoading = false;
     userId: number;
+    originalCreatedBy: number = 0 ; // Store original created_by
 
     constructor(
         private fb: FormBuilder,
@@ -26,9 +27,11 @@ export class EditUserComponent implements OnInit {
         this.userForm = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(3)]],
             email: ['', [Validators.required, Validators.email]],
+            password: ['', Validators.required],
             role: ['', Validators.required]
         });
         this.userId = 0;
+        this.originalCreatedBy = 0; // Initialize originalCreatedBy
     }
 
     ngOnInit(): void {
@@ -47,8 +50,10 @@ export class EditUserComponent implements OnInit {
                 this.userForm.patchValue({
                     name: user.name,
                     email: user.email,
+                    password: user.password_hash,
                     role: user.role
                 });
+                this.originalCreatedBy = user.created_by ?? 0; // Use default value if undefined
                 this.isLoading = false;
             },
             error: (error) => {
@@ -67,11 +72,13 @@ export class EditUserComponent implements OnInit {
                 id: this.userId,
                 name: this.userForm.value.name,
                 email: this.userForm.value.email,
-                password_hash: this.userForm.value.password_hash,
+                password_hash: this.userForm.value.password,
                 role: this.userForm.value.role,
-                created_by: 0,
+                created_by: this.originalCreatedBy, // Use original created_by
                 created_at: new Date().toISOString()
             };
+
+            console.log('Submitting user data:', userData);
 
             this.usersService.updateUser(userData.id, userData).subscribe({
                 next: () => {
