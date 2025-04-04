@@ -16,6 +16,7 @@ func Init(router *gin.Engine) {
     getAttendeesUseCase := application.NewGetEventAttendees(repository)
     getUserEventsUseCase := application.NewGetUserEvents(repository)
     isRegisteredUseCase := application.NewIsUserRegistered(repository)
+    UpdateAttendenceUseCase :=application.NewUpdateAttendanceStatus(repository)
 
     // Initialize controllers
     registerController := controllers.NewRegisterAttendeeController(registerUseCase)
@@ -23,7 +24,7 @@ func Init(router *gin.Engine) {
     getAttendeesController := controllers.NewGetEventAttendeesController(getAttendeesUseCase)
     getUserEventsController := controllers.NewGetUserEventsController(getUserEventsUseCase)
     isRegisteredController := controllers.NewIsUserRegisteredController(isRegisteredUseCase)
-
+    UpdateAttendenceController :=controllers.NewUpdateAttendanceController(UpdateAttendenceUseCase)
     // Initialize routes
     EventAttendeesRoutes(router, EventAttendeesHandlers{
         register:      registerController,
@@ -31,5 +32,6 @@ func Init(router *gin.Engine) {
         getAttendees:  getAttendeesController,
         getUserEvents: getUserEventsController,
         isRegistered:  isRegisteredController,
+        updateAttendance: UpdateAttendenceController,
     })
 }

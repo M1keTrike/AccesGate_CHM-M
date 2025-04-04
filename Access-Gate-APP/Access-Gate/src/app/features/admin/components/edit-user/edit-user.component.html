@@ -55,9 +55,9 @@
             [ngClass]="{'border-red-500': userForm.get('role')?.invalid && userForm.get('role')?.touched}"
           >
             <option value="">Seleccione un rol</option>
-            <option value="admin">Administrador</option>
+            <option value="security">Seguridad</option>
             <option value="organizer">Organizador</option>
-            <option value="guest">Invitado</option>
+            <option value="attendee">Invitado</option>
           </select>
           <div *ngIf="userForm.get('role')?.invalid && userForm.get('role')?.touched" class="text-red-500 text-sm">
             <span *ngIf="userForm.get('role')?.errors?.['required']">El rol es requerido</span>

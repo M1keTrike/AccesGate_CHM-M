@@ -41,6 +41,7 @@ export class ViewUsersComponent implements OnInit {
             next: (users) => {
                 this.users = users;
                 this.isLoading = false;
+                console.log('Usuarios cargados:', users);
             },
             error: (error) => {
                 console.error('Error al cargar usuarios:', error);
