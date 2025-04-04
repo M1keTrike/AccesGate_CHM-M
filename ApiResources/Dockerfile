@@ -1,5 +1,5 @@
 # Use the official Golang image as the base image
-FROM golang:1.19
+FROM golang:1.23.4
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -14,13 +14,17 @@ RUN go mod download
 COPY . .
 
 # Build the Go application
-RUN go build -o apihexhandler main.go
+RUN go build -o apiresources main.go
 
 # Expose the port the application runs on
-EXPOSE 8081
+EXPOSE 8084
 
 # Set environment variables (if needed)
-ENV PORT=8081
+ENV DB_HOST=3.211.243.19
+ENV DB_PORT=5432
+ENV DB_USER=esparrago
+ENV DB_PASS=CHPaladin
+ENV DB_SCHEMA=access_gate
 
 # Command to run the executable
-CMD ["./apihexhandler"]
+CMD ["./apiresources"]
