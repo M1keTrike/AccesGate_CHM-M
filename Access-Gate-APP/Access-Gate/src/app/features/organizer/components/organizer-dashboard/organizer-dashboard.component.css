@@ -1,0 +1,118 @@
+.organizer-dashboard {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 2rem;
+  }
+  
+  .buttons-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+  
+  .buttons-container button {
+    padding: 1rem;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+  }
+  
+  .buttons-container button:nth-child(1) { background: #2196F3; }
+  .buttons-container button:nth-child(2) { background: #4CAF50; }
+  .buttons-container button:nth-child(3) { background: #FF9800; }
+  .buttons-container button:nth-child(4) { background: #9C27B0; }
+  
+  .buttons-container button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .events-section {
+    margin-top: 2rem;
+  }
+  
+  .events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .event-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .event-card h3 {
+    margin: 0 0 1rem 0;
+    color: #333;
+  }
+  
+  .event-dates {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  .event-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .event-actions button {
+    flex: 1;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .event-actions button:first-child {
+    background: #2196F3;
+    color: white;
+  }
+  
+  .event-actions button:last-child {
+    background: #FF9800;
+    color: white;
+  }
+  
+  .no-events {
+    text-align: center;
+    margin-top: 3rem;
+  }
+  
+  .no-events p {
+    color: #666;
+    margin-bottom: 1rem;
+  }
+  
+  .no-events button {
+    padding: 1rem 2rem;
+    background: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .no-events button:hover {
+    background: #1976D2;
+  }

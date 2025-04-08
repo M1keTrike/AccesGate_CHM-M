@@ -1,0 +1,70 @@
+<div class="min-h-screen bg-gradient-to-br from-[#424242] to-[#b98809] py-6 flex flex-col justify-center sm:py-12 px-4">
+  <div class="relative py-3 w-full sm:max-w-2xl mx-auto">
+    <!-- Div amarillo degradado - Aumenté el tamaño y ajusté la posición -->
+    <div class="absolute inset-0 -top-2 -bottom-2 -left-2 -right-2 bg-gradient-to-r from-[#FFEB3B] to-[#B8860B] shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
+    
+    <!-- Contenedor principal - Ajusté el z-index para que quede sobre el div amarillo -->
+    <div class="relative px-4 py-8 bg-[#212121] shadow-lg rounded-3xl sm:p-12 md:p-24 z-10">
+      <div class="w-full mx-auto">
+        <div class="divide-y divide-gray-200">
+          <div class="py-6 text-base leading-6 space-y-6 text-gray-700 sm:text-lg sm:leading-7">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-6 sm:mb-10 text-[#FFD700]">Login</h2>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4 sm:space-y-6">
+              
+              <div class="relative">
+                <input 
+                  formControlName="email"
+                  type="text" 
+                  class="peer h-10 w-full border-b-2 border-[#424242] text-[#FFD700] bg-transparent placeholder-transparent focus:outline-none focus:border-[#FFEB3B]"
+                  placeholder="Email"
+                />
+                <label class="absolute left-0 -top-3.5 text-[#FFD700] text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-[#424242] peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#FFD700] peer-focus:text-sm">
+                  Email
+                </label>
+                <div *ngIf="loginForm.get('email')?.errors?.['required'] && loginForm.get('email')?.touched" 
+                     class="text-red-500 text-xs mt-1">
+                     Email is required
+                </div>
+              </div>
+
+              <div class="relative">
+                <input 
+                  formControlName="password"
+                  type="password" 
+                  class="peer h-10 w-full border-b-2 border-[#424242] text-[#FFD700] bg-transparent placeholder-transparent focus:outline-none focus:border-[#FFEB3B]"
+                  placeholder="Password"
+                />
+                <label class="absolute left-0 -top-3.5 text-[#FFD700] text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-[#424242] peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#FFD700] peer-focus:text-sm">
+                  Password
+                </label>
+                <div *ngIf="loginForm.get('password')?.errors?.['required'] && loginForm.get('password')?.touched" 
+                     class="text-red-500 text-xs mt-1">
+                  Password is required
+                </div>
+              </div>
+              
+              <div *ngIf="loginError" class="text-red-500 text-center mt-2 sm:mt-4 text-sm sm:text-base">
+                {{ loginError }}
+              </div>
+              
+              <div class="relative pt-2 sm:pt-4">
+                <button 
+                  type="submit"
+                  [disabled]="!loginForm.valid"
+                  class="w-full bg-[#FFD700] text-[#212121] rounded-md px-2 py-2 sm:py-3 text-sm sm:text-base hover:bg-[#FFEB3B] focus:outline-none focus:ring-2 focus:ring-[#FFD700] focus:ring-opacity-50 transform hover:-translate-y-0.5 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                  Login
+                </button>
+              </div>
+
+              <div class="text-center mt-2 sm:mt-4">
+                <a routerLink="/register" class="text-xs sm:text-sm text-[#FFD700] hover:text-[#FFEB3B]">
+                  Don't have an account? Register
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

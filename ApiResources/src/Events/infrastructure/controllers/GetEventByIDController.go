@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"api_resources/src/Events/application"
-	
 	"net/http"
 	"strconv"
 
@@ -17,16 +16,26 @@ func NewGetEventByIDController(useCase *application.GetEventByID) *GetEventByIDC
 	return &GetEventByIDController{useCase: useCase}
 }
 
-func (c *GetEventByIDController) Handle(ctx *gin.Context) {
+// GetEventByID godoc
+// @Summary Obtiene un evento por ID
+// @Tags Events
+// @Produce json
+// @Param id path int true "ID del evento"
+// @Success 200 {object} entities.Event
+// @Failure 400 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Security BearerAuth
+// @Router /events/{id} [get]
+func (c *GetEventByIDController) Execute(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
 		return
 	}
 
 	event, err := c.useCase.Execute(id)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "Evento no encontrado"})
 		return
 	}
 

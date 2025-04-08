@@ -15,10 +15,17 @@ func NewGetAllEventsController(useCase *application.GetAllEvents) *GetAllEventsC
 	return &GetAllEventsController{useCase: useCase}
 }
 
-func (c *GetAllEventsController) Handle(ctx *gin.Context) {
+// GetAllEvents godoc
+// @Summary Lista todos los eventos
+// @Tags Events
+// @Produce json
+// @Success 200 {array} entities.Event
+// @Security BearerAuth
+// @Router /events [get]
+func (c *GetAllEventsController) Execute(ctx *gin.Context) {
 	events, err := c.useCase.Execute()
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "No se pudieron obtener los eventos"})
 		return
 	}
 

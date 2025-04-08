@@ -1,6 +1,7 @@
 package adapters
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"sync"
@@ -17,14 +18,14 @@ var upgrader = websocket.Upgrader{
 
 type WebSocketAdapter struct {
 	mu       sync.Mutex
-	clients  map[string]map[*websocket.Conn]bool
+	clients  map[string]map[string]map[*websocket.Conn]bool // topic -> mac -> connections
 	emitters map[string]*websocket.Conn
 	service  *core.MessageService
 }
 
 func NewWebSocketAdapter(service *core.MessageService) *WebSocketAdapter {
 	return &WebSocketAdapter{
-		clients:  make(map[string]map[*websocket.Conn]bool),
+		clients:  make(map[string]map[string]map[*websocket.Conn]bool),
 		emitters: make(map[string]*websocket.Conn),
 		service:  service,
 	}
@@ -32,6 +33,7 @@ func NewWebSocketAdapter(service *core.MessageService) *WebSocketAdapter {
 
 func (ws *WebSocketAdapter) HandleWebSocket(c *gin.Context) {
 	topic := c.Query("topic")
+	mac := c.Query("mac")
 	isEmitter := c.Query("emitter") == "true"
 
 	if topic == "" {
@@ -40,6 +42,12 @@ func (ws *WebSocketAdapter) HandleWebSocket(c *gin.Context) {
 		return
 	}
 
+	// Solo requerimos MAC para suscriptores
+	if !isEmitter && mac == "" {
+		fmt.Println("Error: No se proporcionó una MAC para el suscriptor")
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Se requiere una MAC para suscriptores"})
+		return
+	}
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		fmt.Println("Error al conectar WebSocket:", err)
@@ -51,7 +59,7 @@ func (ws *WebSocketAdapter) HandleWebSocket(c *gin.Context) {
 		ws.removeClient(topic, conn, isEmitter)
 	}()
 
-	ws.addClient(topic, conn, isEmitter)
+	ws.addClient(topic, mac, conn, isEmitter)
 
 	fmt.Printf("Cliente %s conectado al tema: %s\n", ws.getConnectionType(isEmitter), topic)
 
@@ -62,27 +70,35 @@ func (ws *WebSocketAdapter) HandleWebSocket(c *gin.Context) {
 			break
 		}
 
-		fmt.Printf("Mensaje recibido en el servidor [%s]: %s\n", topic, msg.Content)
+		var prettyMessage map[string]interface{}
+		if err := json.Unmarshal([]byte(msg.Content), &prettyMessage); err != nil {
+			fmt.Printf("Mensaje recibido en el servidor [%s]: %s\n", topic, msg.Content)
+		} else {
+			prettyJSON, _ := json.MarshalIndent(prettyMessage, "", "  ")
+			fmt.Printf("Mensaje recibido en el servidor [%s]:\n%s\n", topic, string(prettyJSON))
+		}
 
 		ws.SendMessage(topic, &msg)
 	}
 }
 
-func (ws *WebSocketAdapter) addClient(topic string, conn *websocket.Conn, isEmitter bool) {
+func (ws *WebSocketAdapter) addClient(topic string, mac string, conn *websocket.Conn, isEmitter bool) {
 	ws.mu.Lock()
 	defer ws.mu.Unlock()
 
 	if isEmitter {
-
 		if existingEmitter, exists := ws.emitters[topic]; exists {
 			existingEmitter.Close()
 		}
 		ws.emitters[topic] = conn
 	} else {
 		if _, exists := ws.clients[topic]; !exists {
-			ws.clients[topic] = make(map[*websocket.Conn]bool)
+			ws.clients[topic] = make(map[string]map[*websocket.Conn]bool)
 		}
-		ws.clients[topic][conn] = true
+		if _, exists := ws.clients[topic][mac]; !exists {
+			ws.clients[topic][mac] = make(map[*websocket.Conn]bool)
+		}
+		ws.clients[topic][mac][conn] = true
 	}
 }
 
@@ -99,7 +115,17 @@ func (ws *WebSocketAdapter) removeClient(topic string, conn *websocket.Conn, isE
 		}
 	} else {
 		if _, exists := ws.clients[topic]; exists {
-			delete(ws.clients[topic], conn)
+			// Iterate through all MACs to find and remove the connection
+			for mac, connections := range ws.clients[topic] {
+				if _, exists := connections[conn]; exists {
+					delete(connections, conn)
+					// Remove the MAC if no connections remain
+					if len(connections) == 0 {
+						delete(ws.clients[topic], mac)
+					}
+					break
+				}
+			}
 		}
 	}
 }
@@ -110,18 +136,29 @@ func (ws *WebSocketAdapter) SendMessage(topic string, msg *models.Message) {
 
 	fmt.Printf("Intentando enviar mensaje en el tema: %s\n", topic)
 
-	if subscribers, exists := ws.clients[topic]; exists {
-		for conn := range subscribers {
-			fmt.Printf("Enviando mensaje a suscriptor en %s\n", topic)
+	if macSubscribers, exists := ws.clients[topic]; exists {
+		// Extraer MAC del mensaje
+		var msgContent map[string]interface{}
+		if err := json.Unmarshal([]byte(msg.Content), &msgContent); err != nil {
+			fmt.Printf("Error parseando mensaje: %v\n", err)
+			return
+		}
 
-			if err := conn.WriteJSON(msg); err != nil {
-				fmt.Printf("Error enviando mensaje a %s: %v\n", topic, err)
-				conn.Close()
-				delete(subscribers, conn)
+		msgMAC, ok := msgContent["mac"].(string)
+		if !ok {
+			fmt.Printf("MAC no encontrada en el mensaje\n")
+			return
+		}
+
+		// Enviar a suscriptores de la MAC específica
+		if subscribers, exists := macSubscribers[msgMAC]; exists {
+			for conn := range subscribers {
+				if err := conn.WriteJSON(msg); err != nil {
+					conn.Close()
+					delete(subscribers, conn)
+				}
 			}
 		}
-	} else {
-		fmt.Printf("No hay suscriptores en el tema %s\n", topic)
 	}
 }
 

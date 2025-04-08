@@ -1,0 +1,91 @@
+<div class="min-h-screen bg-gradient-to-br from-[#424242] to-[#b98809] py-8 px-4 flex flex-col items-center justify-center-safe">
+  <div class="max-w-6xl mx-auto">
+    <!-- Div amarillo degradado que sobresale -->
+    <div class="relative mb-10">
+      <div class="absolute inset-0 -top-2 -bottom-2 -left-2 -right-2 bg-gradient-to-r from-[#FFEB3B] to-[#B8860B] shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
+      
+      <!-- Header section -->
+      <div class="relative px-6 py-6 bg-[#212121] shadow-lg rounded-3xl z-10">
+
+        <button 
+        *ngIf="isAttendee"
+         routerLink="/login" 
+         (click)="logout()"
+         class="bg-[#2A2A2A] border border-red-500 text-red-500 px-6 py-3 rounded-lg hover:bg-red-500 hover:text-white transition-all duration-200 flex items-center justify-center gap-2"
+       >
+         <span class="text-xl">🚪</span>
+         <span>Cerrar Sesión</span>
+       </button>
+        <button 
+         *ngIf="!isAttendee"
+          routerLink="/organizer/dashboard"
+          class="bg-[#2A2A2A] border border-[#FFD700] text-[#FFD700] px-4 py-2 rounded-md hover:bg-[#FFD700] hover:text-[#212121] transition duration-200 flex items-center gap-2 mb-6"
+        >
+          
+          <span>Back to Dashboard</span>
+        </button>
+        
+        <!-- Título centrado -->
+        <div class="flex justify-center mb-8">
+          <h1 class="text-2xl sm:text-3xl font-bold text-[#FFD700] text-center">My Events</h1>
+        </div>
+
+        <!-- Loading state -->
+        <div *ngIf="loading" class="text-center py-12">
+          <p class="text-[#FFD700] text-xl">Loading events...</p>
+        </div>
+    
+        <!-- Empty state -->
+        <div *ngIf="!loading && events.length === 0" class="bg-[#2A2A2A] rounded-2xl p-8 text-center shadow-lg">
+          <p class="text-[#FFD700] text-lg mb-6">You haven't created any events yet.</p>
+          <button 
+            routerLink="/organizer/create-event"
+            class="bg-[#FFD700] text-[#212121] px-6 py-3 rounded-md hover:bg-[#FFEB3B] focus:outline-none focus:ring-2 focus:ring-[#FFD700] focus:ring-opacity-50 transition duration-200"
+          >
+            Create Your First Event
+          </button>
+        </div>
+    
+        <!-- Events grid -->
+        <div *ngIf="!loading && events.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div *ngFor="let event of events" class="bg-[#2A2A2A] rounded-2xl shadow-lg overflow-hidden border border-[#FFD700]/20 hover:border-[#FFD700]/50 transition-all duration-300">
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-[#FFD700] mb-2">{{ event.name }}</h3>
+              <p class="text-[#B8860B] text-sm mb-4 line-clamp-3">{{ event.description }}</p>
+              
+              <div class="space-y-2 text-[#FFD700]/80 text-sm">
+                <div class="flex items-center gap-2">
+                  <span>📅</span>
+                  <span>Start: {{ event.start_time | date:'medium' }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span>🕒</span>
+                  <span>End: {{ event.end_time | date:'medium' }}</span>
+                </div>
+              </div>
+            </div>
+    
+            <div class="bg-[#212121] px-6 py-4 flex justify-end gap-3">
+              <button 
+                *ngIf="!isAttendee"
+                (click)="onUpdateEvent(event.id)"
+                class="bg-[#FFD700] text-[#212121] px-4 py-2 rounded-md text-sm hover:bg-[#FFEB3B] transition duration-200 flex items-center gap-2"
+              >
+                <span>✏️</span>
+                <span>Update</span>
+              </button>
+              <button 
+                *ngIf="!isAttendee"
+                (click)="onDeleteEvent(event.id)"
+                class="bg-red-500 text-white px-4 py-2 rounded-md text-sm hover:bg-red-600 transition duration-200 flex items-center gap-2"
+              >
+                <span>🗑️</span>
+                <span>Delete</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

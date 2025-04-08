@@ -16,6 +16,17 @@ func NewCreateNfcCardController(useCase application.CreateNfcCard) *CreateNfcCar
 	return &CreateNfcCardController{useCase: useCase}
 }
 
+// Execute godoc
+// @Summary      Crea una nueva tarjeta NFC
+// @Description  Registra una nueva tarjeta NFC con UID y estado.
+// @Tags         NFC Cards
+// @Accept       json
+// @Produce      json
+// @Param        card  body      entities.NfcCard  true  "Datos de la tarjeta NFC"
+// @Success      201   {string}  string            "Created"
+// @Failure      400   {object}  map[string]string "Error de validación de entrada"
+// @Failure      500   {object}  map[string]string "Error interno del servidor"
+// @Router       /nfc_cards [post]
 func (c *CreateNfcCardController) Execute(ctx *gin.Context) {
 	var card entities.NfcCard
 	if err := ctx.ShouldBindJSON(&card); err != nil {

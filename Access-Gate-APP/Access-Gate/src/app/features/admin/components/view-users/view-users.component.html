@@ -1,1 +1,69 @@
-<p>view-users works!</p>
+<div class="min-h-screen bg-gradient-to-br from-[#424242] to-[#b98809] py-8 flex flex-col items-center px-4 justify-center">
+  <div class="relative w-full max-w-4xl mx-auto">
+    <!-- Div amarillo degradado que sobresale -->
+    <div class="absolute inset-0 -top-2 -bottom-2 -left-2 -right-2 bg-gradient-to-r from-[#FFEB3B] to-[#B8860B] shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
+    
+    <!-- Contenedor principal -->
+    <div class="relative px-6 py-8 bg-[#212121] shadow-lg rounded-3xl sm:p-12 z-10">
+      <button 
+        routerLink="/admin" 
+        class="bg-[#2A2A2A] text-[#FFD700] border border-[#FFD700] px-4 py-2 rounded-md hover:bg-[#FFD700] hover:text-[#212121] transition duration-200 text-sm sm:text-base mb-6"
+      >
+        ← Volver al Panel
+      </button>
+
+      <h1 class="text-3xl sm:text-4xl font-bold text-center mb-10 text-[#FFD700]">Usuarios Registrados</h1>
+
+      <!-- Botón Crear Usuario -->
+      <div class="mb-8 flex justify-end">
+        <button 
+          routerLink="/admin/create-user" 
+          class="bg-[#2A2A2A] border border-[#FFD700] text-[#FFD700] p-4 rounded-lg hover:bg-[#FFD700] hover:text-[#212121] transition-all duration-200 flex items-center justify-center gap-2 transform hover:-translate-y-1"
+        >
+          <span class="text-xl">👤</span>
+          <span>Crear Usuario</span>
+        </button>
+      </div>
+
+      <!-- Lista de Usuarios -->
+      <div class="overflow-x-auto">
+        <table class="w-full bg-[#2A2A2A] rounded-lg overflow-hidden">
+          <thead class="bg-[#1A1A1A] text-[#FFD700]">
+            <tr>
+              <th class="px-6 py-3 text-left">Nombre</th>
+              <th class="px-6 py-3 text-left">Email</th>
+              <th class="px-6 py-3 text-left">Rol</th>
+              <th class="px-6 py-3 text-left">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[#424242]">
+            <tr *ngFor="let user of users" class="text-[#FFD700] hover:bg-[#363636] transition-colors">
+              <td class="px-6 py-4">{{user.name}}</td>
+              <td class="px-6 py-4">{{user.email}}</td>
+              <td class="px-6 py-4">{{user.role}}</td>
+              <td class="px-6 py-4">
+                <button 
+                  class="text-blue-400 hover:text-blue-300 mr-2"
+                  (click)="editUser(user)"
+                >
+                  ✏️
+                </button>
+                <button 
+                  class="text-red-400 hover:text-red-300"
+                  (click)="deleteUser(user)"
+                >
+                  🗑️
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Estado vacío -->
+        <div *ngIf="users.length === 0" class="text-center py-8 text-[#FFD700]">
+          <p>No hay usuarios registrados</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

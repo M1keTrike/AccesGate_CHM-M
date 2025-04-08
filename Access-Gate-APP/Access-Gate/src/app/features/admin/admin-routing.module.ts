@@ -6,18 +6,24 @@ import { CreateEventComponent } from './components/create-event/create-event.com
 import { AssignGuestsComponent } from './components/assign-guests/assign-guests.component';
 import { ViewUsersComponent } from './components/view-users/view-users.component';
 import { ScanNfcComponent } from './components/scan-nfc/scan-nfc.component';
+import { LinkDeviceComponent } from './components/link-device/link-device.component';
+import { FingerprintRegisterComponent } from './components/fingerprint-register/fingerprint-register.component';
+import { EditUserComponent } from './components/edit-user/edit-user.component';
 
 const routes: Routes = [
   { path: '', component: AdminDashboardComponent },
   { path: 'create-user', component: CreateUserComponent },
-  { path: 'scan-nfc', component: ScanNfcComponent }, 
+  { path: 'scan-nfc', component: ScanNfcComponent },
   { path: 'create-event', component: CreateEventComponent },
   { path: 'assign-guests', component: AssignGuestsComponent },
-  { path: 'view-users', component: ViewUsersComponent }
+  { path: 'view-users', component: ViewUsersComponent },
+  { path: 'link-device', component: LinkDeviceComponent },
+  { path: 'fingerprint-register', component: FingerprintRegisterComponent },
+  { path: 'edit-user/:id', component: EditUserComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AdminRoutingModule { }
+export class AdminRoutingModule {}

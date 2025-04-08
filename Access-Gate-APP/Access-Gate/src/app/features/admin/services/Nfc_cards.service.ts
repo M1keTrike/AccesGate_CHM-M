@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NfcCard } from '../models/iNfc_cards';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NfcCardsService {
-  private apiUrl = 'http://localhost:8080/nfc_cards';
+  private apiUrl = `${environment.apiBaseUrl}/nfc_cards`;
 
   constructor(private http: HttpClient) {}
 

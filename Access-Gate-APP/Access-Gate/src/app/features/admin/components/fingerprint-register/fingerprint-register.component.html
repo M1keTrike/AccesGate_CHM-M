@@ -1,0 +1,45 @@
+<div class="min-h-screen bg-gradient-to-br from-[#424242] to-[#b98809] py-64 px-4">
+  <div class="max-w-4xl mx-auto">
+    <!-- Div amarillo degradado que sobresale -->
+    <div class="relative mb-10">
+      <div class="absolute inset-0 -top-2 -bottom-2 -left-2 -right-2 bg-gradient-to-r from-[#FFEB3B] to-[#B8860B] shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
+      
+      <!-- Contenedor principal -->
+      <div class="relative px-6 py-8 bg-[#212121] shadow-lg rounded-3xl z-10">
+        <button routerLink="/admin" class="bg-[#2A2A2A] text-[#FFD700] border border-[#FFD700] px-4 py-2 rounded-md hover:bg-[#FFD700] hover:text-[#212121] transition duration-200 text-sm sm:text-base">
+          ← Volver al Panel
+        </button>
+        <h2 class="text-2xl sm:text-3xl font-bold text-center mb-8 text-[#FFD700]">Registro de Huella Digital</h2>
+
+        <!-- Sección de conexión -->
+        <div class="bg-[#2A2A2A] rounded-xl p-6 mb-8 border border-[#FFD700]/30">
+          <div *ngIf="!conectado" class="text-center">
+            <button 
+              (click)="conectarDispositivo()"
+              class="bg-[#FFD700] text-[#212121] px-6 py-3 rounded-lg hover:bg-[#FFEB3B] focus:outline-none focus:ring-2 focus:ring-[#FFD700] focus:ring-opacity-50 transition duration-300 flex items-center justify-center gap-2 mx-auto"
+            >
+              <span class="text-xl">🔗</span>
+              <span>Conectar dispositivo BLE</span>
+            </button>
+            <p class="text-[#B8860B] mt-4">Conecta tu dispositivo de huellas digitales para comenzar</p>
+          </div>
+
+          <!-- Componente de acción de huella digital -->
+          <div *ngIf="conectado">
+            <app-fingerprint-action
+              (estado)="onStatusUpdate($event)"
+            ></app-fingerprint-action>
+          </div>
+        </div>
+
+        <!-- Componente de estado -->
+        <div *ngIf="conectado" class="bg-[#2A2A2A] rounded-xl p-6 border border-[#FFD700]/30">
+          <app-fingerprint-status
+            [estado]="status"
+            [mensaje]="mensaje"
+          ></app-fingerprint-status>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,20 +1,26 @@
-# Imagen base de Go
+# Use the official Golang image as the base image
 FROM golang:1.19
 
-# Crear y establecer el directorio de trabajo
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copiar archivos del proyecto
+# Copy go.mod and go.sum files to the working directory
+COPY go.mod go.sum ./
+
+# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
+RUN go mod download
+
+# Copy the rest of the application code to the working directory
 COPY . .
 
-# Descargar dependencias y compilar
-RUN go mod tidy && go build -o api_returner main.go
+# Build the Go application
+RUN go build -o apihexhandler main.go
 
-# Copiar el archivo .env si existe
-COPY .env /app/.env
+# Expose the port the application runs on
+EXPOSE 8081
 
-# Exponer el puerto de la API Returner
-EXPOSE 8082
+# Set environment variables (if needed)
+ENV PORT=8081
 
-# Ejecutar la API
-CMD ["./api_returner"]
+# Command to run the executable
+CMD ["./apihexhandler"]

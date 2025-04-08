@@ -1,0 +1,92 @@
+<div class="min-h-screen bg-gradient-to-br from-[#424242] to-[#b98809] py-8 px-4 flex flex-col items-center justify-center-safe">
+  <div class="max-w-2xl mx-auto">
+    <!-- Yellow gradient div -->
+    <div class="relative mb-10">
+      <div class="absolute inset-0 -top-2 -bottom-2 -left-2 -right-2 bg-gradient-to-r from-[#FFEB3B] to-[#B8860B] shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
+      
+      <!-- Main container -->
+      <div class="relative px-6 py-8 bg-[#212121] shadow-lg rounded-3xl z-10">
+        <h2 class="text-3xl font-bold text-center mb-8 text-[#FFD700]">Update Event</h2>
+
+        <!-- Loading state -->
+        <div *ngIf="loading" class="text-center py-12">
+          <p class="text-[#FFD700] text-xl">Loading event details...</p>
+        </div>
+
+        <!-- Form -->
+        <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" *ngIf="!loading" class="space-y-6">
+          <!-- Event Name -->
+          <div class="relative">
+            <input 
+              id="name"
+              type="text" 
+              formControlName="name"
+              class="peer h-10 w-full border-b-2 border-[#424242] text-[#FFD700] bg-transparent placeholder-transparent focus:outline-none focus:border-[#FFEB3B]"
+              placeholder=" "
+            >
+            <label for="name" class="absolute left-0 -top-3.5 text-[#FFD700] text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-[#424242] peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#FFD700] peer-focus:text-sm">
+              Event Name
+            </label>
+          </div>
+
+          <!-- Description -->
+          <div class="relative">
+            <textarea 
+              id="description"
+              formControlName="description"
+              rows="4"
+              class="peer h-24 w-full border-b-2 border-[#424242] text-[#FFD700] bg-transparent placeholder-transparent focus:outline-none focus:border-[#FFEB3B]"
+              placeholder=" "
+            ></textarea>
+            <label for="description" class="absolute left-0 -top-3.5 text-[#FFD700] text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-[#424242] peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#FFD700] peer-focus:text-sm">
+              Description
+            </label>
+          </div>
+
+          <!-- Date/Time Fields -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Start Time -->
+            <div class="relative">
+              <label class="block text-[#FFD700] text-sm mb-1">Start Time</label>
+              <input 
+                id="start_time"
+                type="datetime-local"
+                formControlName="start_time"
+                class="w-full bg-[#2A2A2A] border border-[#FFD700] text-[#FFD700] px-3 py-2 rounded focus:outline-none focus:ring-1 focus:ring-[#FFEB3B]"
+              >
+            </div>
+
+            <!-- End Time -->
+            <div class="relative">
+              <label class="block text-[#FFD700] text-sm mb-1">End Time</label>
+              <input 
+                id="end_time"
+                type="datetime-local"
+                formControlName="end_time"
+                class="w-full bg-[#2A2A2A] border border-[#FFD700] text-[#FFD700] px-3 py-2 rounded focus:outline-none focus:ring-1 focus:ring-[#FFEB3B]"
+              >
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="flex flex-col sm:flex-row justify-end gap-4 pt-6">
+            <button 
+              type="button" 
+              routerLink="/organizer/my-events"
+              class="bg-transparent border border-[#FFD700] text-[#FFD700] px-6 py-2 rounded hover:bg-[#FFD700] hover:text-[#212121] transition duration-200"
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit" 
+              [disabled]="!eventForm.valid"
+              class="bg-[#FFD700] text-[#212121] px-6 py-2 rounded hover:bg-[#FFEB3B] focus:outline-none focus:ring-2 focus:ring-[#FFD700] focus:ring-opacity-50 transform hover:-translate-y-0.5 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Update Event
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

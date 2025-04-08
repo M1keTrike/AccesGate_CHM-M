@@ -1,3 +1,90 @@
-<p>assign-guests works! Deploy</p>
+<div class="min-h-screen bg-gradient-to-br from-[#424242] to-[#b98809] py-6 flex flex-col justify-center sm:py-12 px-4">
+  <div class="relative py-3 w-full sm:max-w-4xl mx-auto">
+    <!-- Div amarillo degradado - Aumentado para que sobresalga más -->
+    <div class="absolute inset-0 -top-2 -bottom-2 -left-2 -right-2 bg-gradient-to-r from-[#FFEB3B] to-[#B8860B] shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
+    
+    <!-- Contenedor principal con z-index para superposición -->
+    <div class="relative px-4 py-8 bg-[#212121] shadow-lg rounded-3xl sm:p-12 md:p-24 z-10">
+      <div class="flex justify-start mb-6">
+        <button routerLink="/admin" class="bg-[#2A2A2A] text-[#FFD700] border border-[#FFD700] px-4 py-2 rounded-md hover:bg-[#FFD700] hover:text-[#212121] transition duration-200 text-sm sm:text-base">
+          ← Volver al Panel
+        </button>
+      </div>
+      <div class="max-w-4xl mx-auto">
+        <div class="divide-y divide-gray-200">
+          <h2 class="text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-10 text-[#FFD700]">Assign Guests to Events</h2>
 
-<div><button>Invitar</button></div>
+          <!-- Form Section -->
+          <div class="py-6 sm:py-8">
+            <h3 class="text-xl sm:text-2xl font-semibold text-[#FFD700] mb-4 sm:mb-6">Assign New Guest</h3>
+            <form [formGroup]="assignForm" (ngSubmit)="assignGuest()" class="space-y-4 sm:space-y-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <!-- Event Selection -->
+                <div class="relative">
+                  <select id="eventSelect" formControlName="eventId" (change)="onEventSelect($event)" 
+                    class="w-full bg-[#2A2A2A] border border-[#FFD700] text-[#FFD700] p-2 sm:p-3 rounded-md text-sm sm:text-base">
+                    <option value="" disabled selected>Select an event</option>
+                    <option *ngFor="let event of events" [value]="event.id">{{ event.name }} {{ event.start_time | date:'mediumDate' }}</option>
+                  </select>
+                </div>
+                <!-- Guest Selection -->
+                <div class="relative">
+                  <select id="userSelect" formControlName="userId" 
+                    class="w-full bg-[#2A2A2A] border border-[#FFD700] text-[#FFD700] p-2 sm:p-3 rounded-md text-sm sm:text-base">
+                    <option value="" disabled selected>Select a guest</option>
+                    <option *ngFor="let user of filteredUsers" [value]="user.id">{{ user.name }} ({{ user.email }})</option>
+                  </select>
+                </div>
+              </div>
+              <!-- Submit Button -->
+              <div class="flex justify-center pt-2 sm:pt-4">
+                <button type="submit" [disabled]="assignForm.invalid || isLoading" 
+                  class="w-full md:w-auto bg-[#FFD700] text-[#212121] rounded-md px-6 sm:px-8 py-2 sm:py-3 hover:bg-[#FFEB3B] focus:outline-none focus:ring-2 focus:ring-[#FFD700] focus:ring-opacity-50 transform hover:-translate-y-0.5 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base">
+                  <span *ngIf="!isLoading">Assign Guest</span>
+                  <mat-spinner *ngIf="isLoading" diameter="24" class="mx-auto"></mat-spinner>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Attendees List Section -->
+          <div class="py-6 sm:py-8" *ngIf="selectedEventId">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-2">
+              <h3 class="text-xl sm:text-2xl font-semibold text-[#FFD700]">Current Attendees</h3>
+              <span class="text-[#FFD700] text-xs sm:text-sm">
+                {{ attendees.length }} {{ attendees.length === 1 ? 'attendee' : 'attendees' }} registered
+              </span>
+            </div>
+            <!-- Attendees Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+              <div *ngFor="let attendee of attendees" class="bg-[#2A2A2A] rounded-lg p-3 sm:p-4 shadow-md hover:shadow-lg transition-shadow duration-200">
+                <div class="flex items-start justify-between space-x-2">
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center space-x-2 sm:space-x-3">
+                      <div class="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#FFD700] flex items-center justify-center">
+                        <mat-icon class="text-[#212121] text-sm sm:text-base">person</mat-icon>
+                      </div>
+                      <div class="min-w-0 flex-1">
+                        <h4 class="text-[#FFD700] font-semibold truncate text-sm sm:text-base">{{ attendee.name }}</h4>
+                        <p class="text-[#B8860B] text-xs sm:text-sm truncate">{{ attendee.email }}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <button (click)="removeAttendee(attendee.id)" class="flex-shrink-0 text-red-500 hover:text-red-600 transition-colors duration-200" matTooltip="Remove attendee">
+                    <mat-icon class="text-sm sm:text-base">delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- Empty State -->
+            <div *ngIf="attendees.length === 0" class="col-span-full bg-[#2A2A2A] rounded-lg p-4 sm:p-6 text-center">
+              <mat-icon class="text-[#FFD700] text-3xl sm:text-4xl mb-2">info</mat-icon>
+              <h4 class="text-[#FFD700] font-semibold mb-1 text-sm sm:text-base">No attendees registered</h4>
+              <p class="text-[#B8860B] text-xs sm:text-sm">Select guests to assign them to this event</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

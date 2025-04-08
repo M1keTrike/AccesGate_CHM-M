@@ -13,32 +13,55 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Build Docker Image
-        run: |
-          cd Access-Gate-APP/Access-Gate || exit 1  # Salir si no existe
-          docker build -t access-gate-frontend:${{ github.sha }} .
+      - name: Install Node.js and Angular CLI
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-      - name: Save Docker Image
+      - name: Install dependencies
         run: |
-          docker save access-gate-frontend:${{ github.sha }} | gzip > access-gate.tar.gz
+          cd Access-Gate-APP/Access-Gate
+          npm install -g @angular/cli
+          npm install
 
-      - name: Copy Image to EC2
+      - name: Build Angular Project
+        run: |
+          cd Access-Gate-APP/Access-Gate
+          ng build --configuration production
+
+      - name: Archive build output
+        run: |
+          tar -czf access-gate.tar.gz -C Access-Gate-APP/Access-Gate/dist/access-gate .
+
+      - name: Verificar contenido del .tar.gz (opcional)
+        run: |
+          tar -tf access-gate.tar.gz
+
+      - name: Upload via SCP to EC2
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          source: "access-gate.tar.gz"
+          source: access-gate.tar.gz
           target: "/home/ubuntu/"
+          rm: false
+          strip_components: 0
+          tar_dereference: false
+          overwrite: true
 
-      - name: Deploy Image on EC2
+      - name: Deploy on EC2 (extract and replace frontend)
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
-            docker load < /home/ubuntu/access-gate.tar.gz
-            docker stop access-gate-frontend || true
-            docker rm access-gate-frontend || true
-            docker run -d --name access-gate-frontend -p 80:80 access-gate-frontend:${{ github.sha }}
+            sudo mkdir -p /var/www/accessgate
+            sudo chown -R $USER:$USER /var/www/accessgate
+            sudo rm -rf /var/www/accessgate/*
+            sudo tar -xzf /home/***/access-gate.tar.gz -C /var/www/accessgate/
+            sudo chown -R www-data:www-data /var/www/accessgate
+            sudo chmod -R 755 /var/www/accessgate
+            sudo nginx -t && sudo systemctl reload nginx
+

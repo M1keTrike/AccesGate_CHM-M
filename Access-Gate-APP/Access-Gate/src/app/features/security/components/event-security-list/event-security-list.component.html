@@ -1,0 +1,103 @@
+<div class="min-h-screen bg-gradient-to-br from-[#424242] to-[#b98809] py-20 px-4 flex flex-col items-center justify-center-safe">
+  <div class="max-w-6xl mx-auto">
+    <!-- Div amarillo degradado que sobresale -->
+    <div class="relative mb-10">
+      <div class="absolute inset-0 -top-2 -bottom-2 -left-2 -right-2 bg-gradient-to-r from-[#FFEB3B] to-[#B8860B] shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
+      
+      <!-- Contenedor principal -->
+      <div class="relative px-6 py-8 bg-[#212121] shadow-lg rounded-3xl z-10">
+        <button 
+         *ngIf="!isSecurityRole"
+          routerLink="/login" 
+          (click)="logout()"
+          class="bg-[#2A2A2A] border border-red-500 text-red-500 px-6 py-3 rounded-lg hover:bg-red-500 hover:text-white transition-all duration-200 flex items-center justify-center gap-2"
+        >
+          <span class="text-xl">🚪</span>
+          <span>Cerrar Sesión</span>
+        </button>
+        <button 
+          *ngIf="isSecurityRole"
+          routerLink="/organizer/dashboard"
+          class="bg-[#2A2A2A] border border-[#FFD700] text-[#FFD700] px-4 py-2 rounded-md hover:bg-[#FFD700] hover:text-[#212121] transition duration-200 flex items-center gap-2 mb-6">
+          <span>Back to Dashboard</span>
+        </button>
+        <h1 class="text-3xl font-bold text-center mb-8 text-[#FFD700]">Event Security Control</h1>
+
+        <!-- Bluetooth Controls -->
+        <div class="bg-[#2A2A2A] rounded-xl p-6 mb-8 border border-[#FFD700]/30">
+          <button 
+            (click)="connectBluetooth()" 
+            class="w-full bg-[#2A2A2A] border-2 border-[#FFD700] text-[#FFD700] px-6 py-3 rounded-lg hover:bg-[#FFD700] hover:text-[#212121] transition duration-300 flex items-center justify-center gap-2"
+            [class.border-green-500]="isConnected"
+            [class.text-green-500]="isConnected"
+            [class.hover:bg-green-500]="isConnected"
+          >
+            <span class="text-xl">{{ isConnected ? '🔵' : '⚪' }}</span>
+            <span>{{ isConnected ? 'Connected' : 'Connect Bluetooth' }}</span>
+          </button>
+          
+          <div *ngIf="isConnected" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+            <button 
+              (click)="togglePir()"
+              class="bg-[#2A2A2A] border-2 border-[#FFD700] text-[#FFD700] px-4 py-3 rounded-lg hover:bg-[#FFD700] hover:text-[#212121] transition duration-300 flex items-center justify-center gap-2"
+              [class.border-red-500]="isPirEnabled"
+              [class.text-red-500]="isPirEnabled"
+              [class.hover:bg-red-500]="isPirEnabled"
+            >
+              <span class="text-xl">{{ isPirEnabled ? '🔒' : '🔓' }}</span>
+              <span>{{ isPirEnabled ? 'Disable PIR Sensor' : 'Enable PIR Sensor' }}</span>
+            </button>
+            
+            <button 
+              (click)="toggleAccessMode()"
+              class="bg-[#2A2A2A] border-2 border-[#FFD700] text-[#FFD700] px-4 py-3 rounded-lg hover:bg-[#FFD700] hover:text-[#212121] transition duration-300 flex items-center justify-center gap-2"
+              [class.border-green-500]="isAccessModeEnabled"
+              [class.text-green-500]="isAccessModeEnabled"
+              [class.hover:bg-green-500]="isAccessModeEnabled"
+            >
+              <span class="text-xl">{{ isAccessModeEnabled ? '🚫' : '✅' }}</span>
+              <span>{{ isAccessModeEnabled ? 'Disable Access Mode' : 'Enable Access Mode' }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Loading state -->
+        <div *ngIf="loading" class="text-center py-8">
+          <p class="text-[#FFD700] text-lg">Loading events...</p>
+        </div>
+
+        <!-- Empty state -->
+        <div *ngIf="!loading && events.length === 0" class="bg-[#2A2A2A] rounded-xl p-8 text-center border border-[#FFD700]/20">
+          <p class="text-[#FFD700]">No events available for security control.</p>
+        </div>
+
+        <!-- Events list in 3 columns -->
+        <div *ngIf="!loading && events.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div *ngFor="let event of events" class="bg-[#2A2A2A] rounded-xl p-6 border border-[#FFD700]/20 hover:border-[#FFD700]/50 transition duration-300 flex flex-col">
+            <div class="flex-grow">
+              <h3 class="text-xl font-bold text-[#FFD700] mb-2">{{ event.name }}</h3>
+              <p class="text-[#B8860B] text-sm mb-4 line-clamp-3">{{ event.description }}</p>
+              <div class="text-[#FFD700]/80 text-sm">
+                <div class="flex items-center gap-2 mb-1">
+                  <span>📅</span>
+                  <span>{{ event.start_time | date:'mediumDate' }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span>🕒</span>
+                  <span>{{ event.start_time | date:'shortTime' }} - {{ event.end_time | date:'shortTime' }}</span>
+                </div>
+              </div>
+            </div>
+            <button 
+              (click)="viewAttendees(event.id)"
+              class="mt-4 bg-[#FFD700] text-[#212121] px-4 py-2 rounded-lg hover:bg-[#FFEB3B] transition duration-300 flex items-center justify-center gap-2 w-full"
+            >
+              <span class="text-xl">👥</span>
+              <span>Control Attendees</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

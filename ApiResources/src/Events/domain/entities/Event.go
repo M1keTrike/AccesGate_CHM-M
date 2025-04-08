@@ -1,8 +1,6 @@
 package entities
 
-import (
-	"time"
-)
+import "time"
 
 type Event struct {
 	ID          int       `json:"id"`

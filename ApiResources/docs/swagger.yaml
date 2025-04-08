@@ -1,0 +1,1539 @@
+basePath: /
+definitions:
+  controllers.CreateUserRequest:
+    properties:
+      biometric_auth:
+        example: false
+        type: boolean
+      created_by:
+        example: 1
+        type: integer
+      email:
+        example: admin@example.com
+        type: string
+      fingerprint_id:
+        example: 0
+        type: integer
+      name:
+        example: Admin
+        type: string
+      password_hash:
+        example: "123456"
+        type: string
+      role:
+        example: admin
+        type: string
+    type: object
+  controllers.LoginRequest:
+    properties:
+      email:
+        example: admin@example.com
+        type: string
+      password:
+        example: "123456"
+        type: string
+    type: object
+  entities.AccessEvent:
+    properties:
+      device_id:
+        type: integer
+      front_id:
+        type: integer
+      id:
+        type: integer
+      status:
+        type: string
+      timestamp:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  entities.Device:
+    properties:
+      assigned_to:
+        type: integer
+      hardware_id:
+        type: string
+      id:
+        type: integer
+      location:
+        type: string
+      registered_at:
+        type: string
+      status:
+        type: string
+      type:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  entities.Event:
+    properties:
+      created_at:
+        type: string
+      created_by:
+        type: integer
+      description:
+        type: string
+      end_time:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      start_time:
+        type: string
+    type: object
+  entities.EventAttendee:
+    properties:
+      attended:
+        type: boolean
+      event_id:
+        type: integer
+      id:
+        type: integer
+      registered_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  entities.NfcCard:
+    properties:
+      card_uid:
+        type: string
+    type: object
+  entities.NfcCardAssignment:
+    properties:
+      assigned_at:
+        type: string
+      card_uid:
+        type: string
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      user_id:
+        type: integer
+    type: object
+  entities.User:
+    properties:
+      biometric_auth:
+        type: boolean
+      created_at:
+        type: string
+      created_by:
+        type: integer
+      email:
+        type: string
+      fingerprint_id:
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+      password_hash:
+        type: string
+      role:
+        type: string
+      updated_at:
+        type: string
+    type: object
+host: localhost:8084
+info:
+  contact:
+    email: contacto@accessgate.com
+    name: Equipo de Desarrollo AccessGate
+  description: API REST con arquitectura hexagonal para gestión de usuarios, tarjetas
+    NFC y clientes.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: https://accessgate.com/terms/
+  title: AccessGate API
+  version: "1.0"
+paths:
+  /access-events:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.AccessEvent'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Lista todos los eventos de acceso
+      tags:
+      - Access Events
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Evento de acceso a registrar
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/entities.AccessEvent'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entities.AccessEvent'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Crea un nuevo evento de acceso
+      tags:
+      - Access Events
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Evento de acceso actualizado
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/entities.AccessEvent'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Actualiza un evento de acceso
+      tags:
+      - Access Events
+  /access-events/{id}:
+    delete:
+      parameters:
+      - description: ID del evento de acceso
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Elimina un evento de acceso
+      tags:
+      - Access Events
+    get:
+      parameters:
+      - description: ID del evento de acceso
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.AccessEvent'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Obtiene un evento de acceso por ID
+      tags:
+      - Access Events
+  /access-events/device/{deviceId}:
+    get:
+      parameters:
+      - description: ID del dispositivo
+        in: path
+        name: deviceId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.AccessEvent'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Obtiene eventos de acceso por dispositivo
+      tags:
+      - Access Events
+  /access-events/front/{frontId}:
+    get:
+      parameters:
+      - description: ID del front (puerta)
+        in: path
+        name: frontId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.AccessEvent'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Obtiene eventos de acceso por puerta (front)
+      tags:
+      - Access Events
+  /access-events/user/{userId}:
+    get:
+      parameters:
+      - description: ID del usuario
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.AccessEvent'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Obtiene eventos de acceso por usuario
+      tags:
+      - Access Events
+  /api/nfc-assignments:
+    get:
+      description: Retrieves all NFC card assignments in the system
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.NfcCardAssignment'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Gets all NFC card assignments
+      tags:
+      - NFC Card Assignments
+    post:
+      consumes:
+      - application/json
+      description: Assigns an NFC card to a user
+      parameters:
+      - description: Assignment Data
+        in: body
+        name: assignment
+        required: true
+        schema:
+          $ref: '#/definitions/entities.NfcCardAssignment'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entities.NfcCardAssignment'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Creates a new NFC card assignment
+      tags:
+      - NFC Card Assignments
+  /api/nfc-assignments/{id}:
+    get:
+      description: Retrieves a specific NFC card assignment using its ID
+      parameters:
+      - description: Assignment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.NfcCardAssignment'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Gets an NFC card assignment by ID
+      tags:
+      - NFC Card Assignments
+    put:
+      consumes:
+      - application/json
+      description: Updates the details of an existing NFC card assignment
+      parameters:
+      - description: Assignment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated Assignment Data
+        in: body
+        name: assignment
+        required: true
+        schema:
+          $ref: '#/definitions/entities.NfcCardAssignment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Updates an NFC card assignment
+      tags:
+      - NFC Card Assignments
+  /api/nfc-assignments/{id}/deactivate:
+    put:
+      description: Sets an NFC card assignment as inactive
+      parameters:
+      - description: Assignment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Deactivates an NFC card assignment
+      tags:
+      - NFC Card Assignments
+  /api/nfc-assignments/card/{cardUid}:
+    get:
+      description: Retrieves the active assignment for a specific NFC card
+      parameters:
+      - description: Card UID
+        in: path
+        name: cardUid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.NfcCardAssignment'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Gets an NFC card assignment by card UID
+      tags:
+      - NFC Card Assignments
+  /api/nfc-assignments/user/{userId}:
+    get:
+      description: Retrieves all NFC card assignments associated with a specific user
+      parameters:
+      - description: User ID
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.NfcCardAssignment'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Gets all NFC card assignments for a user
+      tags:
+      - NFC Card Assignments
+  /devices:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Device'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Obtiene todos los dispositivos
+      tags:
+      - Devices
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Nuevo dispositivo
+        in: body
+        name: device
+        required: true
+        schema:
+          $ref: '#/definitions/entities.Device'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entities.Device'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Crea un nuevo dispositivo
+      tags:
+      - Devices
+  /devices/{id}:
+    delete:
+      parameters:
+      - description: ID del dispositivo
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Elimina un dispositivo por ID
+      tags:
+      - Devices
+    get:
+      parameters:
+      - description: ID del dispositivo
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.Device'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Obtiene un dispositivo por ID
+      tags:
+      - Devices
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID del dispositivo
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Dispositivo actualizado
+        in: body
+        name: device
+        required: true
+        schema:
+          $ref: '#/definitions/entities.Device'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Actualiza un dispositivo existente
+      tags:
+      - Devices
+  /devices/hardware/{hardware_id}:
+    get:
+      parameters:
+      - description: Identificador físico del dispositivo
+        in: path
+        name: hardware_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.Device'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Obtiene un dispositivo por hardware_id
+      tags:
+      - Devices
+  /event-attendees:
+    post:
+      consumes:
+      - application/json
+      description: Registers a user to attend a specific event
+      parameters:
+      - description: Attendee Registration Data
+        in: body
+        name: attendee
+        required: true
+        schema:
+          $ref: '#/definitions/entities.EventAttendee'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entities.EventAttendee'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Register a user for an event
+      tags:
+      - Event Attendees
+  /event-attendees/event/{eventId}/user/{userId}/check:
+    get:
+      description: Verifies if a specific user is registered to attend an event
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventId
+        required: true
+        type: integer
+      - description: User ID
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Check if a user is registered for an event
+      tags:
+      - Event Attendees
+  /event-attendees/events/{eventId}/attendees:
+    get:
+      description: Retrieves all users registered to attend a specific event
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.User'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all attendees for an event
+      tags:
+      - Event Attendees
+  /event-attendees/events/{eventId}/users/{userId}:
+    delete:
+      description: Removes a user's registration from a specific event
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventId
+        required: true
+        type: integer
+      - description: User ID
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Remove an attendee from an event
+      tags:
+      - Event Attendees
+  /event-attendees/user/{userId}/events:
+    get:
+      description: Retrieves all events that a user is registered to attend
+      parameters:
+      - description: User ID
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Event'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all events for a user
+      tags:
+      - Event Attendees
+  /events:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Event'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Lista todos los eventos
+      tags:
+      - Events
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Evento a crear
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/entities.Event'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entities.Event'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Crea un nuevo evento
+      tags:
+      - Events
+  /events/{id}:
+    delete:
+      parameters:
+      - description: ID del evento
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Elimina un evento
+      tags:
+      - Events
+    get:
+      parameters:
+      - description: ID del evento
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.Event'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Obtiene un evento por ID
+      tags:
+      - Events
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID del evento
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Datos del evento
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/entities.Event'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Actualiza un evento
+      tags:
+      - Events
+  /events/creator/{user_id}:
+    get:
+      parameters:
+      - description: ID del creador
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Event'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Lista eventos por creador
+      tags:
+      - Events
+  /nfc_cards:
+    get:
+      description: Retorna un listado de todas las tarjetas NFC registradas.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.NfcCard'
+            type: array
+        "500":
+          description: Error interno del servidor
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtiene todas las tarjetas NFC
+      tags:
+      - NFC Cards
+    post:
+      consumes:
+      - application/json
+      description: Registra una nueva tarjeta NFC con UID y estado.
+      parameters:
+      - description: Datos de la tarjeta NFC
+        in: body
+        name: card
+        required: true
+        schema:
+          $ref: '#/definitions/entities.NfcCard'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "400":
+          description: Error de validación de entrada
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Error interno del servidor
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Crea una nueva tarjeta NFC
+      tags:
+      - NFC Cards
+  /nfc_cards/{uid}:
+    delete:
+      description: Elimina una tarjeta NFC usando su UID.
+      parameters:
+      - description: UID de la tarjeta NFC
+        in: path
+        name: uid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "500":
+          description: Error interno del servidor
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Elimina una tarjeta NFC
+      tags:
+      - NFC Cards
+    get:
+      description: Retorna los datos de una tarjeta NFC específica según su UID.
+      parameters:
+      - description: UID de la tarjeta NFC
+        in: path
+        name: uid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.NfcCard'
+        "500":
+          description: Error interno del servidor
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtiene una tarjeta NFC por UID
+      tags:
+      - NFC Cards
+  /users:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.User'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Obtiene todos los usuarios
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Registra un usuario con nombre, email, contraseña y rol
+      parameters:
+      - description: Nuevo usuario
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entities.User'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Crea un nuevo usuario
+      tags:
+      - Users
+  /users/{id}:
+    delete:
+      description: Borra un usuario existente utilizando su ID
+      parameters:
+      - description: ID del usuario
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Elimina un usuario por ID
+      tags:
+      - Users
+    get:
+      parameters:
+      - description: ID del usuario
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.User'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Obtiene un usuario por ID
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID del usuario
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Usuario actualizado
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/entities.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.User'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Actualiza un usuario existente
+      tags:
+      - Users
+  /users/email:
+    get:
+      parameters:
+      - description: Email del usuario
+        in: query
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.User'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtiene un usuario por email
+      tags:
+      - Users
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Valida credenciales y retorna un token JWT
+      parameters:
+      - description: Credenciales
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Inicia sesión de usuario
+      tags:
+      - Auth
+  /users/role/{role}:
+    get:
+      description: Retrieves all users with a specific role
+      parameters:
+      - description: User role
+        in: path
+        name: role
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.User'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get users by role
+      tags:
+      - Users
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
